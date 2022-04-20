@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-    <h1 class="text-2xl text-left font-semibold text-gray-900">Home</h1>
+    <h1 class="text-2xl text-left font-semibold text-gray-900">Marketplace</h1>
   </div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
     <!-- Replace with your content -->
@@ -12,10 +12,12 @@
 </template>
 
 <script>
-// @ is an alias to /src
-
 export default {
-  name: "HomeView",
-  components: {},
+  name: "StakingView",
+  data() {
+    return {};
+  },
 };
 </script>
+
+<style></style>

@@ -1,5 +1,5 @@
 {
-  "name": "vue-tailwind-starter",
+  "name": "Chibits",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,6 +7,13 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.1.1",
+    "@fortawesome/pro-duotone-svg-icons": "^6.1.1",
+    "@fortawesome/pro-light-svg-icons": "^6.1.1",
+    "@fortawesome/pro-regular-svg-icons": "^6.1.1",
+    "@fortawesome/pro-solid-svg-icons": "^6.1.1",
+    "@fortawesome/pro-thin-svg-icons": "^6.1.1",
+    "@fortawesome/vue-fontawesome": "^3.0.0-5",
     "@headlessui/vue": "^1.5.0",
     "@heroicons/vue": "^1.0.6",
     "core-js": "^3.8.3",
@@ -14,6 +21,7 @@
     "vue-router": "^4.0.3"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.0",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-service": "~5.0.0",

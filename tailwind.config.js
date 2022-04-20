@@ -5,12 +5,23 @@ module.exports = {
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
+        colors: {
+            pink: {
+                chi: '#fff'
+            },
+            purple: {
+                chi: '#696CFF'
+            }
+        },
         fontFamily: {
             sans: ['Inter var', ...defaultTheme.fontFamily.sans],
           },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }
