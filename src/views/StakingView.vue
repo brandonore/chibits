@@ -2,9 +2,9 @@
   <div class="max-w-7xl mx-auto px-4 pb-8 sm:px-6 md:px-8">
     <h1 class="titles text-2xl text-left text-slate-500">Staking Dashboard</h1>
   </div>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+  <div class="staking max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
     <!-- Replace with your content -->
-    <div class="grid grid-cols-3 lg:grid-cols-5 gap-5">
+    <div class="grid grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
       <div
         v-for="card in cards"
         :key="card.id"
@@ -62,13 +62,13 @@
     </div>
 
     <!-- nft container -->
-    <div class="mt-8 p-4">
+    <div class="md:mt-8 p-4">
       <div class="flex items-center justify-between pt-4 pb-8">
         <h1 class="titles text-2xl text-left text-slate-500">Staked NFTs</h1>
         <span>{{ nftsSelected }}</span>
         <button
           type="button"
-          class="p-3 w-1/2 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-l from-[#FFBE96] to-[#FE7096] transition-all linear hover:opacity-75"
+          class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-l from-[#FFBE96] to-[#FE7096] transition-all linear hover:opacity-75"
         >
           Unstake
           <span v-if="nftsSelected.length">({{ nftsSelected.length }})</span>
@@ -79,21 +79,31 @@
           v-for="nft in nfts"
           :key="nft.tokenId"
           class="nft-card overflow-hidden"
-          :class="{ active: nft.active }"
-          @click="getNftId(nft)"
         >
-          <div class="flex-col items-center justify-evenly">
-            <div>
-              <img
-                :src="require(`../assets/images/nfts/${nft.tokenId}.png`)"
-                class="rounded-lg nft-image"
-                alt=""
-              />
-            </div>
-            <h1 class="mt-2 text-xs text-slate-400 font-light">CHIBITS</h1>
-            <p class="text-lg font-bold text-slate-500">
-              NO. {{ nft.tokenId }}
-            </p>
+          <div
+            class="flex-col relative items-center justify-evenly"
+            :class="{ active: nft.active }"
+            @click="getNftId(nft)"
+          >
+            <span v-show="nft.active" class="absolute top-2 right-2 text-violet-500">
+              <font-awesome-icon class="h-6 w-6" :icon="checkedIcon"
+            /></span>
+            <img
+              :src="require(`../assets/images/nfts/${nft.tokenId}.png`)"
+              class="rounded-lg nft-img w-full"
+            />
+          </div>
+          <div class="flex p-2 items-center justify-evenly">
+            <h1 class="small-title text-sm text-slate-400">
+              chibits //
+              <span class="text-lg font-bold">NO. {{ nft.tokenId }}</span>
+            </h1>
+            <a
+              class="w-1/12 transition-all duration-200 hover:opacity-75"
+              href="https://opensea.io"
+            >
+              <img class="" src="../assets/icons/opensea.svg" alt="" />
+            </a>
           </div>
         </div>
       </div>
@@ -122,6 +132,8 @@ export default {
         { tokenId: 8 },
       ],
       nftsSelected: [],
+      isLoaded: false,
+      checkedIcon: ["fas", "circle-check"],
       cards: [
         {
           id: 1,
@@ -172,11 +184,23 @@ export default {
 </script>
 
 <style scoped>
+.staking {
+}
 .titles {
-  font-family: "Colombo", sans-serif;
+  font-family: "CeraBold", sans-serif;
+  text-transform: uppercase;
+}
+.small-title {
+  font-family: "CeraLight", sans-serif;
+  text-transform: uppercase;
+}
+.active:before {
+  /* content: 'selected';
+    color: #9c57ff; */
 }
 .active {
-  border: 4px solid #9c57ff;
+  border: 4px solid #8b5cf6;
+;
   border-radius: 3%;
 }
 .icon-box {

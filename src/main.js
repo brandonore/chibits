@@ -4,9 +4,12 @@ import router from './router'
 import './index.css'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt } from '@fortawesome/pro-regular-svg-icons'
+import { 
+    faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt
+} from '@fortawesome/pro-regular-svg-icons'
+import { faCircleCheck } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt)
+library.add(faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt, faCircleCheck)
 
 createApp(App).component('font-awesome-icon', FontAwesomeIcon).use(router).mount('#app')
