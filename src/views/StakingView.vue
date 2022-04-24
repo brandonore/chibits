@@ -2,8 +2,12 @@
   <div class="max-w-7xl mx-auto px-4 pb-8 sm:px-6 md:px-8">
     <h1 class="titles text-2xl text-left text-slate-500">Staking Dashboard</h1>
   </div>
-  <div class="staking max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+  <div
+    v-if="getUserAccount"
+    class="staking max-w-7xl mx-auto px-4 sm:px-6 md:px-8"
+  >
     <!-- Replace with your content -->
+
     <div class="grid grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
       <div
         v-for="card in cards"
@@ -35,12 +39,6 @@
       <div
         class="flex bg-gradient-to-r from-[#D88BFF] to-[#9C57FF] overflow-hidden col-span-3 lg:col-span-2 rounded-lg"
       >
-        <!-- <div class="icon-box p-2 rounded-md flex-shrink-0">
-              <font-awesome-icon
-                class="h-6 w-6"
-                :icon="card.icon"
-              />
-            </div> -->
         <div class="flex items-center justify-evenly card-bg w-full px-5 py-10">
           <dl>
             <dt class="text-3xl font-bold text-pink-chi truncate">5500</dt>
@@ -85,7 +83,10 @@
             :class="{ active: nft.active }"
             @click="getNftId(nft)"
           >
-            <span v-show="nft.active" class="absolute top-2 right-2 text-violet-500">
+            <span
+              v-show="nft.active"
+              class="absolute top-2 right-2 text-violet-500"
+            >
               <font-awesome-icon class="h-6 w-6" :icon="checkedIcon"
             /></span>
             <img
@@ -110,14 +111,29 @@
     </div>
     <!-- /End replace -->
   </div>
+  <div v-else>
+    <font-awesome-icon
+      :icon="starIcon"
+      class="text-orange-300 mx-auto h-12 w-12"
+      aria-hidden="true"
+    />
+    <h3 class="mt-2 text-lg font-medium text-slate-500">Wallet disconnected</h3>
+    <p class="mb-6 mt-1 text-sm text-slate-500">
+      Connect your wallet to view your Chibits & start staking!
+    </p>
+    <ConnectWallet />
+  </div>
 </template>
 
 <script>
-import { isTemplateNode } from "@vue/compiler-core";
+import ConnectWallet from "@/components/ConnectWallet.vue";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "StakingView",
-  components: {},
+  components: {
+    ConnectWallet,
+  },
   data() {
     return {
       nfts: [
@@ -134,6 +150,7 @@ export default {
       nftsSelected: [],
       isLoaded: false,
       checkedIcon: ["fas", "circle-check"],
+            starIcon: ["fal", "star-shooting"],
       cards: [
         {
           id: 1,
@@ -160,6 +177,12 @@ export default {
     };
   },
   computed: {
+    ...mapGetters("wallet", [
+      "getWeb3",
+      "getUserAccount",
+      "getTokenInstance",
+      "getStakingInstance",
+    ]),
     nftCount() {
       return this.nfts.length;
     },
@@ -200,7 +223,6 @@ export default {
 }
 .active {
   border: 4px solid #8b5cf6;
-;
   border-radius: 3%;
 }
 .icon-box {
