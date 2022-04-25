@@ -61,12 +61,12 @@ export default {
   },
   beforeMount() {
     this.web3Modal = new Web3Modal({
-      cacheProvider: false,
+      cacheProvider: true,
       disableInjectedProvider: false,
     });
   },
   methods: {
-    ...mapActions("wallet", [
+    ...mapActions([
       "SET_WEB3",
       "SET_USER_ACCOUNT",
       "SET_TOKEN_INSTANCE",
@@ -74,12 +74,15 @@ export default {
     ]),
     async onConnect() {
       try {
-        let provider = await this.web3Modal.connect();
-        this.onProvider(provider);
+        if(this.web3Modal.cachedProvider) {
+            let provider = await this.web3Modal.connect();
+            this.onProvider(provider);
         provider.on("accountsChanged", (accounts) => {
           console.log(accounts);
           this.onProvider(provider);
         });
+        }
+        
       } catch (e) {
         console.log("Could not get a wallet connection", e);
         return;
@@ -91,8 +94,7 @@ export default {
 
       let accounts = await web3.eth.getAccounts();
       this.SET_USER_ACCOUNT(accounts[0]);
-      this.currentAccount = this.getUserAccount
-      console.log('account connected' + this.currentAccount)
+      console.log(this.getUserAccount)
 
       let chainId = await web3.eth.getChainId();
       if (chainId !== this.chainId) {
@@ -117,7 +119,7 @@ export default {
     }
   },
     computed: {
-    ...mapGetters("wallet", [
+    ...mapGetters([
       "getWeb3",
       "getUserAccount",
       "getTokenInstance",

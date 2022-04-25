@@ -16,4 +16,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt, faCircleCheck, faWallet,
      faStarShooting, faHexagonExclamation)
 
+store.subscribe((mutation, state) => {
+    localStorage.setItem('userAccount', JSON.stringify(state.userAccount))
+})
+
 createApp(App).use(Vuex).use(store).component('font-awesome-icon', FontAwesomeIcon).use(router).mount('#app')

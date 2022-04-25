@@ -72,7 +72,7 @@
           <span v-if="nftsSelected.length">({{ nftsSelected.length }})</span>
         </button>
       </div>
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <div
           v-for="nft in nfts"
           :key="nft.tokenId"
@@ -177,7 +177,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("wallet", [
+    ...mapGetters([
       "getWeb3",
       "getUserAccount",
       "getTokenInstance",
@@ -208,6 +208,7 @@ export default {
 
 <style scoped>
 .staking {
+    height: 100vh;
 }
 .titles {
   font-family: "CeraBold", sans-serif;
@@ -239,7 +240,7 @@ export default {
 }
 @media (hover: hover) and (pointer: fine) {
   .nft-card:hover {
-    max-width: 300px;
+    /* max-width: 300px; */
     cursor: pointer;
     transform: scale(1.1);
   }

@@ -1,5 +1,5 @@
 <template>
-  <div class="dark:bg-gray-900 dark:text-white antialiased">
+  <div :class="darkMode ? 'dark' : ''" class="dark:bg-gray-900 dark:text-slate-500 antialiased">
     <Transition name="slide-fade">
       <div
         v-if="sidebarOpen"
@@ -7,7 +7,7 @@
       >
         <!-- Sidebar component, swap this element with another sidebar if you like -->
         <div
-          class="flex flex-col flex-grow md:border-r border-gray-200 pt-5 bg-white overflow-y-auto dark:bg-gray-900 dark:text-white dark:border-gray-600"
+          class="flex flex-col flex-grow md:border-r border-gray-200 pt-5 bg-white overflow-y-auto dark:bg-gray-900 dark:text-slate-500 dark:border-gray-600"
         >
           <div class="flex items-center flex-shrink-0 px-4">
             <img
@@ -47,7 +47,7 @@
     <!-- Menu Bar -->
     <div :class="{ [`md:pl-64`]: sidebarOpen }" class="flex flex-col flex-1">
       <div
-        class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white dark:bg-slate-800 dark:text-white shadow"
+        class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white dark:bg-slate-800 dark:text-slate-500"
       >
         <button
           type="button"
@@ -59,7 +59,7 @@
         </button>
         <div class="flex-1 flex justify-between">
           <div class="flex-1 flex items-center justify-end">
-              <ConnectWallet />
+            <ConnectWallet v-if="notHome" />
           </div>
           <!-- dark/light toggle -->
           <div class="flex px-5 items-center">
@@ -79,7 +79,7 @@
         </div>
       </div>
 
-      <main class="flex-1 bg-main">
+      <main class="dark:bg-gray-900 dark:text-slate-500">
         <div class="pt-6 bg-girl">
           <router-view></router-view>
         </div>
@@ -90,7 +90,7 @@
 
 <script>
 import { ref } from "vue";
-import ConnectWallet from '@/components/ConnectWallet.vue'
+import ConnectWallet from "@/components/ConnectWallet.vue";
 import {
   Dialog,
   DialogOverlay,
@@ -146,23 +146,25 @@ export default {
     CurrencyDollarIcon,
     ShoppingBagIcon,
     XIcon,
-    ConnectWallet
-},
+    ConnectWallet,
+  },
   data() {
+    let darkMode = localStorage.getItem("darkMode") == "true";
     return {
       navigation,
       sidebarOpen: ref(false),
-      darkMode: ref(false),
+      darkMode,
       walletIcon: ["fas", "wallet"],
     };
+  },
+  beforeMount() {
+    this.$store.commit("INIT_STORE");
+    
   },
   methods: {
     applyDarkMode() {
       this.darkMode = !this.darkMode;
-      console.log("clicked");
-      document
-        .querySelector("html")
-        .classList[this.darkMode ? "add" : "remove"]("dark");
+      localStorage.setItem("darkMode", this.darkMode);
     },
   },
   computed: {
