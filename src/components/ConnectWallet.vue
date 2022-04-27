@@ -38,10 +38,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import Web3 from "web3";
 import Moralis from "../plugins/moralis";
-import contract from '@/contracts/ABIs.json'
-
 
 export default {
   name: "ConnectWallet",
@@ -54,7 +51,9 @@ export default {
   },
   methods: {
     ...mapActions([
+      "SET_WEB3",
       "SET_USER_ACCOUNT",
+      "SET_NFTS",
       "SET_TOKEN_INSTANCE",
       "SET_STAKING_INSTANCE",
     ]),
@@ -66,22 +65,7 @@ export default {
       const user = await Moralis.authenticate({
         signingMessage: "Connect to Chibits ❤️",
       });
-      this.SET_USER_ACCOUNT(user.get("ethAddress"));
-      
-    //   await Moralis.enableWeb3();
-    //   const web3 = new Web3(Moralis.provider);
-
-    //   let TOKEN_INSTANCE = new web3.eth.Contract(
-    //     contract.TOKEN_ABI,
-    //     contract.TOKEN_ADDR
-    //   );
-    //   let STAKING_INSTANCE = new web3.eth.Contract(
-    //     contract.STAKING_ABI,
-    //     contract.STAKING_ADDR
-    //   );
-
-    //   this.SET_TOKEN_INSTANCE(TOKEN_INSTANCE);
-    //   this.SET_STAKING_INSTANCE(STAKING_INSTANCE);
+      this.SET_USER_ACCOUNT(user.get("ethAddress"))
     },
   },
   computed: {

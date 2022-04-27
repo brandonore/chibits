@@ -91,6 +91,8 @@
 <script>
 import { ref } from "vue";
 import { mapActions, mapGetters } from "vuex";
+import Web3 from "web3";
+import Moralis from "@/plugins/moralis";
 import ConnectWallet from "@/components/ConnectWallet.vue";
 import {
   Dialog,
@@ -157,11 +159,9 @@ export default {
       walletIcon: ["fas", "wallet"],
     };
   },
-  beforeMount() {
-    // this.$store.commit("INIT_STORE");
-  },
   methods: {
       ...mapActions([
+          "SET_WEB3",
       "SET_USER_ACCOUNT",
       "SET_TOKEN_INSTANCE",
       "SET_STAKING_INSTANCE",
@@ -176,6 +176,22 @@ export default {
       return this.$route.name !== "home";
     },
   },
+   async beforeMount() {
+    // this.$store.commit("INIT_STORE");
+        await Moralis.enableWeb3();
+      const web3 = new Web3(Moralis.provider)
+      this.SET_WEB3(web3)
+  },
+  mounted() {
+     window.ethereum.on('accountsChanged', async() => {
+         await Moralis.User.logOut();
+         this.SET_USER_ACCOUNT(null);
+     })
+     window.ethereum.on('disconnect', async() => {
+         await Moralis.User.logOut();
+         this.SET_USER_ACCOUNT(null);
+     })
+  }
 };
 </script>
 

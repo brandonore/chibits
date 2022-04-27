@@ -10,12 +10,12 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { 
     faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt
 } from '@fortawesome/pro-regular-svg-icons'
-import { faCircleCheck, faWallet, faHexagonExclamation } from '@fortawesome/pro-solid-svg-icons'
-import { faStarShooting } from '@fortawesome/pro-light-svg-icons'
+import { faCircleCheck, faWallet, faHexagonExclamation, faStars, faStarShooting, } from '@fortawesome/pro-solid-svg-icons'
+import { faSpinnerThird } from '@fortawesome/pro-light-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt, faCircleCheck, faWallet,
-     faStarShooting, faHexagonExclamation)
+     faStarShooting, faHexagonExclamation, faStars, faSpinnerThird)
 
 store.subscribe((mutation, state) => {
     localStorage.setItem('userAccount', JSON.stringify(state.userAccount))

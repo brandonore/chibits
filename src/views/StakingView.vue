@@ -20,10 +20,10 @@
         >
           <dl>
             <dt
-              v-if="card.id === 1"
+              v-if="card.id === 1 && getNftCount"
               class="text-3xl font-bold text-pink-chi truncate"
             >
-              <!-- {{ nftCount }} -->
+              {{ getNftCount.length }}
             </dt>
             <dt
               v-else-if="card.id === 3"
@@ -64,34 +64,19 @@
       </div>
     </div>
 
-    <!-- nft container -->
-    <div class="md:mt-8 p-4">
-      <div class="flex items-center justify-between pt-4 pb-8">
-        <h1 class="titles text-2xl text-left text-slate-500">Staked NFTs</h1>
-        <span class="pr-5">{{ getSelectedNfts }}</span>
-        {{ getUserAccount }}
-        <button
-          type="button"
-          class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-l from-[#FFBE96] to-[#FE7096] transition-all linear hover:opacity-75"
-        >
-          Unstake
-          <span v-if="getSelectedNfts.length">({{ getSelectedNfts.length }})</span>
-        </button>
-      </div>
-      <!-- staked container -->
-      <div v-if="getUserAccount">
-        <StakedNfts />
-      </div>
-    </div>
+    <!-- staked nfts -->
+    <StakedNfts />
+    <!-- unstaked nfts -->
+    <UnstakedNfts />
     <!-- /End replace -->
   </div>
-  <div v-else>
+  <div v-else class="py-24">
     <font-awesome-icon
       :icon="starIcon"
       class="text-orange-300 mx-auto h-12 w-12"
       aria-hidden="true"
     />
-    <h3 class="mt-2 text-lg font-medium text-slate-500">Wallet disconnected</h3>
+    <h1 class="mt-2 text-xl font-medium text-slate-500">Wallet disconnected</h1>
     <p class="mb-6 mt-1 text-sm text-slate-500">
       Connect your wallet to view your Chibits & start staking!
     </p>
@@ -105,20 +90,19 @@ import StakedNfts from "@/components/StakedNfts.vue";
 import { mapActions, mapGetters } from "vuex";
 import Moralis from "../plugins/moralis";
 import contract from "@/contracts/ABIs.json";
+import UnstakedNfts from "../components/UnstakedNfts.vue";
 
 export default {
   name: "StakingView",
   components: {
     ConnectWallet,
     StakedNfts,
-  },
+    UnstakedNfts
+},
   data() {
     return {
-      nfts: [],
-      nftsSelected: [],
-      staked_tokens: null,
-      isLoaded: false,
-      starIcon: ["fal", "star-shooting"],
+      starIcon: ["fas", "star-shooting"],
+      spinnerIcon: ["fal", "spinner-third"],
       cards: [
         {
           id: 1,
@@ -144,22 +128,14 @@ export default {
       ],
     };
   },
-  methods: {
-
-  },
+  methods: {},
   computed: {
-    ...mapGetters(["getUserAccount", "getSelectedNfts"]),
-    nftCount() {
-      return this.nfts.length;
-    },
+    ...mapGetters(["getUserAccount", "getNftCount"]),
   },
 };
 </script>
 
 <style scoped>
-.staking {
-  height: 100vh;
-}
 .titles {
   font-family: "CeraBold", sans-serif;
   text-transform: uppercase;
@@ -167,10 +143,6 @@ export default {
 .small-title {
   font-family: "CeraLight", sans-serif;
   text-transform: uppercase;
-}
-.icon-box {
-  background-color: #e3008c33;
-  color: #e3008c;
 }
 .card-bg {
   background-image: url("../assets/images/other/circles.svg");
