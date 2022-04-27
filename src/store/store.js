@@ -2,15 +2,12 @@ import { createStore } from "vuex";
 
 const store = createStore({
   state: {
-    web3: null,
     userAccount: null,
     tokenInstance: null,
     stakingInstance: null,
+    selectedNfts: [],
   },
   mutations: {
-    SET_WEB3: (state, payload) => {
-      state.web3 = payload;
-    },
     SET_USER_ACCOUNT: (state, payload) => {
       state.userAccount = payload;
     },
@@ -20,16 +17,21 @@ const store = createStore({
     SET_STAKING_INSTANCE: (state, payload) => {
       state.stakingInstance = payload;
     },
+    SET_SELECTED_NFTS: (state, payload) => {
+      state.selectedNfts.push(payload);
+    },
+    REMOVE_SELECTED_NFTS: (state, payload) => {
+      state.selectedNfts = state.selectedNfts.filter(
+        (value) => value !== payload
+      );
+    },
     INIT_STORE(state) {
-        if(localStorage.getItem('userAccount')) {
-            state.userAccount = JSON.parse(localStorage.userAccount)
-        }
-    }
+      if (localStorage.getItem("userAccount")) {
+        state.userAccount = JSON.parse(localStorage.userAccount);
+      }
+    },
   },
   getters: {
-    getWeb3: (state) => {
-      return state.web3;
-    },
     getUserAccount: (state) => {
       return state.userAccount;
     },
@@ -39,11 +41,11 @@ const store = createStore({
     getStakingInstance: (state) => {
       return state.stakingInstance;
     },
+    getSelectedNfts: (state) => {
+      return state.selectedNfts;
+    },
   },
   actions: {
-    SET_WEB3({ commit }, payload) {
-      commit("SET_WEB3", payload);
-    },
     SET_USER_ACCOUNT({ commit }, payload) {
       commit("SET_USER_ACCOUNT", payload);
     },
@@ -53,6 +55,12 @@ const store = createStore({
     SET_STAKING_INSTANCE({ commit }, payload) {
       commit("SET_STAKING_INSTANCE", payload);
     },
+    SET_SELECTED_NFTS({ commit }, payload) {
+      commit("SET_SELECTED_NFTS", payload);
+    },
+   REMOVE_SELECTED_NFTS({ commit }, payload) {
+        commit("REMOVE_SELECTED_NFTS", payload);
+      },
   },
 });
 

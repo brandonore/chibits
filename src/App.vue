@@ -1,5 +1,5 @@
 <template>
-  <div :class="darkMode ? 'dark' : ''" class="dark:bg-gray-900 dark:text-slate-500 antialiased">
+  <div :class="darkMode ? 'dark' : ''" class="dark:bg-gray-900 dark:text-slate-500 bg-gray-100 antialiased">
     <Transition name="slide-fade">
       <div
         v-if="sidebarOpen"
@@ -90,6 +90,7 @@
 
 <script>
 import { ref } from "vue";
+import { mapActions, mapGetters } from "vuex";
 import ConnectWallet from "@/components/ConnectWallet.vue";
 import {
   Dialog,
@@ -108,7 +109,6 @@ import {
   CurrencyDollarIcon,
   ShoppingBagIcon,
   MenuAlt2Icon,
-  UsersIcon,
   XIcon,
 } from "@heroicons/vue/outline";
 import { SearchIcon } from "@heroicons/vue/solid";
@@ -158,10 +158,14 @@ export default {
     };
   },
   beforeMount() {
-    this.$store.commit("INIT_STORE");
-    
+    // this.$store.commit("INIT_STORE");
   },
   methods: {
+      ...mapActions([
+      "SET_USER_ACCOUNT",
+      "SET_TOKEN_INSTANCE",
+      "SET_STAKING_INSTANCE",
+    ]),
     applyDarkMode() {
       this.darkMode = !this.darkMode;
       localStorage.setItem("darkMode", this.darkMode);

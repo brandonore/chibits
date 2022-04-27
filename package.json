@@ -17,6 +17,7 @@
     "@headlessui/vue": "^1.5.0",
     "@heroicons/vue": "^1.0.6",
     "core-js": "^3.8.3",
+    "moralis": "^1.5.10",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "path-browserify": "^1.0.1",
     "vue": "^3.2.13",

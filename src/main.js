@@ -1,9 +1,10 @@
-import { createApp } from 'vue'
+import { createApp, provide } from 'vue'
 import App from './App.vue'
 import router from './router'
 import Vuex from 'vuex'
 import store from './store/store'
 import './index.css'
+import Moralis from './plugins/moralis'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { 
@@ -20,4 +21,4 @@ store.subscribe((mutation, state) => {
     localStorage.setItem('userAccount', JSON.stringify(state.userAccount))
 })
 
-createApp(App).use(Vuex).use(store).component('font-awesome-icon', FontAwesomeIcon).use(router).mount('#app')
+createApp(App).provide('moralis', Moralis).use(Vuex).use(store).component('font-awesome-icon', FontAwesomeIcon).use(router).mount('#app')

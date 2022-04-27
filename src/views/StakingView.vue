@@ -20,13 +20,19 @@
         >
           <dl>
             <dt
-              v-if="card.id !== 3"
+              v-if="card.id === 1"
               class="text-3xl font-bold text-pink-chi truncate"
             >
-              {{ card.amount }}
+              <!-- {{ nftCount }} -->
+            </dt>
+            <dt
+              v-else-if="card.id === 3"
+              class="text-3xl font-bold text-pink-chi truncate"
+            >
+              {{ card.amount }}%
             </dt>
             <dt v-else class="text-3xl font-bold text-pink-chi truncate">
-              {{ card.amount }}%
+              {{ card.amount }}
             </dt>
             <dd>
               <div class="text-sm font-medium text-white">
@@ -50,7 +56,6 @@
           </dl>
           <button
             type="button"
-            @click="nftCount(nfts)"
             class="w-1/3 p-3 text-center text-sm font-extrabold rounded-md text-[#B57DFF] bg-pink-chi transition-all linear hover:opacity-75"
           >
             Claim CHI
@@ -63,50 +68,19 @@
     <div class="md:mt-8 p-4">
       <div class="flex items-center justify-between pt-4 pb-8">
         <h1 class="titles text-2xl text-left text-slate-500">Staked NFTs</h1>
-        <span>{{ nftsSelected }}</span>
+        <span class="pr-5">{{ getSelectedNfts }}</span>
+        {{ getUserAccount }}
         <button
           type="button"
           class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-l from-[#FFBE96] to-[#FE7096] transition-all linear hover:opacity-75"
         >
           Unstake
-          <span v-if="nftsSelected.length">({{ nftsSelected.length }})</span>
+          <span v-if="getSelectedNfts.length">({{ getSelectedNfts.length }})</span>
         </button>
       </div>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <div
-          v-for="nft in nfts"
-          :key="nft.tokenId"
-          class="nft-card overflow-hidden"
-        >
-          <div
-            class="flex-col relative items-center justify-evenly"
-            :class="{ active: nft.active }"
-            @click="getNftId(nft)"
-          >
-            <span
-              v-show="nft.active"
-              class="absolute top-2 right-2 text-violet-500"
-            >
-              <font-awesome-icon class="h-6 w-6" :icon="checkedIcon"
-            /></span>
-            <img
-              :src="require(`../assets/images/nfts/${nft.tokenId}.png`)"
-              class="rounded-lg nft-img w-full"
-            />
-          </div>
-          <div class="flex p-2 items-center justify-evenly">
-            <h1 class="small-title text-sm text-slate-400">
-              chibits //
-              <span class="text-lg font-bold">NO. {{ nft.tokenId }}</span>
-            </h1>
-            <a
-              class="w-1/12 transition-all duration-200 hover:opacity-75"
-              href="https://opensea.io"
-            >
-              <img class="" src="../assets/icons/opensea.svg" alt="" />
-            </a>
-          </div>
-        </div>
+      <!-- staked container -->
+      <div v-if="getUserAccount">
+        <StakedNfts />
       </div>
     </div>
     <!-- /End replace -->
@@ -127,35 +101,29 @@
 
 <script>
 import ConnectWallet from "@/components/ConnectWallet.vue";
+import StakedNfts from "@/components/StakedNfts.vue";
 import { mapActions, mapGetters } from "vuex";
+import Moralis from "../plugins/moralis";
+import contract from "@/contracts/ABIs.json";
 
 export default {
   name: "StakingView",
   components: {
     ConnectWallet,
+    StakedNfts,
   },
   data() {
     return {
-      nfts: [
-        { tokenId: 0 },
-        { tokenId: 1 },
-        { tokenId: 2 },
-        { tokenId: 3 },
-        { tokenId: 4 },
-        { tokenId: 5 },
-        { tokenId: 6 },
-        { tokenId: 7 },
-        { tokenId: 8 },
-      ],
+      nfts: [],
       nftsSelected: [],
+      staked_tokens: null,
       isLoaded: false,
-      checkedIcon: ["fas", "circle-check"],
-            starIcon: ["fal", "star-shooting"],
+      starIcon: ["fal", "star-shooting"],
       cards: [
         {
           id: 1,
           title: "Number of NFTs Owned",
-          amount: 0,
+          amount: null,
           icon: ["far", "hashtag"],
           bg: "bg-gradient-to-r from-[#FFBE96] to-[#FE7096]",
         },
@@ -176,39 +144,21 @@ export default {
       ],
     };
   },
+  methods: {
+
+  },
   computed: {
-    ...mapGetters([
-      "getWeb3",
-      "getUserAccount",
-      "getTokenInstance",
-      "getStakingInstance",
-    ]),
+    ...mapGetters(["getUserAccount", "getSelectedNfts"]),
     nftCount() {
       return this.nfts.length;
     },
-  },
-  methods: {
-    getNftId(event) {
-      let nft = this.nfts[event.tokenId];
-      nft.active = !nft.active;
-      if (nft.active) {
-        this.nftsSelected.push(nft.tokenId);
-      } else {
-        this.nftsSelected = this.nftsSelected.filter(
-          (value) => value !== nft.tokenId
-        );
-      }
-    },
-  },
-  created() {
-    this.cards[0].amount = this.nftCount;
   },
 };
 </script>
 
 <style scoped>
 .staking {
-    height: 100vh;
+  height: 100vh;
 }
 .titles {
   font-family: "CeraBold", sans-serif;
@@ -218,14 +168,6 @@ export default {
   font-family: "CeraLight", sans-serif;
   text-transform: uppercase;
 }
-.active:before {
-  /* content: 'selected';
-    color: #9c57ff; */
-}
-.active {
-  border: 4px solid #8b5cf6;
-  border-radius: 3%;
-}
 .icon-box {
   background-color: #e3008c33;
   color: #e3008c;
@@ -234,15 +176,5 @@ export default {
   background-image: url("../assets/images/other/circles.svg");
   background-repeat: no-repeat;
   background-size: cover;
-}
-.nft-card {
-  transition: all 0.1s linear;
-}
-@media (hover: hover) and (pointer: fine) {
-  .nft-card:hover {
-    /* max-width: 300px; */
-    cursor: pointer;
-    transform: scale(1.1);
-  }
 }
 </style>
