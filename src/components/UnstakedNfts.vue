@@ -145,7 +145,7 @@ export default {
       starsIcon: ["fas", "stars"],
       starIcon: ["fas", "star"],
       txSubmitted: false,
-      loading: true,
+      loading: false,
     };
   },
   methods: {

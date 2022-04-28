@@ -167,6 +167,7 @@ export default {
       "SET_USER_ACCOUNT",
       "SET_TOKEN_INSTANCE",
       "SET_STAKING_INSTANCE",
+      "SET_NFTS"
     ]),
     applyDarkMode() {
       this.darkMode = !this.darkMode;
@@ -185,10 +186,12 @@ export default {
     window.ethereum.on("accountsChanged", async () => {
       await Moralis.User.logOut();
       this.SET_USER_ACCOUNT(null);
+      this.SET_NFTS(null)
     });
     window.ethereum.on("disconnect", async () => {
       await Moralis.User.logOut();
       this.SET_USER_ACCOUNT(null);
+      this.SET_NFTS(null)
     });
   },
 };

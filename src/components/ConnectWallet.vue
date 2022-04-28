@@ -59,6 +59,7 @@ export default {
       "SET_USER_ACCOUNT",
       "SET_TOKEN_INSTANCE",
       "SET_STAKING_INSTANCE",
+      "SET_NFTS"
     ]),
     async logOut() {
         if(!this.getUserAccount) {
@@ -67,6 +68,7 @@ export default {
         Moralis.User.logOut().then(() => {
             this.currentUser = Moralis.User.current()
             this.SET_USER_ACCOUNT(this.currentUser)
+            this.SET_NFTS(null)
         })
     },
     async login() {

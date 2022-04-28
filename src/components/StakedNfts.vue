@@ -4,7 +4,7 @@
         <h1 class="titles text-2xl text-left text-slate-500">Staked NFTs</h1>
         <button
           type="button"
-          class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-violet-500 bg-[#8a5cf638] hover:bg-violet-500 hover:text-white transition-all linear hover:opacity-75"
+          class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-violet-500 hover:text-white transition-all linear hover:opacity-75"
         >
           Unstake
           <span v-if="selectedNfts.length"
