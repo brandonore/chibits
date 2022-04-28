@@ -7,7 +7,7 @@ const store = createStore({
     tokenInstance: null,
     stakingInstance: null,
     nfts: null,
-    selectedNfts: [],
+    isApproved: false
   },
   mutations: {
     SET_WEB3: (state, payload) => {
@@ -25,13 +25,8 @@ const store = createStore({
     SET_NFTS: (state, payload) => {
       state.nfts = payload;
     },
-    SET_SELECTED_NFTS: (state, payload) => {
-      state.selectedNfts.push(payload);
-    },
-    REMOVE_SELECTED_NFTS: (state, payload) => {
-      state.selectedNfts = state.selectedNfts.filter(
-        (value) => value !== payload
-      );
+    SET_APPROVAL: (state, payload) => {
+        state.isApproved = payload
     },
     INIT_STORE(state) {
       if (localStorage.getItem("userAccount")) {
@@ -55,9 +50,9 @@ const store = createStore({
     getNftCount: (state) => {
       return state.nfts;
     },
-    getSelectedNfts: (state) => {
-      return state.selectedNfts;
-    },
+    getIsApproved: (state) => {
+        return state.isApproved;
+    }
   },
   actions: {
     SET_WEB3({ commit }, payload) {
@@ -75,12 +70,9 @@ const store = createStore({
     SET_NFTS({ commit }, payload) {
       commit("SET_NFTS", payload);
     },
-    SET_SELECTED_NFTS({ commit }, payload) {
-      commit("SET_SELECTED_NFTS", payload);
-    },
-    REMOVE_SELECTED_NFTS({ commit }, payload) {
-      commit("REMOVE_SELECTED_NFTS", payload);
-    },
+    SET_APPROVAL({ commit }, payload) {
+        commit("SET_APPROVAL", payload)
+    }
   },
 });
 

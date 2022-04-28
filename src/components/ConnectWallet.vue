@@ -38,7 +38,10 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import Web3 from "web3";
+import Web3Modal from "web3modal";
 import Moralis from "../plugins/moralis";
+import contract from '@/contracts/ABIs'
 
 export default {
   name: "ConnectWallet",
@@ -47,29 +50,56 @@ export default {
     return {
       walletIcon: ["fas", "wallet"],
       disconnectIcon: ["fas", "hexagon-exclamation"],
+      currentUser: null
     };
   },
   methods: {
     ...mapActions([
       "SET_WEB3",
       "SET_USER_ACCOUNT",
-      "SET_NFTS",
       "SET_TOKEN_INSTANCE",
       "SET_STAKING_INSTANCE",
     ]),
     async logOut() {
-      await Moralis.User.logOut();
-      this.SET_USER_ACCOUNT(null);
+        if(!this.getUserAccount) {
+            return
+        }
+        Moralis.User.logOut().then(() => {
+            this.currentUser = Moralis.User.current()
+            this.SET_USER_ACCOUNT(this.currentUser)
+        })
     },
     async login() {
-      const user = await Moralis.authenticate({
-        signingMessage: "Connect to Chibits ❤️",
-      });
-      this.SET_USER_ACCOUNT(user.get("ethAddress"))
+        try {
+            let user = await Moralis.authenticate({ signingMessage: "Connect to Chibits ❤️" })
+            this.currentUser = user
+            this.SET_USER_ACCOUNT(user.get('ethAddress'))
+            await Moralis.enableWeb3();
+            const web3 = new Web3(Moralis.provider);
+            this.SET_WEB3(web3);
+            this.$store.commit("INIT_STORE");
+
+            let TOKEN_INSTANCE = new web3.eth.Contract(
+                contract.TOKEN_ABI,
+                contract.TOKEN_ADDR
+            );
+            let STAKING_INSTANCE = new web3.eth.Contract(
+                contract.STAKING_ABI,
+                contract.STAKING_ADDR
+            );
+
+            this.SET_TOKEN_INSTANCE(TOKEN_INSTANCE);
+            this.SET_STAKING_INSTANCE(STAKING_INSTANCE);
+        } catch (error) {
+            console.log(error)
+        } 
     },
   },
   computed: {
-    ...mapGetters(["getUserAccount"]),
+    ...mapGetters(["getUserAccount", "getWeb3"]),
+  },
+  beforeMount() {
+    this.currentUser = Moralis.User.current()
   },
 };
 </script>

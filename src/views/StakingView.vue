@@ -1,9 +1,9 @@
 <template>
-  <div class="max-w-7xl mx-auto px-4 pb-8 sm:px-6 md:px-8">
+  <div class="max-w-7xl mx-auto px-4 pb-8 sm:px-6 md:px-8 h-full">
     <h1 class="titles text-2xl text-left text-slate-500">Staking Dashboard</h1>
   </div>
   <div
-    v-if="getUserAccount"
+    v-if="getUserAccount !== null"
     class="staking max-w-7xl mx-auto px-4 sm:px-6 md:px-8"
   >
     <!-- Replace with your content -->
@@ -24,6 +24,12 @@
               class="text-3xl font-bold text-pink-chi truncate"
             >
               {{ getNftCount.length }}
+            </dt>
+            <dt
+              v-else-if="card.id === 1 && !getNftCount"
+              class="text-3xl font-bold text-pink-chi truncate"
+            >
+              0
             </dt>
             <dt
               v-else-if="card.id === 3"
@@ -135,7 +141,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .titles {
   font-family: "CeraBold", sans-serif;
   text-transform: uppercase;

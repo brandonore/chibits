@@ -1,5 +1,8 @@
 <template>
-  <div :class="darkMode ? 'dark' : ''" class="dark:bg-gray-900 dark:text-slate-500 bg-gray-100 antialiased">
+  <div
+    :class="darkMode ? 'dark' : ''"
+    class="dark:bg-gray-900 dark:text-slate-500 bg-gray-100 antialiased"
+  >
     <Transition name="slide-fade">
       <div
         v-if="sidebarOpen"
@@ -93,6 +96,7 @@ import { ref } from "vue";
 import { mapActions, mapGetters } from "vuex";
 import Web3 from "web3";
 import Moralis from "@/plugins/moralis";
+import contract from '@/contracts/ABIs'
 import ConnectWallet from "@/components/ConnectWallet.vue";
 import {
   Dialog,
@@ -113,7 +117,6 @@ import {
   MenuAlt2Icon,
   XIcon,
 } from "@heroicons/vue/outline";
-import { SearchIcon } from "@heroicons/vue/solid";
 
 const navigation = [
   { name: "Home", href: "/", icon: HomeIcon, current: false },
@@ -144,7 +147,6 @@ export default {
     SunIcon,
     MoonIcon,
     MenuAlt2Icon,
-    SearchIcon,
     CurrencyDollarIcon,
     ShoppingBagIcon,
     XIcon,
@@ -160,8 +162,8 @@ export default {
     };
   },
   methods: {
-      ...mapActions([
-          "SET_WEB3",
+    ...mapActions([
+      "SET_WEB3",
       "SET_USER_ACCOUNT",
       "SET_TOKEN_INSTANCE",
       "SET_STAKING_INSTANCE",
@@ -172,26 +174,23 @@ export default {
     },
   },
   computed: {
+      ...mapGetters([
+          "getWeb3"
+      ]),
     notHome() {
       return this.$route.name !== "home";
     },
   },
-   async beforeMount() {
-    // this.$store.commit("INIT_STORE");
-        await Moralis.enableWeb3();
-      const web3 = new Web3(Moralis.provider)
-      this.SET_WEB3(web3)
+  async beforeMount() {
+    window.ethereum.on("accountsChanged", async () => {
+      await Moralis.User.logOut();
+      this.SET_USER_ACCOUNT(null);
+    });
+    window.ethereum.on("disconnect", async () => {
+      await Moralis.User.logOut();
+      this.SET_USER_ACCOUNT(null);
+    });
   },
-  mounted() {
-     window.ethereum.on('accountsChanged', async() => {
-         await Moralis.User.logOut();
-         this.SET_USER_ACCOUNT(null);
-     })
-     window.ethereum.on('disconnect', async() => {
-         await Moralis.User.logOut();
-         this.SET_USER_ACCOUNT(null);
-     })
-  }
 };
 </script>
 
@@ -201,7 +200,6 @@ export default {
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -222,13 +220,6 @@ export default {
 @font-face {
   font-family: "Colombo";
   src: local("Colombo"), url(./fonts/Colombo.ttf) format("truetype");
-}
-.slide-fade-enter-active {
-  /* transition: all 0.5s ease-out; */
-}
-
-.slide-fade-leave-active {
-  /* transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1); */
 }
 
 .slide-fade-enter-from,

@@ -4,6 +4,7 @@
       <h1 class="titles text-2xl text-left text-slate-500">Unstaked NFTs</h1>
       <span class="pr-5">{{ selectedNfts }}</span>
       <button
+        @click.prevent="checkNft"
         type="button"
         class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-l from-[#FFBE96] to-[#FE7096] transition-all linear hover:opacity-75"
       >
@@ -11,8 +12,8 @@
         <span v-if="selectedNfts.length">({{ selectedNfts.length }})</span>
       </button>
     </div>
-    <!-- staked container -->
-    <div v-if="getUserAccount" class="bg-white rounded-xl p-8">
+    <!-- unstaked nfts -->
+    <div v-if="getUserAccount && getIsApproved && nfts.length" class="">
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         <div
           v-for="nft in sortedNfts"
@@ -34,7 +35,7 @@
           </div>
           <div class="flex p-2 items-center justify-evenly">
             <h1 class="small-title text-sm text-slate-400">
-              chibits //
+              hana //
               <span class="text-lg font-bold">NO. {{ nft.tokenId }}</span>
             </h1>
             <a
@@ -47,27 +48,79 @@
         </div>
       </div>
     </div>
-    <!-- loading staked nfts -->
-    <!-- <div v-else-if="!getUserAccount" class="py-24">
-        <font-awesome-icon
-          :icon="spinnerIcon"
-          class="text-slate-400 mx-auto h-12 w-12 animate-spin"
-          aria-hidden="true"
-        />
-        <h1 class="mt-2 text-xl font-medium text-slate-400">
-          Fetching Chibits ⭐ ...
-        </h1>
-      </div> -->
-    <!-- no staked nfts -->
-    <div v-else class="py-24 border-2 rounded-xl">
+    <!-- loading -->
+    <div
+      class="py-24 border-2 rounded-xl"
+      v-else-if="getUserAccount && !getIsApproved && loading"
+    >
+      <font-awesome-icon
+        :icon="starIcon"
+        class="text-slate-400 mx-auto h-12 w-12 animate-spin"
+        aria-hidden="true"
+      />
+      <h1 class="mt-2 text-xl font-medium text-slate-500">Loading...</h1>
+      <p class="mb-6 mt-1 text-sm text-slate-500">Please be patient!</p>
+    </div>
+    <!-- approve wallet -->
+    <div
+      v-else-if="getUserAccount && !getIsApproved && !loading"
+      class="py-24 border-2 rounded-xl"
+    >
       <font-awesome-icon
         :icon="starsIcon"
         class="text-slate-400 mx-auto h-12 w-12"
         aria-hidden="true"
       />
       <h1 class="mt-2 text-xl font-medium text-slate-500">
-        No Chibits found!
+        Approve wallet for staking
       </h1>
+      <p class="mb-6 mt-1 text-sm text-slate-500">
+        This only needs to be done once!
+      </p>
+      <button
+        v-if="!txSubmitted"
+        @click.prevent="onApproval"
+        type="button"
+        class="inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-violet-500 transition-all linear hover:opacity-75"
+      >
+        Approve
+      </button>
+      <button
+        v-else
+        type="button"
+        disabled
+        class="cursor-not-allowed disabled:opacity-75 inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-violet-500"
+      >
+        <svg
+          class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        Approving...
+      </button>
+    </div>
+    <!-- no nfts found -->
+    <div v-else class="py-24 border-2 rounded-xl">
+      <font-awesome-icon
+        :icon="starsIcon"
+        class="text-slate-400 mx-auto h-12 w-12"
+        aria-hidden="true"
+      />
+      <h1 class="mt-2 text-xl font-medium text-slate-500">No Chibits found!</h1>
       <p class="mb-6 mt-1 text-sm text-slate-500">
         Visit the official OpenSea collection
       </p>
@@ -76,10 +129,10 @@
 </template>
 
 <script>
+import Web3 from "web3";
 import Moralis from "../plugins/moralis";
 import contract from "@/contracts/ABIs.json";
 import { mapActions, mapGetters } from "vuex";
-import { computeAddress } from "@ethersproject/transactions";
 
 export default {
   name: "StakedNfts",
@@ -87,12 +140,16 @@ export default {
     return {
       nfts: [],
       selectedNfts: [],
+      isApproved: false,
       checkedIcon: ["fas", "circle-check"],
       starsIcon: ["fas", "stars"],
+      starIcon: ["fas", "star"],
+      txSubmitted: false,
+      loading: true,
     };
   },
   methods: {
-    ...mapActions(["SET_NFTS"]),
+    ...mapActions(["SET_NFTS", "SET_APPROVAL"]),
 
     async getNfts() {
       const tokenAddr = contract.TOKEN_ADDR;
@@ -119,6 +176,9 @@ export default {
         this.SET_NFTS(this.nfts);
       });
     },
+    checkNft() {
+      console.log(this.nfts.length);
+    },
 
     fixUrl(url) {
       if (url.startsWith("ipfs")) {
@@ -140,17 +200,84 @@ export default {
         );
       }
     },
+
+    checkApproval() {
+      this.getTokenInstance.methods
+        .isApprovedForAll(this.getUserAccount, contract.STAKING_ADDR)
+        .call()
+        .then((response) => {
+          console.log("is approved? " + response);
+          this.SET_APPROVAL(response);
+        });
+    },
+
+    onApproval() {
+      this.getTokenInstance.methods
+        .setApprovalForAll(contract.STAKING_ADDR, true)
+        .send({
+          from: this.getUserAccount,
+          to: contract.TOKEN_ADDR,
+        })
+        .on("transactionHash", (hash) => {
+          console.log("Transaction Hash: ", hash);
+          this.txSubmitted = true;
+          this.$moshaToast("Transaction has been submitted", {
+            showIcon: "true",
+            position: "top-center",
+            timeout: 4000,
+            type: "info",
+            transition: "bounce",
+            toastBackgroundColor: "#3B82F6",
+          });
+        })
+        .on("receipt", (receipt) => {
+          console.log("Receipt: ", receipt);
+          this.checkApproval();
+          this.txSubmitted = false;
+          this.$moshaToast("Approval successful!", {
+            showIcon: "true",
+            position: "top-center",
+            timeout: 4000,
+            type: "success",
+            transition: "bounce",
+            hideProgressBar: "true",
+          });
+        })
+        .on("error", (error) => {
+          console.log("Error: ", error);
+        });
+    },
+    toggleLoading() {
+      this.loading = false;
+    },
   },
   computed: {
-    ...mapGetters(["getUserAccount"]),
+    ...mapGetters([
+      "getUserAccount",
+      "getWeb3",
+      "getIsApproved",
+      "getTokenInstance",
+      "getStakingInstance",
+    ]),
     sortedNfts() {
-        return this.nfts.sort((a, b) => {
-           return a.tokenId - b.tokenId
-        })
-    }
+      return this.nfts.sort((a, b) => {
+        return a.tokenId - b.tokenId;
+      });
+    },
   },
-  mounted() {
-    this.getNfts();
+  watch: {
+    getTokenInstance(val) {
+      if (val !== null) {
+        this.checkApproval();
+      }
+    },
+    getIsApproved(val) {
+      if (val) {
+        this.getNfts();
+      } else {
+          this.toggleLoading();
+      }
+    },
   },
 };
 </script>
