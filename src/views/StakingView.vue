@@ -3,7 +3,7 @@
     <h1 class="titles text-2xl text-left text-slate-500">Staking Dashboard</h1>
   </div>
   <div
-    v-if="getUserAccount !== null"
+    v-if="getUserAccount && getWeb3"
     class="staking max-w-7xl mx-auto px-4 sm:px-6 md:px-8"
   >
     <!-- Replace with your content -->
@@ -136,7 +136,7 @@ export default {
   },
   methods: {},
   computed: {
-    ...mapGetters(["getUserAccount", "getNftCount"]),
+    ...mapGetters(["getUserAccount", "getNftCount", "getWeb3"]),
   },
 };
 </script>

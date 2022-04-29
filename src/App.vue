@@ -96,7 +96,7 @@ import { ref } from "vue";
 import { mapActions, mapGetters } from "vuex";
 import Web3 from "web3";
 import Moralis from "@/plugins/moralis";
-import contract from '@/contracts/ABIs'
+import contract from "@/contracts/ABIs";
 import ConnectWallet from "@/components/ConnectWallet.vue";
 import {
   Dialog,
@@ -167,7 +167,7 @@ export default {
       "SET_USER_ACCOUNT",
       "SET_TOKEN_INSTANCE",
       "SET_STAKING_INSTANCE",
-      "SET_NFTS"
+      "SET_NFTS",
     ]),
     applyDarkMode() {
       this.darkMode = !this.darkMode;
@@ -175,24 +175,43 @@ export default {
     },
   },
   computed: {
-      ...mapGetters([
-          "getWeb3"
-      ]),
+    ...mapGetters(["getWeb3"]),
     notHome() {
       return this.$route.name !== "home";
     },
   },
+//   beforeMount() {
+      
+//     // window.ethereum.on("accountsChanged", async () => {
+//     //     localStorage.removeItem('userAccount')
+//     //   this.SET_USER_ACCOUNT(null);
+//     //   this.SET_NFTS(null);
+//     //   this.SET_WEB3(null)
+//     // });
+//     // window.ethereum.on("disconnect", async () => {
+//     //   localStorage.removeItem('userAccount')
+//     //   this.SET_USER_ACCOUNT(null);
+//     //   this.SET_NFTS(null);
+//     //   this.SET_WEB3(null)
+//     // });
+//   }
   async beforeMount() {
-    window.ethereum.on("accountsChanged", async () => {
-      await Moralis.User.logOut();
-      this.SET_USER_ACCOUNT(null);
-      this.SET_NFTS(null)
-    });
-    window.ethereum.on("disconnect", async () => {
-      await Moralis.User.logOut();
-      this.SET_USER_ACCOUNT(null);
-      this.SET_NFTS(null)
-    });
+    await Moralis.enableWeb3();
+    const web3 = new Web3(Moralis.provider);
+    this.SET_WEB3(web3);
+
+    let TOKEN_INSTANCE = new web3.eth.Contract(
+      contract.TOKEN_ABI,
+      contract.TOKEN_ADDR
+    );
+    let STAKING_INSTANCE = new web3.eth.Contract(
+      contract.STAKING_ABI,
+      contract.STAKING_ADDR
+    );
+
+    this.SET_TOKEN_INSTANCE(TOKEN_INSTANCE);
+    this.SET_STAKING_INSTANCE(STAKING_INSTANCE);
+
   },
 };
 </script>

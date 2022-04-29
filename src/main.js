@@ -21,8 +21,4 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt, faCircleCheck, faWallet,
      faStarShooting, faHexagonExclamation, faStars, faSpinnerThird, faStar)
 
-store.subscribe((mutation, state) => {
-    localStorage.setItem('userAccount', JSON.stringify(state.userAccount))
-})
-
 createApp(App).provide('moralis', Moralis).use(Vuex).use(store).use(moshaToast).component('font-awesome-icon', FontAwesomeIcon).use(router).mount('#app')

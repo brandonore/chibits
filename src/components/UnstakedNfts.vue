@@ -51,7 +51,7 @@
     <!-- loading -->
     <div
       class="py-24 border-2 rounded-xl"
-      v-else-if="getUserAccount && !getIsApproved && loading"
+      v-else-if="getUserAccount && loading"
     >
       <font-awesome-icon
         :icon="starIcon"
@@ -60,6 +60,18 @@
       />
       <h1 class="mt-2 text-xl font-medium text-slate-500">Loading...</h1>
       <p class="mb-6 mt-1 text-sm text-slate-500">Please be patient!</p>
+    </div>
+    <!-- no nfts found -->
+    <div v-else-if="getUserAccount && getBalance == 0" class="py-24 border-2 rounded-xl">
+      <font-awesome-icon
+        :icon="starsIcon"
+        class="text-slate-400 mx-auto h-12 w-12"
+        aria-hidden="true"
+      />
+      <h1 class="mt-2 text-xl font-medium text-slate-500">No Chibits found!</h1>
+      <p class="mb-6 mt-1 text-sm text-slate-500">
+        Visit the official OpenSea collection
+      </p>
     </div>
     <!-- approve wallet -->
     <div
@@ -72,7 +84,7 @@
         aria-hidden="true"
       />
       <h1 class="mt-2 text-xl font-medium text-slate-500">
-        Approve wallet for staking
+        Chibits found! Approve wallet for staking
       </h1>
       <p class="mb-6 mt-1 text-sm text-slate-500">
         This only needs to be done once!
@@ -113,18 +125,7 @@
         Approving...
       </button>
     </div>
-    <!-- no nfts found -->
-    <div v-else class="py-24 border-2 rounded-xl">
-      <font-awesome-icon
-        :icon="starsIcon"
-        class="text-slate-400 mx-auto h-12 w-12"
-        aria-hidden="true"
-      />
-      <h1 class="mt-2 text-xl font-medium text-slate-500">No Chibits found!</h1>
-      <p class="mb-6 mt-1 text-sm text-slate-500">
-        Visit the official OpenSea collection
-      </p>
-    </div>
+    
   </div>
 </template>
 
@@ -145,11 +146,11 @@ export default {
       starsIcon: ["fas", "stars"],
       starIcon: ["fas", "star"],
       txSubmitted: false,
-      loading: false,
+      loading: true,
     };
   },
   methods: {
-    ...mapActions(["SET_NFTS", "SET_APPROVAL"]),
+    ...mapActions(["SET_NFTS", "SET_APPROVAL", "SET_BALANCE"]),
 
     async getNfts() {
       const tokenAddr = contract.TOKEN_ADDR;
@@ -162,11 +163,10 @@ export default {
       let x = new Promise((resolve, reject) => {
         if (nfts.result.length > 0) {
           nfts.result.forEach((n) => {
-            let metadata = JSON.parse(n.metadata);
-            let url = this.fixUrl(metadata.image);
+            let id = JSON.parse(n.token_id)
             this.nfts.push({
-              tokenId: metadata.edition,
-              url,
+              tokenId: id,
+              url: require(`../assets/images/nfts/${id}.png`)
             });
             if (this.nfts.length === nfts.result.length) resolve();
           });
@@ -201,6 +201,21 @@ export default {
       }
     },
 
+    checkBalance() {
+        this.getTokenInstance.methods
+        .balanceOf(this.getUserAccount)
+        .call()
+        .then((response) => {
+            console.log('balance: ' + response)
+            this.SET_BALANCE(response)
+            if(response > 0) {
+                this.checkApproval()
+            } else {
+                this.loading = false
+            }
+        })
+    },
+
     checkApproval() {
       this.getTokenInstance.methods
         .isApprovedForAll(this.getUserAccount, contract.STAKING_ADDR)
@@ -208,6 +223,11 @@ export default {
         .then((response) => {
           console.log("is approved? " + response);
           this.SET_APPROVAL(response);
+          if(response) {
+              this.getNfts()
+          } else {
+              this.loading = false
+          }
         });
     },
 
@@ -232,7 +252,7 @@ export default {
         })
         .on("receipt", (receipt) => {
           console.log("Receipt: ", receipt);
-          this.checkApproval();
+          this.checkBalance();
           this.txSubmitted = false;
           this.$moshaToast("Approval successful!", {
             showIcon: "true",
@@ -258,6 +278,7 @@ export default {
       "getIsApproved",
       "getTokenInstance",
       "getStakingInstance",
+      "getBalance"
     ]),
     sortedNfts() {
       return this.nfts.sort((a, b) => {
@@ -265,19 +286,8 @@ export default {
       });
     },
   },
-  watch: {
-    getTokenInstance(val) {
-      if (val !== null) {
-        this.checkApproval();
-      }
-    },
-    getIsApproved(val) {
-      if (val) {
-        this.getNfts();
-      } else {
-          this.toggleLoading();
-      }
-    },
+  mounted() {
+      this.checkBalance()
   },
 };
 </script>

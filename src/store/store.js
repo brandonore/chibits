@@ -7,6 +7,7 @@ const store = createStore({
     tokenInstance: null,
     stakingInstance: null,
     nfts: null,
+    balance: null,
     isApproved: false
   },
   mutations: {
@@ -25,13 +26,11 @@ const store = createStore({
     SET_NFTS: (state, payload) => {
       state.nfts = payload;
     },
+    SET_BALANCE: (state, payload) => {
+        state.balance = payload;
+      },
     SET_APPROVAL: (state, payload) => {
         state.isApproved = payload
-    },
-    INIT_STORE(state) {
-      if (localStorage.getItem("userAccount")) {
-        state.userAccount = JSON.parse(localStorage.userAccount);
-      }
     },
   },
   getters: {
@@ -49,6 +48,9 @@ const store = createStore({
     },
     getNftCount: (state) => {
       return state.nfts;
+    },
+    getBalance: (state) => {
+        return state.balance
     },
     getIsApproved: (state) => {
         return state.isApproved;
@@ -70,6 +72,9 @@ const store = createStore({
     SET_NFTS({ commit }, payload) {
       commit("SET_NFTS", payload);
     },
+    SET_BALANCE({ commit }, payload) {
+        commit("SET_BALANCE", payload);
+      },
     SET_APPROVAL({ commit }, payload) {
         commit("SET_APPROVAL", payload)
     }
