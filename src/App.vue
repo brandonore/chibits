@@ -82,8 +82,8 @@
         </div>
       </div>
 
-      <main class="dark:bg-gray-900 dark:text-slate-500">
-        <div class="pt-6 bg-girl">
+      <main class="dark:bg-gray-900 relative dark:text-slate-500">
+        <div class="pt-6 bg-girl h-full">
           <router-view></router-view>
         </div>
       </main>
@@ -180,6 +180,22 @@ export default {
       return this.$route.name !== "home";
     },
   },
+  watch: {
+      darkMode(val) {
+          if(val) {
+              document.querySelector('html').classList.add('dark')
+          } else {
+              document.querySelector('html').classList.remove('dark')
+          }
+      }
+  },
+  mounted() {
+      if(localStorage.getItem('darkMode') == 'true') {
+          document.querySelector('html').classList.add('dark')
+      } else {
+          document.querySelector('html').classList.remove('dark')
+      }
+  },
 //   beforeMount() {
       
 //     // window.ethereum.on("accountsChanged", async () => {
@@ -217,6 +233,7 @@ export default {
 </script>
 
 <style>
+
 * {
   font-family: "CeraRegular", sans-serif;
 }
@@ -226,7 +243,15 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   /* color: #94a3b8; */
+  max-height: 100vh;
 }
+
+/* main {
+    height: 100%;
+    max-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+} */
 
 .router-link-exact-active {
   background-color: #64748b;

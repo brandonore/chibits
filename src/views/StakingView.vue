@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-7xl mx-auto px-4 pb-8 sm:px-6 md:px-8 h-full">
+  <div class="max-w-7xl mx-auto px-4 pb-8 sm:px-6 md:px-8">
     <h1 class="titles text-2xl text-left text-slate-500">Staking Dashboard</h1>
   </div>
   <div class="staking max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
@@ -9,7 +9,7 @@
       <div
         v-for="card in cards"
         :key="card.id"
-        class="overflow-hidden rounded-lg"
+        class=" rounded-lg"
         :class="card.bg"
       >
         <div
@@ -88,7 +88,7 @@
       <UnstakedNfts />
     </div>
 
-    <div v-else class="py-24 border-2 rounded-xl">
+    <div v-else class="py-24 mb-8 border-2 dark:border-slate-500 rounded-xl">
       <font-awesome-icon
         :icon="starIcon"
         class="text-orange-300 mx-auto h-12 w-12"

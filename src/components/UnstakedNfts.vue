@@ -1,5 +1,5 @@
 <template>
-  <div class="md:mt-8 pt-4 pb-0">
+  <div class="md:mt-8 pt-4 mb-8">
     <div class="flex items-center justify-between pt-4 pb-8">
       <h1 class="titles text-2xl text-left text-slate-500">Unstaked NFTs</h1>
       <span class="pr-5">{{ selectedNfts }}</span>
@@ -13,7 +13,7 @@
       </button>
     </div>
     <!-- unstaked nfts -->
-    <div v-if="getUserAccount && getIsApproved && nfts.length" class="">
+    <div v-if="getUserAccount && getIsApproved && nfts.length">
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         <div
           v-for="nft in sortedNfts"
@@ -50,7 +50,7 @@
     </div>
     <!-- loading -->
     <div
-      class="py-24 border-2 rounded-xl"
+      class="py-24 border-2 dark:border-slate-500 rounded-xl"
       v-else-if="getUserAccount && loading"
     >
       <font-awesome-icon
@@ -62,7 +62,7 @@
       <p class="mb-6 mt-1 text-sm text-slate-500">Please be patient!</p>
     </div>
     <!-- no nfts found -->
-    <div v-else-if="getUserAccount && getBalance == 0" class="py-24 border-2 rounded-xl">
+    <div v-else-if="getUserAccount && getBalance == 0" class="py-24 border-2 dark:border-slate-500 rounded-xl">
       <font-awesome-icon
         :icon="starsIcon"
         class="text-slate-400 mx-auto h-12 w-12"
@@ -76,7 +76,7 @@
     <!-- approve wallet -->
     <div
       v-else-if="getUserAccount && !getIsApproved && !loading"
-      class="py-24 border-2 rounded-xl"
+      class="py-24 border-2 dark:border-slate-500 rounded-xl"
     >
       <font-awesome-icon
         :icon="starsIcon"
