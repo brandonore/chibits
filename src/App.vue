@@ -69,11 +69,11 @@
             <button
               @click="applyDarkMode"
               type="button"
-              class="text-gray-400 hover:text-gray-500"
+              class="text-slate-500 hover:text-gray-500"
             >
               <SunIcon
                 v-if="darkMode"
-                class="h-6 w-6 text-gray-400"
+                class="h-6 w-6 text-slate-500"
                 aria-hidden="true"
               />
               <MoonIcon v-else class="h-6 w-6" aria-hidden="true" />
@@ -225,12 +225,12 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #94a3b8;
+  /* color: #94a3b8; */
 }
 
 .router-link-exact-active {
-  background-color: #8a5cf638;
-  color: #8b5cf6;
+  background-color: #64748b;
+  color: white;
 }
 
 .logo-text {

@@ -5,7 +5,7 @@
       <button
         @click.prevent="logOut"
         type="button"
-        class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-rose-500 bg-[#f43f5d2d] hover:bg-rose-500 hover:text-white transition-all linear"
+        class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-gradient-to-tl from-pink-500  to-rose-500 hover:opacity-75 hover:text-white transition-all linear"
       >
         <font-awesome-icon
           :icon="disconnectIcon"
@@ -22,7 +22,7 @@
       <button
         @click.prevent="login"
         type="button"
-        class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-violet-500 bg-[#8a5cf638] hover:bg-violet-500 hover:text-white transition-all linear"
+        class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-gradient-to-tl from-pink-500  to-rose-500 hover:opacity-75 hover:text-white transition-all linear"
       >
         <font-awesome-icon
           :icon="walletIcon"

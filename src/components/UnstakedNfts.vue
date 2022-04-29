@@ -1,15 +1,15 @@
 <template>
-  <div class="md:mt-8 px-4 pt-4 pb-0">
+  <div class="md:mt-8 pt-4 pb-0">
     <div class="flex items-center justify-between pt-4 pb-8">
       <h1 class="titles text-2xl text-left text-slate-500">Unstaked NFTs</h1>
       <span class="pr-5">{{ selectedNfts }}</span>
       <button
         @click.prevent="checkNft"
         type="button"
-        class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-l from-[#FFBE96] to-[#FE7096] transition-all linear hover:opacity-75"
+        class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500  to-rose-500 transition-all linear hover:opacity-75"
       >
-        Stake
-        <span v-if="selectedNfts.length">({{ selectedNfts.length }})</span>
+        <span v-if="!selectedNfts.length">Stake All</span>
+        <span v-else>Stake ({{ selectedNfts.length }})</span>
       </button>
     </div>
     <!-- unstaked nfts -->
@@ -93,7 +93,7 @@
         v-if="!txSubmitted"
         @click.prevent="onApproval"
         type="button"
-        class="inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-violet-500 transition-all linear hover:opacity-75"
+        class="inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
       >
         Approve
       </button>
