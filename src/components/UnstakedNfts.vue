@@ -85,7 +85,7 @@
     >
       <font-awesome-icon
         :icon="starIcon"
-        class="text-slate-400 mx-auto h-12 w-12 animate-spin"
+        class="text-slate-400 mx-auto h-12 w-12 animate-bounce"
         aria-hidden="true"
       />
       <h1 class="mt-2 text-xl font-medium text-slate-500">Loading...</h1>
@@ -347,6 +347,14 @@ export default {
         return a.tokenId - b.tokenId;
       });
     },
+  },
+  watch: {
+      getUnstakedReload(val) {
+          if(val) {
+              this.checkBalance()
+              this.SET_UNSTAKED_RELOAD(false)
+          }
+      }
   },
   mounted() {
     this.checkBalance();

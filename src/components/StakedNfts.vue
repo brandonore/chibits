@@ -5,7 +5,7 @@
       <span class="pr-5">{{ selectedNfts }}</span>
       <button
         v-if="!txSubmitted"
-        @click.prevent="onUnStake"
+        @click.prevent="onUnstake"
         type="button"
         class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
       >
@@ -37,7 +37,7 @@
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
           ></path>
         </svg>
-        Staking...
+        Unstaking...
       </button>
     </div>
     <!-- unstaked nfts -->
@@ -85,7 +85,7 @@
     >
       <font-awesome-icon
         :icon="starIcon"
-        class="text-slate-400 mx-auto h-12 w-12 animate-spin"
+        class="text-slate-400 mx-auto h-12 w-12 animate-bounce"
         aria-hidden="true"
       />
       <h1 class="mt-2 text-xl font-medium text-slate-500">Loading...</h1>
@@ -143,11 +143,6 @@ export default {
         );
       }
     },
-
-    onUnStake() {
-      console.log("unstake");
-    },
-
     getStakedTokens() {
       this.getStakingInstance.methods
         .depositsOf(this.getUserAccount)
@@ -155,8 +150,9 @@ export default {
           from: this.getUserAccount,
         })
         .then((tokenIds) => {
-            this.stakedNfts = []
-            this.selectedNfts = []
+          this.stakedNfts = [];
+          this.selectedNfts = [];
+          this.txSubmitted = false;
           console.log("staked tokens: " + tokenIds);
           if (tokenIds.length) {
             tokenIds.forEach((n) => {
@@ -166,8 +162,45 @@ export default {
               });
             });
           } else {
-              this.loading = false
+            this.loading = false;
           }
+        });
+    },
+    onUnstake() {
+      const ids = this.selectedNfts;
+      this.getStakingInstance.methods
+        .withdraw(ids)
+        .send({
+          from: this.getUserAccount,
+          to: contract.STAKING_ADDR,
+        })
+        .on("transactionHash", (hash) => {
+          console.log("Transaction Hash: ", hash);
+          this.txSubmitted = true;
+          this.$moshaToast("Transaction has been submitted", {
+            showIcon: "true",
+            position: "top-center",
+            timeout: 4000,
+            type: "info",
+            transition: "bounce",
+            toastBackgroundColor: "#0ea5e9",
+          });
+        })
+        .on("receipt", (receipt) => {
+          console.log("Receipt: ", receipt);
+        this.SET_UNSTAKED_RELOAD(true);
+          this.getStakedTokens()
+          this.$moshaToast("Approval successful!", {
+            showIcon: "true",
+            position: "top-center",
+            timeout: 4000,
+            type: "success",
+            transition: "bounce",
+            hideProgressBar: "true",
+          });
+        })
+        .on("error", (error) => {
+          console.log("Error: ", error);
         });
     },
   },
@@ -178,7 +211,7 @@ export default {
       "getTokenInstance",
       "getStakingInstance",
       "getStakedReload",
-      "getUnstakedReload"
+      "getUnstakedReload",
     ]),
     sortedNfts() {
       return this.stakedNfts.sort((a, b) => {
@@ -190,13 +223,13 @@ export default {
     this.getStakedTokens();
   },
   watch: {
-      getStakedReload(val) {
-          if(val) {
-              this.getStakedTokens()
-              this.SET_STAKED_RELOAD(false)
-          }
+    getStakedReload(val) {
+      if (val) {
+        this.getStakedTokens();
+        this.SET_STAKED_RELOAD(false);
       }
-  }
+    },
+  },
 };
 </script>
 

@@ -23,7 +23,9 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
+/src/assets/
 /src/assets/images/nfts
+/src/assets/images/other
 /src/fonts/
 
 chibits.rar

@@ -60,14 +60,12 @@ export default {
       "SET_USER_ACCOUNT",
       "SET_TOKEN_INSTANCE",
       "SET_STAKING_INSTANCE",
-      "SET_NFTS",
     ]),
     logOut() {
       if (!this.getUserAccount) {
         return;
       } else {
         this.SET_USER_ACCOUNT(null);
-        this.SET_NFTS(null);
       }
     },
     // async onConnect() {
