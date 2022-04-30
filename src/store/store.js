@@ -6,9 +6,10 @@ const store = createStore({
     userAccount: null,
     tokenInstance: null,
     stakingInstance: null,
-    nfts: null,
     balance: null,
-    isApproved: false
+    isApproved: false,
+    stakedReload: false,
+    unstakedReload: false
   },
   mutations: {
     SET_WEB3: (state, payload) => {
@@ -23,14 +24,17 @@ const store = createStore({
     SET_STAKING_INSTANCE: (state, payload) => {
       state.stakingInstance = payload;
     },
-    SET_NFTS: (state, payload) => {
-      state.nfts = payload;
-    },
     SET_BALANCE: (state, payload) => {
         state.balance = payload;
       },
     SET_APPROVAL: (state, payload) => {
         state.isApproved = payload
+    },
+    SET_STAKED_RELOAD: (state, payload) => {
+        state.stakedReload = payload
+    },
+    SET_UNSTAKED_RELOAD: (state, payload) => {
+        state.unstakedReload = payload
     },
   },
   getters: {
@@ -46,14 +50,17 @@ const store = createStore({
     getStakingInstance: (state) => {
       return state.stakingInstance;
     },
-    getNftCount: (state) => {
-      return state.nfts;
-    },
     getBalance: (state) => {
         return state.balance
     },
     getIsApproved: (state) => {
         return state.isApproved;
+    },
+    getStakedReload: (state) => {
+        return state.stakedReload
+    },
+    getUnstakedReload: (state) => {
+        return state.unstakedReload
     }
   },
   actions: {
@@ -69,14 +76,17 @@ const store = createStore({
     SET_STAKING_INSTANCE({ commit }, payload) {
       commit("SET_STAKING_INSTANCE", payload);
     },
-    SET_NFTS({ commit }, payload) {
-      commit("SET_NFTS", payload);
-    },
     SET_BALANCE({ commit }, payload) {
         commit("SET_BALANCE", payload);
       },
     SET_APPROVAL({ commit }, payload) {
         commit("SET_APPROVAL", payload)
+    },
+    SET_STAKED_RELOAD({ commit }, payload) {
+        commit("SET_STAKED_RELOAD", payload)
+    },
+    SET_UNSTAKED_RELOAD({ commit }, payload) {
+        commit("SET_UNSTAKED_RELOAD", payload)
     }
   },
 });

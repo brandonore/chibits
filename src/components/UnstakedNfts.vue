@@ -4,26 +4,56 @@
       <h1 class="titles text-2xl text-left text-slate-500">Unstaked NFTs</h1>
       <span class="pr-5">{{ selectedNfts }}</span>
       <button
-        @click.prevent="checkNft"
+        v-if="!txSubmitted"
+        @click.prevent="onStake"
         type="button"
-        class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500  to-rose-500 transition-all linear hover:opacity-75"
+        class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
       >
         <span v-if="!selectedNfts.length">Stake All</span>
         <span v-else>Stake ({{ selectedNfts.length }})</span>
       </button>
+      <button
+        v-else
+        type="button"
+        disabled
+        class="cursor-not-allowed disabled:opacity-75 inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
+      >
+        <svg
+          class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        Staking...
+      </button>
     </div>
     <!-- unstaked nfts -->
-    <div v-if="getUserAccount && getIsApproved && nfts.length">
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+    <div v-if="getUserAccount && getIsApproved && nfts.length && !txSubmitted">
+      <div
+        class="unstaked-container rounded-lg grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
+      >
         <div
           v-for="nft in sortedNfts"
           :key="nft.tokenId"
-          class="nft-card overflow-hidden"
+          class="rounded-lg nft-card overflow-hidden"
         >
           <div
             class="flex-col relative items-center justify-evenly"
             :class="{ active: nft.active }"
-            @click="getNftId(nft)"
+            @click="!txSubmitted && getNftId(nft)"
           >
             <span
               v-show="nft.active"
@@ -51,7 +81,7 @@
     <!-- loading -->
     <div
       class="py-24 border-2 dark:border-slate-500 rounded-xl"
-      v-else-if="getUserAccount && loading"
+      v-else-if="(getUserAccount && loading) || (getUserAccount && txSubmitted)"
     >
       <font-awesome-icon
         :icon="starIcon"
@@ -62,7 +92,10 @@
       <p class="mb-6 mt-1 text-sm text-slate-500">Please be patient!</p>
     </div>
     <!-- no nfts found -->
-    <div v-else-if="getUserAccount && getBalance == 0" class="py-24 border-2 dark:border-slate-500 rounded-xl">
+    <div
+      v-else-if="getUserAccount && getBalance == 0"
+      class="py-24 border-2 dark:border-slate-500 rounded-xl"
+    >
       <font-awesome-icon
         :icon="starsIcon"
         class="text-slate-400 mx-auto h-12 w-12"
@@ -101,7 +134,7 @@
         v-else
         type="button"
         disabled
-        class="cursor-not-allowed disabled:opacity-75 inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-violet-500"
+        class="cursor-not-allowed disabled:opacity-75 inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
       >
         <svg
           class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -125,15 +158,13 @@
         Approving...
       </button>
     </div>
-    
   </div>
 </template>
 
 <script>
-import Web3 from "web3";
-import Moralis from "../plugins/moralis";
 import contract from "@/contracts/ABIs.json";
 import { mapActions, mapGetters } from "vuex";
+import { createAlchemyWeb3 } from '@alch/alchemy-web3'
 
 export default {
   name: "StakedNfts",
@@ -150,34 +181,24 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["SET_NFTS", "SET_APPROVAL", "SET_BALANCE"]),
+    ...mapActions(["SET_APPROVAL", "SET_BALANCE", "SET_STAKED_RELOAD", "SET_UNSTAKED_RELOAD"]),
 
     async getNfts() {
       const tokenAddr = contract.TOKEN_ADDR;
-      const options = {
-        chain: "rinkeby",
-        address: this.getUserAccount,
-        token_address: tokenAddr,
-      };
-      let nfts = await Moralis.Web3API.account.getNFTsForContract(options);
-      let x = new Promise((resolve, reject) => {
-        if (nfts.result.length > 0) {
-          nfts.result.forEach((n) => {
-            let id = JSON.parse(n.token_id)
-            this.nfts.push({
+      const aWeb3 = createAlchemyWeb3(process.env.VUE_APP_ALCHEMY_SERVER_URL + process.env.VUE_APP_ALCHEMY_API_KEY)
+      this.txSubmitted = false
+      let nfts = await aWeb3.alchemy.getNfts({
+          owner: this.getUserAccount,
+          contractAddresses: [tokenAddr],
+          withMetadata: true
+      })
+      nfts.ownedNfts.forEach((n) => {
+          let id = Number(n.id.tokenId)
+          this.nfts.push({
               tokenId: id,
               url: require(`../assets/images/nfts/${id}.png`)
-            });
-            if (this.nfts.length === nfts.result.length) resolve();
-          });
-        }
-      });
-      x.then(() => {
-        this.SET_NFTS(this.nfts);
-      });
-    },
-    checkNft() {
-      console.log(this.nfts.length);
+          })
+      })
     },
 
     fixUrl(url) {
@@ -202,18 +223,21 @@ export default {
     },
 
     checkBalance() {
-        this.getTokenInstance.methods
+      this.getTokenInstance.methods
         .balanceOf(this.getUserAccount)
         .call()
         .then((response) => {
-            console.log('balance: ' + response)
-            this.SET_BALANCE(response)
-            if(response > 0) {
-                this.checkApproval()
-            } else {
-                this.loading = false
-            }
-        })
+          console.log("balance: " + response);
+          this.nfts = [];
+          this.selectedNfts = [];
+          this.SET_BALANCE(response);
+          if (response > 0) {
+            this.checkApproval();
+          } else {
+            this.loading = false;
+            this.txSubmitted = false;
+          }
+        });
     },
 
     checkApproval() {
@@ -223,10 +247,10 @@ export default {
         .then((response) => {
           console.log("is approved? " + response);
           this.SET_APPROVAL(response);
-          if(response) {
-              this.getNfts()
+          if (response) {
+            this.getNfts();
           } else {
-              this.loading = false
+            this.loading = false;
           }
         });
     },
@@ -247,12 +271,11 @@ export default {
             timeout: 4000,
             type: "info",
             transition: "bounce",
-            toastBackgroundColor: "#3B82F6",
+            toastBackgroundColor: "#0ea5e9",
           });
         })
         .on("receipt", (receipt) => {
           console.log("Receipt: ", receipt);
-          this.checkBalance();
           this.txSubmitted = false;
           this.$moshaToast("Approval successful!", {
             showIcon: "true",
@@ -270,6 +293,43 @@ export default {
     toggleLoading() {
       this.loading = false;
     },
+    onStake() {
+      const ids = this.selectedNfts;
+      this.getStakingInstance.methods
+        .deposit(ids)
+        .send({
+          from: this.getUserAccount,
+          to: contract.STAKING_ADDR,
+        })
+        .on("transactionHash", (hash) => {
+          console.log("Transaction Hash: ", hash);
+          this.txSubmitted = true;
+          this.$moshaToast("Transaction has been submitted", {
+            showIcon: "true",
+            position: "top-center",
+            timeout: 4000,
+            type: "info",
+            transition: "bounce",
+            toastBackgroundColor: "#0ea5e9",
+          });
+        })
+        .on("receipt", (receipt) => {
+          console.log("Receipt: ", receipt);
+          this.checkBalance();
+          this.SET_STAKED_RELOAD(true)
+          this.$moshaToast("Approval successful!", {
+            showIcon: "true",
+            position: "top-center",
+            timeout: 4000,
+            type: "success",
+            transition: "bounce",
+            hideProgressBar: "true",
+          });
+        })
+        .on("error", (error) => {
+          console.log("Error: ", error);
+        });
+    },
   },
   computed: {
     ...mapGetters([
@@ -278,7 +338,9 @@ export default {
       "getIsApproved",
       "getTokenInstance",
       "getStakingInstance",
-      "getBalance"
+      "getBalance",
+      "getStakedReload",
+      "getUnstakedReload"
     ]),
     sortedNfts() {
       return this.nfts.sort((a, b) => {
@@ -287,15 +349,15 @@ export default {
     },
   },
   mounted() {
-      this.checkBalance()
+    this.checkBalance();
   },
 };
 </script>
 
-<style scoped>
+<style>
 .active {
   border: 4px solid #8b5cf6;
-  border-radius: 3%;
+  border-radius: 0.75rem;
 }
 .nft-card {
   transition: all 0.1s linear;

@@ -17,13 +17,13 @@
         >
           <dl>
             <dt
-              v-if="card.id === 1 && getNftCount"
+              v-if="card.id === 1 && getBalance"
               class="text-3xl font-bold text-pink-chi truncate"
             >
-              {{ getNftCount.length }}
+              {{ getBalance }}
             </dt>
             <dt
-              v-else-if="card.id === 1 && !getNftCount"
+              v-else-if="card.id === 1 && !getBalance"
               class="text-3xl font-bold text-pink-chi truncate"
             >
               0
@@ -68,7 +68,7 @@
     </div>
 
     <!-- staked nfts -->
-    <div class="md:mt-8 pt-4">
+    <div v-if="!getUserAccount" class="md:mt-8 pt-4">
       <div class="flex items-center justify-between pt-4 pb-8">
         <h1 class="titles text-2xl text-left text-slate-500">Staked NFTs</h1>
         <button
@@ -79,11 +79,9 @@
           <!-- <span v-if="selectedNfts.length">({{ selectedNfts.length }})</span> -->
         </button>
       </div>
-      <div v-if="getUserAccount && getWeb3">
-          <StakedNfts />
-      </div>
     </div>
     <div v-if="getUserAccount && getWeb3">
+        <StakedNfts />
       <!-- unstaked nfts -->
       <UnstakedNfts />
     </div>
@@ -148,11 +146,12 @@ export default {
           bg: "card-3",
         },
       ],
+      stakedReload: false,
+      unstakedReload: false
     };
   },
-  methods: {},
   computed: {
-    ...mapGetters(["getUserAccount", "getNftCount", "getWeb3"]),
+    ...mapGetters(["getUserAccount", "getBalance", "getWeb3"]),
   },
 };
 </script>
@@ -166,31 +165,26 @@ export default {
   font-family: "CeraLight", sans-serif;
   text-transform: uppercase;
 }
-/* .card-bg {
-  background-image: url("../assets/images/other/circles.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
-} */
 .card-1 {
-    background-image: url('../assets/images/other/card-1.png');
+    background-image: url('../assets/images/other/card-1a.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
 }
 .card-2 {
-    background-image: url('../assets/images/other/card-2.png');
+    background-image: url('../assets/images/other/card-2a.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
 }
 .card-3 {
-    background-image: url('../assets/images/other/card-3.png');
+    background-image: url('../assets/images/other/card-3a.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
 }
 .card-4 {
-    background-image: url('../assets/images/other/card-4.png');
+    background-image: url('../assets/images/other/card-4a.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
