@@ -9,7 +9,7 @@
       <div
         v-for="card in cards"
         :key="card.id"
-        class=" rounded-lg"
+        class="rounded-lg"
         :class="card.bg"
       >
         <div
@@ -17,25 +17,23 @@
         >
           <dl>
             <dt
-              v-if="card.id === 1 && getBalance"
+              v-if="card.id === 1"
               class="text-3xl font-bold text-pink-chi truncate"
             >
-              {{ getBalance }}
+              {{ Number(getBalance) + Number(getStakedBalance.length) }}
             </dt>
             <dt
-              v-else-if="card.id === 1 && !getBalance"
+              v-if="card.id === 2"
               class="text-3xl font-bold text-pink-chi truncate"
             >
-              0
+              <span v-if="getStakedBalance.length >= 5"> 5% </span>
+              <span v-else> 0% </span>
             </dt>
             <dt
-              v-else-if="card.id === 3"
+              v-if="card.id === 3"
               class="text-3xl font-bold text-pink-chi truncate"
             >
-              {{ card.amount }}%
-            </dt>
-            <dt v-else class="text-3xl font-bold text-pink-chi truncate">
-              {{ card.amount }}
+            {{ totalRewards }}
             </dt>
             <dd>
               <div class="text-sm font-medium text-white">
@@ -58,6 +56,7 @@
             </dd>
           </dl>
           <button
+            @click.prevent="getRewards"
             type="button"
             class="w-1/3 p-3 text-center text-sm font-extrabold rounded-md text-[#DE14E9] bg-pink-chi transition-all linear hover:opacity-75"
           >
@@ -81,7 +80,7 @@
       </div>
     </div>
     <div v-if="getUserAccount && getWeb3">
-        <StakedNfts />
+      <StakedNfts />
       <!-- unstaked nfts -->
       <UnstakedNfts />
     </div>
@@ -105,11 +104,10 @@
 </template>
 
 <script>
+import contract from "@/contracts/ABIs.json";
 import ConnectWallet from "@/components/ConnectWallet.vue";
 import StakedNfts from "@/components/StakedNfts.vue";
 import { mapActions, mapGetters } from "vuex";
-import Moralis from "../plugins/moralis";
-import contract from "@/contracts/ABIs.json";
 import UnstakedNfts from "../components/UnstakedNfts.vue";
 
 export default {
@@ -126,32 +124,102 @@ export default {
       cards: [
         {
           id: 1,
-          title: "Number of NFTs Owned",
-          amount: null,
+          title: "Total Chibits Owned",
           icon: ["far", "hashtag"],
           bg: "card-1",
         },
         {
           id: 2,
-          title: "CHI Earnings Per Day",
-          amount: 350,
+          title: "Current Boost Amount",
           icon: ["far", "coins"],
           bg: "card-2",
         },
         {
           id: 3,
-          title: "Current Boost Amount",
-          amount: 5,
+          title: "Total CHI Earnings Per Day",
           icon: ["far", "bolt"],
           bg: "card-3",
         },
       ],
       stakedReload: false,
-      unstakedReload: false
+      unstakedReload: false,
+      totalTokens: 0,
+      tokenRewards: [],
+      totalRewards: 0
     };
   },
+  methods: {
+    getRewards() {
+        this.tokenRewards = []
+      this.getStakedBalance.forEach((i) => {
+        switch (true) {
+          case i <= 5:
+            this.tokenRewards.push({
+                stakedId: i,
+                rarity: 0,
+                rewardPerDay: 100
+            })
+            break
+          case i > 5 && i <= 10:
+                        this.tokenRewards.push({
+                stakedId: i,
+                rarity: 1,
+                rewardPerDay: 80
+            })
+            break
+            case i > 10 && i <= 15:
+                        this.tokenRewards.push({
+                stakedId: i,
+                rarity: 2,
+                rewardPerDay: 60
+            })
+            break
+            case i > 15 && i <= 20:
+                        this.tokenRewards.push({
+                stakedId: i,
+                rarity: 3,
+                rewardPerDay: 40
+            })
+            break
+            case i > 20 && i <= 25:
+                        this.tokenRewards.push({
+                stakedId: i,
+                rarity: 4,
+                rewardPerDay: 20
+            })
+            break
+        }
+      })
+      this.getTotalRewards()
+    },
+    getTotalRewards() {
+        let result = 0
+        this.tokenRewards.forEach((n) => {
+            result += n.rewardPerDay
+        })
+        if(this.getStakedBalance.length >= 5) {
+            result += result * .05
+            this.totalRewards = result
+        } else {
+            this.totalRewards = result
+        }
+    }
+  },
+  watch: {
+      getStakedBalance(val) {
+          if(val) {
+              this.getRewards()
+          }
+      }
+  },
   computed: {
-    ...mapGetters(["getUserAccount", "getBalance", "getWeb3"]),
+    ...mapGetters([
+      "getUserAccount",
+      "getBalance",
+      "getStakedBalance",
+      "getWeb3",
+      "getStakingInstance",
+    ]),
   },
 };
 </script>
@@ -163,30 +231,30 @@ export default {
 }
 .small-title {
   font-family: "CeraLight", sans-serif;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
 }
 .card-1 {
-    background-image: url('../assets/images/other/card-1a.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+  background-image: url("../assets/images/other/card-1a.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 .card-2 {
-    background-image: url('../assets/images/other/card-2a.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+  background-image: url("../assets/images/other/card-2a.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 .card-3 {
-    background-image: url('../assets/images/other/card-3a.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+  background-image: url("../assets/images/other/card-3a.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 .card-4 {
-    background-image: url('../assets/images/other/card-4a.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+  background-image: url("../assets/images/other/card-4a.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 </style>

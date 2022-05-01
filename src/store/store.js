@@ -6,10 +6,13 @@ const store = createStore({
     userAccount: null,
     tokenInstance: null,
     stakingInstance: null,
-    balance: null,
+    balance: 0,
     isApproved: false,
     stakedReload: false,
-    unstakedReload: false
+    unstakedReload: false,
+    disableStakeButton: false,
+    disableUnstakeButton: false,
+    stakedBalance: 0
   },
   mutations: {
     SET_WEB3: (state, payload) => {
@@ -36,6 +39,15 @@ const store = createStore({
     SET_UNSTAKED_RELOAD: (state, payload) => {
         state.unstakedReload = payload
     },
+    SET_DISABLE_STAKE_BUTTON: (state, payload) => {
+        state.disableStakeButton = payload
+    },
+    SET_DISABLE_UNSTAKE_BUTTON: (state, payload) => {
+        state.disableUnstakeButton = payload
+    },
+    SET_STAKED_BALANCE: (state, payload) => {
+        state.stakedBalance = payload
+    },
   },
   getters: {
     getWeb3: (state) => {
@@ -61,6 +73,15 @@ const store = createStore({
     },
     getUnstakedReload: (state) => {
         return state.unstakedReload
+    },
+    getDisableStakeButton: (state) => {
+        return state.disableStakeButton
+    },
+    getDisableUnstakeButton: (state) => {
+        return state.disableUnstakeButton
+    },
+    getStakedBalance: (state) => {
+        return state.stakedBalance
     }
   },
   actions: {
@@ -87,6 +108,15 @@ const store = createStore({
     },
     SET_UNSTAKED_RELOAD({ commit }, payload) {
         commit("SET_UNSTAKED_RELOAD", payload)
+    },
+    SET_DISABLE_STAKE_BUTTON({ commit }, payload) {
+        commit("SET_DISABLE_STAKE_BUTTON", payload)
+    },
+    SET_DISABLE_UNSTAKE_BUTTON({ commit }, payload) {
+        commit("SET_DISABLE_UNSTAKE_BUTTON", payload)
+    },
+    SET_STAKED_BALANCE({ commit }, payload) {
+        commit("SET_STAKED_BALANCE", payload)
     }
   },
 });

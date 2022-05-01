@@ -1,13 +1,13 @@
 <template>
   <div class="md:mt-8 pt-4 mb-8">
     <div class="flex items-center justify-between pt-4 pb-8">
-      <h1 class="titles text-2xl text-left text-slate-500">Unstaked NFTs</h1>
+      <h1 class="titles text-2xl text-left text-slate-500">Unstaked NFTs ({{ getBalance }})</h1>
       <span class="pr-5">{{ selectedNfts }}</span>
       <button
         v-if="!txSubmitted"
         @click.prevent="onStake"
         type="button"
-        class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
+        class="stake-btn p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
       >
         <span v-if="!selectedNfts.length">Stake All</span>
         <span v-else>Stake ({{ selectedNfts.length }})</span>
@@ -16,7 +16,7 @@
         v-else
         type="button"
         disabled
-        class="cursor-not-allowed disabled:opacity-75 inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
+        class="cursor-not-allowed disabled:opacity-50 inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
       >
         <svg
           class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -164,7 +164,7 @@
 <script>
 import contract from "@/contracts/ABIs.json";
 import { mapActions, mapGetters } from "vuex";
-import { createAlchemyWeb3 } from '@alch/alchemy-web3'
+import { createAlchemyWeb3 } from "@alch/alchemy-web3";
 
 export default {
   name: "StakedNfts",
@@ -178,27 +178,38 @@ export default {
       starIcon: ["fas", "star"],
       txSubmitted: false,
       loading: true,
+      disableBtn: true,
     };
   },
   methods: {
-    ...mapActions(["SET_APPROVAL", "SET_BALANCE", "SET_STAKED_RELOAD", "SET_UNSTAKED_RELOAD"]),
+    ...mapActions([
+      "SET_APPROVAL",
+      "SET_BALANCE",
+      "SET_STAKED_RELOAD",
+      "SET_UNSTAKED_RELOAD",
+      "SET_DISABLE_UNSTAKE_BUTTON",
+      "SET_DISABLE_STAKE_BUTTON",
+    ]),
 
     async getNfts() {
       const tokenAddr = contract.TOKEN_ADDR;
-      const aWeb3 = createAlchemyWeb3(process.env.VUE_APP_ALCHEMY_SERVER_URL + process.env.VUE_APP_ALCHEMY_API_KEY)
-      this.txSubmitted = false
+      const aWeb3 = createAlchemyWeb3(
+        process.env.VUE_APP_ALCHEMY_SERVER_URL +
+          process.env.VUE_APP_ALCHEMY_API_KEY
+      );
+      this.txSubmitted = false;
       let nfts = await aWeb3.alchemy.getNfts({
-          owner: this.getUserAccount,
-          contractAddresses: [tokenAddr],
-          withMetadata: true
-      })
+        owner: this.getUserAccount,
+        contractAddresses: [tokenAddr],
+        withMetadata: false,
+      });
       nfts.ownedNfts.forEach((n) => {
-          let id = Number(n.id.tokenId)
-          this.nfts.push({
-              tokenId: id,
-              url: require(`../assets/images/nfts/${id}.png`)
-          })
-      })
+        let id = Number(n.id.tokenId);
+        this.nfts.push({
+          tokenId: id,
+          url: require(`../assets/images/nfts/${id}.png`),
+        });
+      });
     },
 
     fixUrl(url) {
@@ -231,6 +242,7 @@ export default {
           this.nfts = [];
           this.selectedNfts = [];
           this.SET_BALANCE(response);
+          this.SET_DISABLE_STAKE_BUTTON(false);
           if (response > 0) {
             this.checkApproval();
           } else {
@@ -304,6 +316,7 @@ export default {
         .on("transactionHash", (hash) => {
           console.log("Transaction Hash: ", hash);
           this.txSubmitted = true;
+          this.SET_DISABLE_UNSTAKE_BUTTON(true);
           this.$moshaToast("Transaction has been submitted", {
             showIcon: "true",
             position: "top-center",
@@ -316,7 +329,7 @@ export default {
         .on("receipt", (receipt) => {
           console.log("Receipt: ", receipt);
           this.checkBalance();
-          this.SET_STAKED_RELOAD(true)
+          this.SET_STAKED_RELOAD(true);
           this.$moshaToast("Approval successful!", {
             showIcon: "true",
             position: "top-center",
@@ -330,6 +343,17 @@ export default {
           console.log("Error: ", error);
         });
     },
+    disableStakeButton(val) {
+      if (val) {
+        document
+          .querySelector(".stake-btn")
+          .classList.add("pointer-events-none", "opacity-50");
+      } else {
+        document
+          .querySelector(".stake-btn")
+          .classList.remove("pointer-events-none", "opacity-50");
+      }
+    },
   },
   computed: {
     ...mapGetters([
@@ -340,7 +364,8 @@ export default {
       "getStakingInstance",
       "getBalance",
       "getStakedReload",
-      "getUnstakedReload"
+      "getUnstakedReload",
+      "getDisableStakeButton",
     ]),
     sortedNfts() {
       return this.nfts.sort((a, b) => {
@@ -349,12 +374,15 @@ export default {
     },
   },
   watch: {
-      getUnstakedReload(val) {
-          if(val) {
-              this.checkBalance()
-              this.SET_UNSTAKED_RELOAD(false)
-          }
+    getUnstakedReload(val) {
+      if (val) {
+        this.checkBalance();
+        this.SET_UNSTAKED_RELOAD(false);
       }
+    },
+    getDisableStakeButton(val) {
+      this.disableStakeButton(val);
+    },
   },
   mounted() {
     this.checkBalance();
@@ -369,6 +397,10 @@ export default {
 }
 .nft-card {
   transition: all 0.1s linear;
+}
+.disable {
+  pointer-events: none;
+  opacity: 50%;
 }
 @media (hover: hover) and (pointer: fine) {
   .nft-card:hover {

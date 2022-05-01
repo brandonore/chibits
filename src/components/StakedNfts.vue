@@ -1,13 +1,15 @@
 <template>
   <div class="md:mt-8 pt-4 mb-8">
     <div class="flex items-center justify-between pt-4 pb-8">
-      <h1 class="titles text-2xl text-left text-slate-500">Staked NFTs</h1>
+      <h1 class="titles text-2xl text-left text-slate-500">
+        Staked NFTs ({{ getStakedBalance.length }})
+      </h1>
       <span class="pr-5">{{ selectedNfts }}</span>
       <button
         v-if="!txSubmitted"
         @click.prevent="onUnstake"
         type="button"
-        class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
+        class="unstake-btn p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
       >
         <span v-if="!selectedNfts.length">Unstake All</span>
         <span v-else>Unstake ({{ selectedNfts.length }})</span>
@@ -16,7 +18,7 @@
         v-else
         type="button"
         disabled
-        class="cursor-not-allowed disabled:opacity-75 inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
+        class="cursor-not-allowed disabled:opacity-50 inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
       >
         <svg
           class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -128,10 +130,18 @@ export default {
       starIcon: ["fas", "star"],
       txSubmitted: false,
       loading: true,
+      disableBtn: false,
     };
   },
   methods: {
-    ...mapActions(["SET_APPROVAL", "SET_STAKED_RELOAD", "SET_UNSTAKED_RELOAD"]),
+    ...mapActions([
+      "SET_APPROVAL",
+      "SET_STAKED_RELOAD",
+      "SET_UNSTAKED_RELOAD",
+      "SET_DISABLE_STAKE_BUTTON",
+      "SET_DISABLE_UNSTAKE_BUTTON",
+      "SET_STAKED_BALANCE",
+    ]),
 
     getNftId(nft) {
       nft.active = !nft.active;
@@ -153,13 +163,15 @@ export default {
           this.stakedNfts = [];
           this.selectedNfts = [];
           this.txSubmitted = false;
+          this.SET_DISABLE_UNSTAKE_BUTTON(false);
+          this.SET_STAKED_BALANCE(tokenIds)
           console.log("staked tokens: " + tokenIds);
           if (tokenIds.length) {
-            tokenIds.forEach((n) => {
-              this.stakedNfts.push({
-                tokenId: JSON.parse(n),
-                url: require(`../assets/images/nfts/${n}.png`),
-              });
+              tokenIds.forEach((n) => {
+                this.stakedNfts.push({
+                  tokenId: JSON.parse(n),
+                  url: require(`../assets/images/nfts/${n}.png`),
+                });
             });
           } else {
             this.loading = false;
@@ -177,6 +189,7 @@ export default {
         .on("transactionHash", (hash) => {
           console.log("Transaction Hash: ", hash);
           this.txSubmitted = true;
+          this.SET_DISABLE_STAKE_BUTTON(true);
           this.$moshaToast("Transaction has been submitted", {
             showIcon: "true",
             position: "top-center",
@@ -188,8 +201,8 @@ export default {
         })
         .on("receipt", (receipt) => {
           console.log("Receipt: ", receipt);
-        this.SET_UNSTAKED_RELOAD(true);
-          this.getStakedTokens()
+          this.SET_UNSTAKED_RELOAD(true);
+          this.getStakedTokens();
           this.$moshaToast("Approval successful!", {
             showIcon: "true",
             position: "top-center",
@@ -203,6 +216,22 @@ export default {
           console.log("Error: ", error);
         });
     },
+    disableUnstakeButton(val) {
+      if (val) {
+        document
+          .querySelector(".unstake-btn")
+          .classList.add("pointer-events-none", "opacity-50");
+      } else {
+        document
+          .querySelector(".unstake-btn")
+          .classList.remove("pointer-events-none", "opacity-50");
+      }
+    },
+    getTokenReward(id) {
+      this.getStakingInstance.methods.tokenRarity(id).call().then((reward) => {
+          return reward
+      });
+    },
   },
   computed: {
     ...mapGetters([
@@ -212,6 +241,8 @@ export default {
       "getStakingInstance",
       "getStakedReload",
       "getUnstakedReload",
+      "getDisableUnstakeButton",
+      "getStakedBalance",
     ]),
     sortedNfts() {
       return this.stakedNfts.sort((a, b) => {
@@ -228,6 +259,9 @@ export default {
         this.getStakedTokens();
         this.SET_STAKED_RELOAD(false);
       }
+    },
+    getDisableUnstakeButton(val) {
+      this.disableUnstakeButton(val);
     },
   },
 };
