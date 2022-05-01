@@ -48,7 +48,7 @@
       >
         <div class="flex items-center justify-evenly card-bg w-full px-5 py-10">
           <dl>
-            <dt class="text-3xl font-bold text-pink-chi truncate">5500</dt>
+            <dt class="text-3xl font-bold text-pink-chi truncate">{{ totalUnclaimedRewards }}</dt>
             <dd>
               <div class="text-sm font-medium text-white">
                 Claimable CHI Balance
@@ -56,7 +56,7 @@
             </dd>
           </dl>
           <button
-            @click.prevent="getRewards"
+            @click.prevent="viewRewards"
             type="button"
             class="w-1/3 p-3 text-center text-sm font-extrabold rounded-md text-[#DE14E9] bg-pink-chi transition-all linear hover:opacity-75"
           >
@@ -104,6 +104,7 @@
 </template>
 
 <script>
+import Web3 from "web3";
 import contract from "@/contracts/ABIs.json";
 import ConnectWallet from "@/components/ConnectWallet.vue";
 import StakedNfts from "@/components/StakedNfts.vue";
@@ -145,11 +146,13 @@ export default {
       unstakedReload: false,
       totalTokens: 0,
       tokenRewards: [],
-      totalRewards: 0
+      totalRewards: 0,
+      totalUnclaimedRewards: 0,
+      interval: null
     };
   },
   methods: {
-    getRewards() {
+    assignRarity() {
         this.tokenRewards = []
       this.getStakedBalance.forEach((i) => {
         switch (true) {
@@ -203,12 +206,37 @@ export default {
         } else {
             this.totalRewards = result
         }
+    },
+    calcCurrentRewards() {
+        const ids = this.getStakedBalance
+        this.getStakingInstance.methods
+        .calculateRewards(this.getUserAccount, ids)
+        .call({
+            from: this.getUserAccount
+        })
+        .then((rewards) => {
+           let result = 0
+            rewards.forEach((n) => {
+                let x = Web3.utils.fromWei(n.toString(), 'ether')
+                let y = x.substring(0, 6)
+                let z = Number(y)
+                result += z
+            })
+            this.totalUnclaimedRewards = result.toFixed(3)
+        })
+    },
+    startIntervalRewards() {
+        this.interval = setInterval(() => {
+            this.calcCurrentRewards()
+        }, 15000)
     }
   },
   watch: {
       getStakedBalance(val) {
           if(val) {
-              this.getRewards()
+              this.assignRarity()
+              this.calcCurrentRewards()
+              this.startIntervalRewards()
           }
       }
   },
@@ -220,6 +248,9 @@ export default {
       "getWeb3",
       "getStakingInstance",
     ]),
+  },
+  destroyed() {
+      clearInterval(this.interval)
   },
 };
 </script>
