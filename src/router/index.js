@@ -8,6 +8,14 @@ const routes = [
     component: HomeView
   },
   {
+    path: '/mint',
+    name: 'mint',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/MintView.vue')
+  },
+  {
     path: '/staking',
     name: 'staking',
     // route level code-splitting

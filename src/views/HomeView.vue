@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+  <div class="max-w-7xl pt-6 mx-auto px-4 sm:px-6 md:px-8">
     <h1 class="text-2xl text-left font-semibold text-gray-900">Home</h1>
   </div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">

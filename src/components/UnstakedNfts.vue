@@ -63,17 +63,12 @@
             /></span>
             <img :src="nft.url" class="rounded-lg nft-img w-full" />
           </div>
-          <div class="flex p-2 items-center justify-evenly">
+          <div class="flex-col p-2 items-center justify-evenly">
             <h1 class="small-title text-sm text-slate-400">
               hana //
-              <span class="text-lg font-bold">NO. {{ nft.tokenId }}</span>
+              <span class="text-md font-bold">NO. {{ nft.tokenId }}</span>
             </h1>
-            <a
-              class="w-1/12 transition-all duration-200 hover:opacity-75"
-              href="https://opensea.io"
-            >
-              <img class="" src="../assets/icons/opensea.svg" alt="" />
-            </a>
+            <div class="small-title text-md text-slate-400"><span class="font-bold">{{ nft.reward }} CHI</span> per day</div>
           </div>
         </div>
       </div>
@@ -134,7 +129,7 @@
         v-else
         type="button"
         disabled
-        class="cursor-not-allowed disabled:opacity-75 inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
+        class="cursor-not-allowed disabled:opacity-50 inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
       >
         <svg
           class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -172,6 +167,7 @@ export default {
     return {
       nfts: [],
       selectedNfts: [],
+      stateNfts: [],
       isApproved: false,
       checkedIcon: ["fas", "circle-check"],
       starsIcon: ["fas", "stars"],
@@ -189,6 +185,7 @@ export default {
       "SET_UNSTAKED_RELOAD",
       "SET_DISABLE_UNSTAKE_BUTTON",
       "SET_DISABLE_STAKE_BUTTON",
+      "SET_UNSTAKED_BALANCE"
     ]),
 
     async getNfts() {
@@ -206,20 +203,13 @@ export default {
       nfts.ownedNfts.forEach((n) => {
         let id = Number(n.id.tokenId);
         this.nfts.push({
-          tokenId: id,
+          tokenId: id.toString(),
           url: require(`../assets/images/nfts/${id}.png`),
+          reward: this.assignRarity(id)
         });
+        this.stateNfts.push(id.toString())
       });
-    },
-
-    fixUrl(url) {
-      if (url.startsWith("ipfs")) {
-        return (
-          "https://ipfs.moralis.io:2053/ipfs/" + url.split("ipfs://").slice(-1)
-        );
-      } else {
-        return url + "?format=json";
-      }
+        this.SET_UNSTAKED_BALANCE(this.stateNfts)
     },
 
     getNftId(nft) {
@@ -241,6 +231,7 @@ export default {
           console.log("balance: " + response);
           this.nfts = [];
           this.selectedNfts = [];
+          this.stateNfts = []
           this.SET_BALANCE(response);
           this.SET_DISABLE_STAKE_BUTTON(false);
           if (response > 0) {
@@ -284,11 +275,13 @@ export default {
             type: "info",
             transition: "bounce",
             toastBackgroundColor: "#0ea5e9",
+            hideProgressBar: "true",
           });
         })
         .on("receipt", (receipt) => {
           console.log("Receipt: ", receipt);
           this.txSubmitted = false;
+          this.checkApproval()
           this.$moshaToast("Approval successful!", {
             showIcon: "true",
             position: "top-center",
@@ -300,13 +293,27 @@ export default {
         })
         .on("error", (error) => {
           console.log("Error: ", error);
+          this.txSubmitted = false
+          this.$moshaToast("Transaction Rejected", {
+            showIcon: "true",
+            position: "top-center",
+            timeout: 4000,
+            type: "danger",
+            transition: "bounce",
+            hideProgressBar: "true",
+          });
         });
     },
     toggleLoading() {
       this.loading = false;
     },
     onStake() {
-      const ids = this.selectedNfts;
+    let ids = []
+      if(this.selectedNfts.length) {
+          ids = this.selectedNfts;
+      } else {
+          ids = this.getUnstakedBalance
+      }
       this.getStakingInstance.methods
         .deposit(ids)
         .send({
@@ -324,13 +331,14 @@ export default {
             type: "info",
             transition: "bounce",
             toastBackgroundColor: "#0ea5e9",
+            hideProgressBar: 'true'
           });
         })
         .on("receipt", (receipt) => {
           console.log("Receipt: ", receipt);
           this.checkBalance();
           this.SET_STAKED_RELOAD(true);
-          this.$moshaToast("Approval successful!", {
+          this.$moshaToast("Stake successful!", {
             showIcon: "true",
             position: "top-center",
             timeout: 4000,
@@ -341,6 +349,16 @@ export default {
         })
         .on("error", (error) => {
           console.log("Error: ", error);
+          this.txSubmitted = false
+          this.loading = false
+          this.$moshaToast("Transaction Rejected", {
+            showIcon: "true",
+            position: "top-center",
+            timeout: 4000,
+            type: "danger",
+            transition: "bounce",
+            hideProgressBar: "true",
+          });
         });
     },
     disableStakeButton(val) {
@@ -354,6 +372,20 @@ export default {
           .classList.remove("pointer-events-none", "opacity-50");
       }
     },
+        assignRarity(i) {
+        switch (true) {
+          case i <= 5:
+            return 100
+          case i > 5 && i <= 10:
+            return 80
+          case i > 10 && i <= 15:
+              return 60
+          case i > 15 && i <= 20:
+            return 40
+          case i > 20 && i <= 25:
+            return 20
+        }
+    },
   },
   computed: {
     ...mapGetters([
@@ -366,6 +398,7 @@ export default {
       "getStakedReload",
       "getUnstakedReload",
       "getDisableStakeButton",
+      "getUnstakedBalance"
     ]),
     sortedNfts() {
       return this.nfts.sort((a, b) => {

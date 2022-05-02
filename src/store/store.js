@@ -13,7 +13,7 @@ const store = createStore({
     disableStakeButton: false,
     disableUnstakeButton: false,
     stakedBalance: 0,
-    unClaimedRewards: 0
+    unstakedBalance: 0
   },
   mutations: {
     SET_WEB3: (state, payload) => {
@@ -49,8 +49,8 @@ const store = createStore({
     SET_STAKED_BALANCE: (state, payload) => {
         state.stakedBalance = payload
     },
-    SET_UNCLAIMED_REWARDS: (state, payload) => {
-        state.unClaimedRewards = payload
+    SET_UNSTAKED_BALANCE: (state, payload) => {
+        state.unstakedBalance = payload
     },
   },
   getters: {
@@ -87,8 +87,8 @@ const store = createStore({
     getStakedBalance: (state) => {
         return state.stakedBalance
     },
-    getUnclaimedRewards: (state) => {
-        return state.unClaimedRewards
+    getUnstakedBalance: (state) => {
+        return state.unstakedBalance
     }
   },
   actions: {
@@ -125,9 +125,9 @@ const store = createStore({
     SET_STAKED_BALANCE({ commit }, payload) {
         commit("SET_STAKED_BALANCE", payload)
     },
-    SET_UNCLAIMED_REWARDS({ commit }, payload) {
-        commit("SET_UNCLAIMED_REWARDS", payload)
-    }
+    SET_UNSTAKED_BALANCE({ commit }, payload) {
+        commit("SET_UNSTAKED_BALANCE", payload)
+    },
   },
 });
 

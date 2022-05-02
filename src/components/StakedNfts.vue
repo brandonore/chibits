@@ -3,8 +3,24 @@
     <div class="flex items-center justify-between pt-4 pb-8">
       <h1 class="titles text-2xl text-left text-slate-500">
         Staked NFTs ({{ getStakedBalance.length }})
+        <div class="tooltip">
+          <font-awesome-icon class="text-[#ED4790] h-5 pl-2" :icon="infoIcon" />
+          <div class="right p-5">
+            <h3 class="text-2xl pb-2 font-bold text-center">
+              About staking your Chibits
+            </h3>
+            <p class="text-sm normal-case text-center">
+              Staking your Chibits removes them from your wallet and transfers
+              them to the Chibits vault where they can earn rewards! This means
+              that the vault address will be shown as the "owner" while staked,
+              so don't worry if you don't see them in your wallet. Your Chibits
+              are safe and you can un-stake at any time to remove them from the
+              vault and back to your personal wallet.
+            </p>
+            <i></i>
+          </div>
+        </div>
       </h1>
-      <span class="pr-5">{{ selectedNfts }}</span>
       <button
         v-if="!txSubmitted"
         @click.prevent="onUnstake"
@@ -65,17 +81,17 @@
             /></span>
             <img :src="nft.url" class="rounded-lg nft-img w-full" />
           </div>
-          <div class="flex p-2 items-center justify-evenly">
+          <div class="flex-col p-2 items-center justify-evenly">
             <h1 class="small-title text-sm text-slate-400">
               hana //
-              <span class="text-lg font-bold">NO. {{ nft.tokenId }}</span>
+              <span class="text-md font-bold">NO. {{ nft.tokenId }}</span>
             </h1>
-            <a
-              class="w-1/12 transition-all duration-200 hover:opacity-75"
-              href="https://opensea.io"
-            >
-              <img class="" src="../assets/icons/opensea.svg" alt="" />
-            </a>
+            <div class="small-title text-md text-slate-400">
+              <span
+                class="inline-flex items-center px-3 py-0.5 rounded-lg text-sm font-medium bg-violet-400 text-white"
+                >{{ nft.reward }} CHI per day</span
+              > 
+            </div>
           </div>
         </div>
       </div>
@@ -128,6 +144,7 @@ export default {
       checkedIcon: ["fas", "circle-check"],
       starsIcon: ["fas", "stars"],
       starIcon: ["fas", "star"],
+      infoIcon: ["fas", "circle-info"],
       txSubmitted: false,
       loading: true,
       disableBtn: false,
@@ -164,14 +181,15 @@ export default {
           this.selectedNfts = [];
           this.txSubmitted = false;
           this.SET_DISABLE_UNSTAKE_BUTTON(false);
-          this.SET_STAKED_BALANCE(tokenIds)
+          this.SET_STAKED_BALANCE(tokenIds);
           console.log("staked tokens: " + tokenIds);
           if (tokenIds.length) {
-              tokenIds.forEach((n) => {
-                this.stakedNfts.push({
-                  tokenId: JSON.parse(n),
-                  url: require(`../assets/images/nfts/${n}.png`),
-                });
+            tokenIds.forEach((n) => {
+              this.stakedNfts.push({
+                tokenId: JSON.parse(n),
+                url: require(`../assets/images/nfts/${n}.png`),
+                reward: this.assignRarity(n),
+              });
             });
           } else {
             this.loading = false;
@@ -179,7 +197,12 @@ export default {
         });
     },
     onUnstake() {
-      const ids = this.selectedNfts;
+      let ids = [];
+      if (this.selectedNfts.length) {
+        ids = this.selectedNfts;
+      } else {
+        ids = this.getStakedBalance;
+      }
       this.getStakingInstance.methods
         .withdraw(ids)
         .send({
@@ -197,13 +220,15 @@ export default {
             type: "info",
             transition: "bounce",
             toastBackgroundColor: "#0ea5e9",
+            hideProgressBar: "true",
           });
         })
         .on("receipt", (receipt) => {
           console.log("Receipt: ", receipt);
           this.SET_UNSTAKED_RELOAD(true);
           this.getStakedTokens();
-          this.$moshaToast("Approval successful!", {
+          this.$emit('updateUnclaimedBalance')
+          this.$moshaToast("Unstake successful!", {
             showIcon: "true",
             position: "top-center",
             timeout: 4000,
@@ -214,6 +239,15 @@ export default {
         })
         .on("error", (error) => {
           console.log("Error: ", error);
+          this.txSubmitted = false;
+          this.$moshaToast("Transaction Rejected", {
+            showIcon: "true",
+            position: "top-center",
+            timeout: 4000,
+            type: "danger",
+            transition: "bounce",
+            hideProgressBar: "true",
+          });
         });
     },
     disableUnstakeButton(val) {
@@ -228,9 +262,26 @@ export default {
       }
     },
     getTokenReward(id) {
-      this.getStakingInstance.methods.tokenRarity(id).call().then((reward) => {
-          return reward
-      });
+      this.getStakingInstance.methods
+        .tokenRarity(id)
+        .call()
+        .then((reward) => {
+          return reward;
+        });
+    },
+    assignRarity(i) {
+      switch (true) {
+        case i <= 5:
+          return 100;
+        case i > 5 && i <= 10:
+          return 80;
+        case i > 10 && i <= 15:
+          return 60;
+        case i > 15 && i <= 20:
+          return 40;
+        case i > 20 && i <= 25:
+          return 20;
+      }
     },
   },
   computed: {
@@ -243,6 +294,7 @@ export default {
       "getUnstakedReload",
       "getDisableUnstakeButton",
       "getStakedBalance",
+      "getRarity",
     ]),
     sortedNfts() {
       return this.stakedNfts.sort((a, b) => {
@@ -267,4 +319,51 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.tooltip {
+  display: inline-block;
+  position: relative;
+  text-align: left;
+}
+
+.tooltip .right {
+  min-width: 400px;
+  top: 40px;
+  left: 50%;
+  margin-left: 10px;
+  transform: translate(-50%, 0);
+  color: #ffffff;
+  background-color: #334155ea;
+  /* border-left: 6px solid #7c3aed; */
+  border-radius: 0.75rem;
+  position: absolute;
+  z-index: 99999999;
+  box-sizing: border-box;
+  display: none;
+}
+
+.tooltip:hover .right {
+  display: block;
+}
+
+.tooltip .right i {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -12px;
+  width: 24px;
+  height: 12px;
+  overflow: hidden;
+}
+
+.tooltip .right i::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  left: 50%;
+  transform: translate(-50%, 50%) rotate(45deg);
+  background-color: #334155ea;
+  border: 1px solid transparent;
+}
+</style>
