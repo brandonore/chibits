@@ -68,7 +68,7 @@
           </button>
           <div class="flex-1 flex justify-between">
             <div class="flex-1 flex items-center justify-end">
-              <ConnectWallet v-if="notHome" />
+              <ConnectWallet v-if="notHome && !mintRoute" />
             </div>
             <div class="flex px-5 items-center">
               <button
@@ -96,7 +96,7 @@
     <div v-else :class="{ [`md:pl-64`]: sidebarOpen }">
       <div class="">
         <div
-          class="sticky top-0 z-10 flex h-16 bg-white dark:bg-slate-800 dark:text-slate-500"
+          class="sticky menu-reg top-0 z-10 flex bg-white dark:bg-slate-800 dark:text-slate-500"
         >
           <button
             type="button"
@@ -106,7 +106,7 @@
             <span class="sr-only">Open sidebar</span>
             <MenuAlt2Icon class="h-6 w-6" aria-hidden="true" />
           </button>
-          <div class="flex-1 flex justify-between">
+          <div class="flex-1 flex">
             <div class="flex-1 flex items-center justify-end">
               <ConnectWallet v-if="notHome" />
             </div>
@@ -308,6 +308,9 @@ export default {
   position: relative;
   width: 100%;
 }
+.menu-reg {
+    height: 4.5rem;
+}
 .not-mint-route {
   background-color: white;
 }
@@ -315,7 +318,6 @@ export default {
   background-color: transparent;
   position: absolute;
 }
-
 .sidebar-mint {
   background-color: transparent;
   color: white;

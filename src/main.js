@@ -12,13 +12,15 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { 
     faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt
 } from '@fortawesome/pro-regular-svg-icons'
-import { faCircleCheck, faWallet, faHexagonExclamation, faStars, 
-    faStarShooting, faStar, faCircleInfo
+import { faCircleCheck, faWallet, faCircleExclamation, faStars, 
+    faStarShooting, faStar, faCircleInfo, faCheck, faCircle
 } from '@fortawesome/pro-solid-svg-icons'
 import { faSpinnerThird } from '@fortawesome/pro-light-svg-icons'
+import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt, faCircleCheck, faWallet,
-     faStarShooting, faHexagonExclamation, faStars, faSpinnerThird, faStar, faCircleInfo)
+     faStarShooting, faCircleExclamation, faStars, faSpinnerThird, faStar, faCircleInfo,
+     faEthereum, faCheck, faCircle)
 
 createApp(App).provide('moralis', Moralis).use(Vuex).use(store).use(moshaToast).component('font-awesome-icon', FontAwesomeIcon).use(router).mount('#app')

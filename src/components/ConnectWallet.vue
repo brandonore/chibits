@@ -1,37 +1,33 @@
 <template>
   <!-- Replace with your content -->
   <div v-if="getUserAccount && getWeb3" class="text-center">
-    <div>
       <button
         @click.prevent="logOut"
         type="button"
-        class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-gradient-to-tl from-pink-500  to-rose-500 hover:opacity-75 hover:text-white transition-all linear"
+        class="inline-flex items-center px-12 py-3 text-sm font-medium text-white bg-gradient-to-tl from-pink-500  to-rose-500 hover:opacity-75 hover:text-white transition-all linear"
       >
         <font-awesome-icon
-          :icon="disconnectIcon"
+          :icon="['fas', 'circle-exclamation']"
           class="-ml-1 mr-2 h-5 w-5"
           aria-hidden="true"
         />
         Disconnect
       </button>
-    </div>
   </div>
 
   <div v-else class="text-center">
-    <div>
       <button
         @click.prevent="login"
         type="button"
-        class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-gradient-to-tl from-pink-500  to-rose-500 hover:opacity-75 hover:text-white transition-all linear"
+        class="inline-flex items-center px-12 py-3 text-sm font-medium text-white bg-gradient-to-tl from-pink-500  to-rose-500 hover:opacity-75 hover:text-white transition-all linear"
       >
         <font-awesome-icon
-          :icon="walletIcon"
+          :icon="['fas', 'wallet']"
           class="-ml-1 mr-2 h-5 w-5"
           aria-hidden="true"
         />
         Connect Wallet
       </button>
-    </div>
   </div>
   <!-- /End replace -->
 </template>
@@ -48,8 +44,6 @@ export default {
   components: {},
   data() {
     return {
-      walletIcon: ["fas", "wallet"],
-      disconnectIcon: ["fas", "hexagon-exclamation"],
       currentUser: "",
       web3Modal: "",
     };
