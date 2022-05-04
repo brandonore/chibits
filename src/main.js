@@ -10,10 +10,10 @@ import 'mosha-vue-toastify/dist/style.css'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { 
-    faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt
+    faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt, faCircleInfo
 } from '@fortawesome/pro-regular-svg-icons'
 import { faCircleCheck, faWallet, faCircleExclamation, faStars, 
-    faStarShooting, faStar, faCircleInfo, faCheck, faCircle, faCircleX
+    faStarShooting, faStar, faCheck, faCircle, faCircleX
 } from '@fortawesome/pro-solid-svg-icons'
 import { faSpinnerThird } from '@fortawesome/pro-light-svg-icons'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'

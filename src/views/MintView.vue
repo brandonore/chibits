@@ -4,23 +4,61 @@
   >
     <!-- Replace with your content -->
     <div
-      class="mint-container relative flex flex-col justify-center h-2/3 md:h-1/2 w-full max-w-7xl"
+      class="mint-container relative flex flex-col justify-center h-3/4 md:h-1/2 w-full max-w-7xl"
     >
       <div v-if="getUserAccount" class="justify-end absolute top-6 right-6">
         <ConnectWallet />
       </div>
       <!-- title -->
-      <div class="title text-7xl mb-16 text-white">Mint Chibits</div>
+      <div class="title text-7xl mb-12 text-white">Mint Chibits</div>
       <!-- steps -->
 
       <!-- buttons -->
-      <div class="flex items-center px-8 md:px-12 justify-center">
+      <div class="mb-12 px-12 flex justify-center">
+        <ConnectWallet v-if="!getUserAccount" />
+        <!-- user logged in msgs -->
         <div
-          v-if="!getUserAccount"
-          class="relative mr-6 w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
+          v-if="getUserAccount && isWalletCheckedWhitelisted"
+          class="flex px-8 md:px-12 justify-center min-h-[44px]"
         >
+          <div class="flex items-center">
+            <font-awesome-icon
+              :icon="['fas', 'circle-check']"
+              class="text-emerald-400 mx-auto pr-3 h-6"
+              aria-hidden="true"
+            />
+            <div class="flex-col">
+                <h1 class="text-white font-bold text-xl">Your wallet is whitelisted</h1>
+            <p v-if="!presaleStarted" class="text-white text-sm font-normal">Presale hasn't started yet</p>
+            <p v-else-if="presaleStarted" class="text-white text-sm font-normal">Presale has started. Mint below </p>
+            </div>
+          </div>
+        </div>
+        <div
+          v-if="getUserAccount && !isWalletCheckedWhitelisted"
+          class="flex-col px-8 md:px-12 justify-center min-h-[44px]"
+        >
+          <div class="flex items-center">
+            <font-awesome-icon
+              :icon="['fas', 'circle-x']"
+              class="text-rose-500 mx-auto pr-3 h-6"
+              aria-hidden="true"
+            />
+            <div class="flex-col">
+                <h1 class="text-white font-bold text-xl">Your wallet is not whitelisted</h1>
+            <p class="text-white text-sm font-normal">Come back when the public sale starts!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-if="!getUserAccount"
+        class="flex items-center mb-12 px-8 md:px-12 min-h-[48px] justify-center"
+      >
+        <div class="relative mr-6 w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5">
           <div
-            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            class="absolute inset-y-0 left-0 pl-3 flex justify-start items-center pointer-events-none"
           >
             <font-awesome-icon
               :icon="['fab', 'ethereum']"
@@ -33,34 +71,35 @@
             pattern="#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?"
             v-model="checkAddress"
             class="focus:ring-rose-500 focus:border-rose-500 block w-full pl-10 py-2.5 sm:text-sm border-gray-300"
-            placeholder="enter address 0x..."
+            placeholder="Enter address 0x..."
           />
         </div>
         <button
-          @click.prevent="checkWhitelisted(checkAddress)"
+          @click.prevent="checkAddressForWhitelist(checkAddress)"
           type="button"
           class="p-2 w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 text-md font-medium text-white border-2 border-white transition-all linear hover:bg-white hover:text-slate-500"
         >
-          Check Whitelist
+          Verify Whitelist
         </button>
       </div>
-
-      <div class="mt-8 px-12 flex justify-center">
-        <ConnectWallet v-if="!getUserAccount" />
+      <div
+        v-if="getUserAccount && getWeb3"
+        class="flex items-center mb-12 px-8 md:px-12 justify-center"
+      >
         <button
-          v-if="getUserAccount && getWeb3"
           @click.prevent=""
           type="button"
           class="inline-flex items-center justify-center p-2 w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 border-2 border-rose-500 text-md font-medium hover:opacity-75 text-white transition-all linear bg-gradient-to-tl from-pink-500 to-rose-500"
         >
-          <font-awesome-icon
+          <!-- <font-awesome-icon
             :icon="['fas', 'star']"
             class="-ml-1 mr-2 h-5 w-5"
             aria-hidden="true"
-          />
+          /> -->
           Mint
         </button>
       </div>
+
       <!-- notifications -->
       <div
         :style="{
@@ -71,9 +110,7 @@
         }"
       >
         <Transition name="fade">
-          <div
-            class="notification flex w-full justify-center"
-          >
+          <div class="notification flex w-full justify-center">
             <div
               :style="{
                 visibility:
@@ -82,9 +119,12 @@
                     ? 'visible'
                     : 'hidden',
               }"
-              class="pt-8 w-1/4 h-1"
+              class="w-1/4 h-1"
             >
-              <div v-if="walletNotification === 'success'" class="rounded-sm py-2 bg-emerald-50 border-l-4 border-emerald-400">
+              <div
+                v-if="walletNotification === 'success'"
+                class="rounded-sm py-2 bg-emerald-50 border-l-4 border-emerald-400"
+              >
                 <div class="flex items-center justify-center">
                   <div class="flex-shrink-0 items-center flex">
                     <font-awesome-icon
@@ -100,18 +140,21 @@
                   </div>
                 </div>
               </div>
-              <div v-if="walletNotification === 'error'" class="rounded-sm py-2 bg-red-50 border-l-4 border-red-400">
+              <div
+                v-if="walletNotification === 'error'"
+                class="rounded-sm py-2 bg-red-50 border-l-4 border-red-400"
+              >
                 <div class="flex items-center justify-center">
                   <div class="flex-shrink-0 items-center flex">
                     <font-awesome-icon
-                      :icon="['fas', 'circle-check']"
+                      :icon="['fas', 'circle-x']"
                       class="text-red-400 h-5 w-5"
                       aria-hidden="true"
                     />
                   </div>
                   <div class="ml-3">
-                    <p class="text-sm font-medium text-green-800">
-                      Wallet is whitelisted! 😥
+                    <p class="text-sm font-medium text-red-800">
+                      Wallet is not whitelisted! 😥
                     </p>
                   </div>
                 </div>
@@ -135,10 +178,17 @@
             <div class="flex flex-1">
               <div
                 v-if="steps[0].status === 'current'"
-                class="w-8 md:w-10 h-8 md:h-10 bg-white border-2 md:border-4 border-emerald-400 justify-center rounded-full text-lg flex items-center"
+                class="w-8 md:w-10 h-8 md:h-10 bg-white border-2 border-emerald-400 justify-center rounded-full text-lg flex items-center"
               >
-                <span class="bg-emerald-400 text-center h-3 w-3 rounded-full">
+                <span class="text-emerald-400 text-center w-full">
+                  <font-awesome-icon
+                    :icon="['fas', 'star']"
+                    class="h-5 w-5"
+                    aria-hidden="true"
+                  />
                 </span>
+                <!-- <span class="bg-emerald-400 text-center h-3 w-3 rounded-full">
+                </span> -->
               </div>
             </div>
             <!-- step complete  -->
@@ -149,7 +199,7 @@
               >
                 <span class="text-white text-center w-full">
                   <font-awesome-icon
-                    :icon="['fas', 'check']"
+                    :icon="['fas', 'star']"
                     class="h-5 w-5"
                     aria-hidden="true"
                   />
@@ -191,7 +241,12 @@
                 v-if="steps[1].status === 'current'"
                 class="w-8 md:w-10 h-8 md:h-10 bg-white border-2 md:border-4 border-emerald-400 justify-center rounded-full text-lg flex items-center"
               >
-                <span class="bg-emerald-400 text-center h-3 w-3 rounded-full">
+                <span class="text-emerald-400 text-center w-full">
+                  <font-awesome-icon
+                    :icon="['fas', 'star']"
+                    class="h-5 w-5"
+                    aria-hidden="true"
+                  />
                 </span>
               </div>
             </div>
@@ -203,7 +258,7 @@
               >
                 <span class="text-white text-center w-full">
                   <font-awesome-icon
-                    :icon="['fas', 'check']"
+                    :icon="['fas', 'star']"
                     class="h-5 w-5"
                     aria-hidden="true"
                   />
@@ -245,7 +300,12 @@
                 v-if="steps[2].status === 'current'"
                 class="w-8 md:w-10 h-8 md:h-10 bg-white border-2 md:border-4 border-emerald-400 justify-center rounded-full text-lg flex items-center"
               >
-                <span class="bg-emerald-400 text-center h-3 w-3 rounded-full">
+                <span class="text-emerald-400 text-center w-full">
+                  <font-awesome-icon
+                    :icon="['fas', 'star']"
+                    class="h-5 w-5"
+                    aria-hidden="true"
+                  />
                 </span>
               </div>
             </div>
@@ -257,7 +317,7 @@
               >
                 <span class="text-white text-center w-full">
                   <font-awesome-icon
-                    :icon="['fas', 'check']"
+                    :icon="['fas', 'star']"
                     class="h-5 w-5"
                     aria-hidden="true"
                   />
@@ -299,7 +359,12 @@
                 v-if="steps[3].status === 'current'"
                 class="w-8 md:w-10 h-8 md:h-10 bg-white border-2 md:border-4 border-emerald-400 justify-center rounded-full text-lg flex items-center"
               >
-                <span class="bg-emerald-400 text-center h-3 w-3 rounded-full">
+                <span class="text-emerald-400 text-center w-full">
+                  <font-awesome-icon
+                    :icon="['fas', 'star']"
+                    class="h-5 w-5"
+                    aria-hidden="true"
+                  />
                 </span>
               </div>
             </div>
@@ -311,7 +376,7 @@
               >
                 <span class="text-white text-center w-full">
                   <font-awesome-icon
-                    :icon="['fas', 'check']"
+                    :icon="['fas', 'star']"
                     class="h-5 w-5"
                     aria-hidden="true"
                   />
@@ -360,14 +425,14 @@ export default {
   data() {
     return {
       steps: [
-        { name: "Step 1", text: "Contracts Deployed", status: "complete" },
+        { name: "Step 1", text: "Whitelist Collection", status: "complete" },
         { name: "Step 2", text: "Presale Started!", status: "upcoming" },
         {
           name: "Step 3",
           text: "Public Sale Started!",
           status: "upcoming",
         },
-        { name: "Step 4", text: "Mint Over 😭", status: "upcoming" },
+        { name: "Step 4", text: "Reveal", status: "upcoming" },
       ],
       presaleStarted: false,
       publicSaleStarted: false,
@@ -375,6 +440,7 @@ export default {
       publicSalePrice: "0.08",
       maxSupply: null,
       totalSupply: null,
+      isWalletCheckedWhitelisted: false,
       isWhitelisted: false,
       presaleMintAmount: 2,
       publicMintAmount: 5,
@@ -383,6 +449,7 @@ export default {
       mintSelected: 1,
       checkAddress: "",
       walletNotification: "",
+      interval: null,
     };
   },
   methods: {
@@ -392,12 +459,11 @@ export default {
           .presaleStarted()
           .call()
           .then((res) => {
-            if (res) {
-              this.presaleStarted = res;
+            this.presaleStarted = res;
+            if (this.presaleStarted) {
               this.checkPublicSaleStart();
-            } else {
-              this.presaleStarted = false;
-              this.steps[1].status = "upcoming";
+            } else if(!this.presaleStarted) {
+                this.steps[1].status = 'upcoming'
             }
           });
       } else {
@@ -409,18 +475,37 @@ export default {
         .publicSaleStarted()
         .call()
         .then((res) => {
-          if (res) {
-            this.publicSaleStarted = res;
-          }
+          this.publicSaleStarted = res;
           if (this.presaleStarted && !this.publicSaleStarted) {
             this.steps[1].status = "current";
+            this.steps[1].text = "Presale Started!";
+            this.steps[2].status = "upcoming";
           } else if (this.presaleStarted && this.publicSaleStarted) {
             this.steps[1].status = "complete";
+            this.steps[1].text = "Presale Complete!";
             this.steps[2].status = "current";
           }
         });
     },
-    checkWhitelisted(address) {
+    checkWhitelisted() {
+      this.hexProof = [];
+      const leafNodes = whitelist.map((addr) => keccak256(addr));
+      const merkleTree = new MerkleTree(leafNodes, keccak256, {
+        sortPairs: true,
+      });
+      const rootHash = merkleTree.getRoot();
+      const claimingAddress = this.getUserAccount;
+
+      this.hexProof = merkleTree.getHexProof(claimingAddress);
+      this.isWhitelisted = merkleTree.verify(
+        this.hexProof,
+        claimingAddress,
+        rootHash
+      );
+      console.log("Root Hash: ", rootHash.toString("hex"));
+    },
+    checkAddressForWhitelist(address) {
+      this.hexProof = [];
       const leafNodes = whitelist.map((addr) => keccak256(addr));
       const merkleTree = new MerkleTree(leafNodes, keccak256, {
         sortPairs: true,
@@ -434,25 +519,30 @@ export default {
       }
 
       this.hexProof = merkleTree.getHexProof(claimingAddress);
-      this.isWhitelisted = merkleTree.verify(
+      this.isWalletCheckedWhitelisted = merkleTree.verify(
         this.hexProof,
         claimingAddress,
         rootHash
       );
-      if (this.isWhitelisted) {
+      if (!this.getUserAccount && this.isWalletCheckedWhitelisted) {
         this.walletNotification = "success";
         this.checkAddress = "";
         setTimeout(() => {
           this.walletNotification = "";
-        }, 2000);
-      } else if (!this.isWhitelisted) {
+        }, 5000);
+      } else if (!this.getUserAccount && !this.isWalletCheckedWhitelisted) {
         this.walletNotification = "error";
         this.checkAddress = "";
         setTimeout(() => {
           this.walletNotification = "";
-        }, 2000);
+        }, 5000);
       }
       console.log("Whitelisted? " + this.isWhitelisted);
+    },
+    startIntervalSaleCheck() {
+      this.interval = setInterval(() => {
+        this.checkPresaleStart();
+      }, 5000);
     },
   },
   computed: {
@@ -462,11 +552,23 @@ export default {
     getTokenInstance(val) {
       if (val) {
         this.checkPresaleStart();
+        this.startIntervalSaleCheck();
+      }
+    },
+    getUserAccount(val) {
+      if (val) {
+        this.checkWhitelisted();
+        this.checkAddressForWhitelist();
       }
     },
   },
   mounted() {
-    this.checkPresaleStart();
+      if(this.getUserAccount) {
+          this.checkAddressForWhitelist()
+      }
+  },
+  destroyed() {
+    clearInterval(this.interval);
   },
 };
 </script>

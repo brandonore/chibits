@@ -6,7 +6,7 @@
     <Transition name="slide-fade">
       <div
         v-if="sidebarOpen"
-        class="absolute left-0 w-full z-50 border-b dark:border-b-gray-700 md:border-b-0 md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 transition-all"
+        class="absolute left-0 w-full z-50 dark:border-b-gray-700 md:border-b-0 md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 transition-all"
       >
         <!-- Sidebar component, swap this element with another sidebar if you like -->
         <div

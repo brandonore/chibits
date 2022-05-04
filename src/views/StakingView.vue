@@ -119,12 +119,12 @@
     <!-- staked nfts -->
     <div v-if="!getUserAccount" class="md:mt-8 pt-4">
       <div class="flex items-center justify-between pt-4 pb-8">
-        <h1 class="titles text-2xl text-left text-slate-500">Staked NFTs</h1>
+        <h1 class="titles text-2xl text-left text-slate-500">Owned NFTs</h1>
         <button
           type="button"
           class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 hover:text-white transition-all linear hover:opacity-75"
         >
-          Unstake
+          Stake
           <!-- <span v-if="selectedNfts.length">({{ selectedNfts.length }})</span> -->
         </button>
       </div>

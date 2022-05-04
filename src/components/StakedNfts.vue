@@ -4,18 +4,16 @@
       <h1 class="titles text-2xl text-left text-slate-500">
         Staked NFTs ({{ getStakedBalance.length }})
         <div class="tooltip">
-          <font-awesome-icon class="text-[#ED4790] h-5 pl-2" :icon="infoIcon" />
+          <font-awesome-icon class="text-slate-500 h-5 pl-2" :icon="infoIcon" />
           <div class="right p-5">
             <h3 class="text-2xl pb-2 font-bold text-center">
-              About staking your Chibits
+              About Staking
             </h3>
             <p class="text-sm normal-case text-center">
-              Staking your Chibits removes them from your wallet and transfers
-              them to the Chibits vault where they can earn rewards! This means
-              that the vault address will be shown as the "owner" while staked,
-              so don't worry if you don't see them in your wallet. Your Chibits
-              are safe and you can un-stake at any time to remove them from the
-              vault and back to your personal wallet.
+              Chibits are "staked" in the vault and will generate $CHI per day. This means
+              that the vault address will be shown as the "owner" while staked, and
+              unstaking will move them back to your wallet. You will maintain full ownership, but
+              they will not show up in your wallet while staked.
             </p>
             <i></i>
           </div>
@@ -144,7 +142,7 @@ export default {
       checkedIcon: ["fas", "circle-check"],
       starsIcon: ["fas", "stars"],
       starIcon: ["fas", "star"],
-      infoIcon: ["fas", "circle-info"],
+      infoIcon: ["far", "circle-info"],
       txSubmitted: false,
       loading: true,
       disableBtn: false,
