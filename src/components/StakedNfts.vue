@@ -23,7 +23,7 @@
         v-if="!txSubmitted"
         @click.prevent="onUnstake"
         type="button"
-        class="unstake-btn p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
+        class="unstake-btn p-3 w-1/3 rounded-sm md:w-1/6 text-md font-extrabold text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
       >
         <span v-if="!selectedNfts.length">Unstake All</span>
         <span v-else>Unstake ({{ selectedNfts.length }})</span>
@@ -128,7 +128,6 @@
 </template>
 
 <script>
-import Moralis from "../plugins/moralis";
 import contract from "@/contracts/ABIs.json";
 import { mapActions, mapGetters } from "vuex";
 

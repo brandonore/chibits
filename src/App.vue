@@ -139,7 +139,7 @@
 import { ref } from "vue";
 import { mapActions, mapGetters } from "vuex";
 import Web3 from "web3";
-import Moralis from "@/plugins/moralis";
+import Web3Modal from 'web3modal'
 import contract from "@/contracts/ABIs";
 import ConnectWallet from "@/components/ConnectWallet.vue";
 import {
@@ -161,6 +161,11 @@ import {
   MenuAlt2Icon,
   XIcon,
 } from "@heroicons/vue/outline";
+
+const web3Modal = new Web3Modal({
+    cacheProvider: false,
+    disableInjectedProvider: false
+})
 
 const navigation = [
   { name: "Home", href: "/", icon: HomeIcon, current: false },
@@ -245,7 +250,12 @@ export default {
       }
     },
   },
-  mounted() {
+ async mounted() {
+     let account = localStorage.getItem('userAccount')
+     this.SET_USER_ACCOUNT(account)
+      if(web3Modal.cachedProvider) {
+          await web3Modal.connect()
+      }
     if (localStorage.getItem("darkMode") == "true") {
       document.querySelector("html").classList.add("dark");
     } else {
@@ -253,9 +263,15 @@ export default {
     }
   },
   async beforeMount() {
-    await Moralis.enableWeb3();
-    const web3 = new Web3(Moralis.provider);
-    this.SET_WEB3(web3);
+    const provider = await web3Modal.connect()
+    const web3 = new Web3(provider)
+    
+    this.SET_WEB3(web3)
+    // listen for provider changes
+    provider.on('accountsChanged', (accounts) => {
+        console.log('Disconnected')
+        this.SET_USER_ACCOUNT(null)
+    })
 
     let TOKEN_INSTANCE = new web3.eth.Contract(
       contract.TOKEN_ABI,
@@ -269,6 +285,7 @@ export default {
     this.SET_TOKEN_INSTANCE(TOKEN_INSTANCE);
     this.SET_STAKING_INSTANCE(STAKING_INSTANCE);
   },
+  
 };
 </script>
 

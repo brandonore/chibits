@@ -1,43 +1,39 @@
 <template>
   <!-- Replace with your content -->
   <div v-if="getUserAccount && getWeb3" class="text-center">
-      <button
-        @click.prevent="logOut"
-        type="button"
-        class="inline-flex items-center px-12 py-3 text-sm font-medium text-white bg-gradient-to-tl from-pink-500  to-rose-500 hover:opacity-75 hover:text-white transition-all linear"
-      >
-        <font-awesome-icon
-          :icon="['fas', 'circle-exclamation']"
-          class="-ml-1 mr-2 h-5 w-5"
-          aria-hidden="true"
-        />
-        Disconnect
-      </button>
+    <button
+      @click.prevent="logOut"
+      type="button"
+      class="inline-flex items-center px-12 py-3 rounded-sm text-sm font-medium text-white bg-gradient-to-tl from-pink-500 to-rose-500 hover:opacity-75 hover:text-white transition-all linear"
+    >
+      <font-awesome-icon
+        :icon="['fas', 'circle-exclamation']"
+        class="-ml-1 mr-2 h-5 w-5"
+        aria-hidden="true"
+      />
+      Disconnect
+    </button>
   </div>
 
   <div v-else class="text-center">
-      <button
-        @click.prevent="login"
-        type="button"
-        class="inline-flex items-center px-12 py-3 text-sm font-medium text-white bg-gradient-to-tl from-pink-500  to-rose-500 hover:opacity-75 hover:text-white transition-all linear"
-      >
-        <font-awesome-icon
-          :icon="['fas', 'wallet']"
-          class="-ml-1 mr-2 h-5 w-5"
-          aria-hidden="true"
-        />
-        Connect Wallet
-      </button>
+    <button
+      @click.prevent="login"
+      type="button"
+      class="inline-flex items-center px-12 py-3 rounded-sm text-sm font-medium text-white bg-gradient-to-tl from-pink-500 to-rose-500 hover:opacity-75 hover:text-white transition-all linear"
+    >
+      <font-awesome-icon
+        :icon="['fas', 'wallet']"
+        class="-ml-1 mr-2 h-5 w-5"
+        aria-hidden="true"
+      />
+      Connect Wallet
+    </button>
   </div>
   <!-- /End replace -->
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import Web3 from "web3";
-import Web3Modal from "web3modal";
-import Moralis from "../plugins/moralis";
-import contract from "@/contracts/ABIs";
 
 export default {
   name: "ConnectWallet",
@@ -60,50 +56,14 @@ export default {
         return;
       } else {
         this.SET_USER_ACCOUNT(null);
+        localStorage.removeItem('userAccount')
       }
     },
-    // async onConnect() {
-    //   try {
-    //     let provider = await this.web3Modal.connect();
-    //     this.onProvider(provider);
-    //     provider.on("accountsChanged", (accounts) => {
-    //       console.log(accounts);
-    //       this.onProvider(provider);
-    //     });
-    //   } catch (e) {
-    //     console.log("Unable to get a wallet connection", e);
-    //     return;
-    //   }
-    // },
-
-    // async onProvider(provider) {
-    //   let web3 = new Web3(provider);
-    //   this.SET_WEB3(web3);
-
-    //   let accounts = await web3.eth.getAccounts();
-    //   this.SET_USER_ACCOUNT(accounts[0]);
-
-    // // localStorage.setItem('userAccount', JSON.stringify(accounts[0]))
-    //   let TOKEN_INSTANCE = new web3.eth.Contract(
-    //     contract.TOKEN_ABI,
-    //     contract.TOKEN_ADDR
-    //   );
-    //   let STAKING_INSTANCE = new web3.eth.Contract(
-    //     contract.STAKING_ABI,
-    //     contract.STAKING_ADDR
-    //   );
-
-    //   this.SET_TOKEN_INSTANCE(TOKEN_INSTANCE);
-    //   this.SET_STAKING_INSTANCE(STAKING_INSTANCE);
-
-    // },
     async login() {
       try {
-        let user = await Moralis.authenticate({
-          signingMessage: "Connect to Chibits ❤️",
-        });
-                this.SET_USER_ACCOUNT(user.get("ethAddress"));
-
+          let accounts = await this.getWeb3.eth.getAccounts()
+          this.SET_USER_ACCOUNT(accounts[0])
+          localStorage.setItem('userAccount', accounts[0])
       } catch (error) {
         console.log(error);
       }
@@ -111,13 +71,6 @@ export default {
   },
   computed: {
     ...mapGetters(["getUserAccount", "getWeb3"]),
-  },
-  beforeMount() {
-    this.currentUser = Moralis.User.current();
-    // this.web3Modal = new Web3Modal({
-    //   cacheProvider: false,
-    //   disableInjectedProvider: false,
-    // });
   },
 };
 </script>

@@ -7,7 +7,7 @@
         v-if="!txSubmitted"
         @click.prevent="onStake"
         type="button"
-        class="stake-btn p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
+        class="stake-btn p-3 w-1/3 md:w-1/6 rounded-sm text-md font-extrabold text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
       >
         <span v-if="!selectedNfts.length">Stake All</span>
         <span v-else>Stake ({{ selectedNfts.length }})</span>
@@ -16,7 +16,7 @@
         v-else
         type="button"
         disabled
-        class="cursor-not-allowed disabled:opacity-50 inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
+        class="cursor-not-allowed disabled:opacity-50 inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-sm text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
       >
         <svg
           class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -121,7 +121,7 @@
         v-if="!txSubmitted"
         @click.prevent="onApproval"
         type="button"
-        class="inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
+        class="inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-sm text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
       >
         Approve
       </button>
@@ -129,7 +129,7 @@
         v-else
         type="button"
         disabled
-        class="cursor-not-allowed disabled:opacity-50 inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
+        class="cursor-not-allowed disabled:opacity-50 rounded-sm inline-flex justify-center items-center p-3 w-1/3 md:w-1/6 text-md font-extrabold text-white bg-gradient-to-tl from-pink-500 to-rose-500 transition-all linear hover:opacity-75"
       >
         <svg
           class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"

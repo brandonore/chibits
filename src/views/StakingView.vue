@@ -73,7 +73,7 @@
                     <button
           v-if="!getUserAccount"
             type="button"
-            class="w-1/3 p-3 text-center text-sm font-extrabold rounded-md text-[#DE14E9] bg-pink-chi transition-all linear hover:opacity-75"
+            class="w-1/3 p-3 text-center text-sm font-extrabold rounded-sm text-[#DE14E9] bg-pink-chi transition-all linear hover:opacity-75"
           >
             Claim CHI
           </button>
@@ -81,7 +81,7 @@
           v-else-if="getUserAccount && !txSubmitted"
             @click.prevent="claimRewards"
             type="button"
-            class="w-1/3 p-3 text-center text-sm font-extrabold rounded-md text-[#DE14E9] bg-pink-chi transition-all linear hover:opacity-75"
+            class="w-1/3 p-3 text-center text-sm font-extrabold rounded-sm text-[#DE14E9] bg-pink-chi transition-all linear hover:opacity-75"
           >
             Claim CHI
           </button>

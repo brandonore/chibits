@@ -1,10 +1,9 @@
-import { createApp, provide } from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import Vuex from 'vuex'
 import store from './store/store'
 import './index.css'
-import Moralis from './plugins/moralis'
 import moshaToast from 'mosha-vue-toastify'
 import 'mosha-vue-toastify/dist/style.css'
 
@@ -23,4 +22,4 @@ library.add(faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt, faCircle
      faStarShooting, faCircleExclamation, faStars, faSpinnerThird, faStar, faCircleInfo,
      faEthereum, faCheck, faCircle, faCircleX)
 
-createApp(App).provide('moralis', Moralis).use(Vuex).use(store).use(moshaToast).component('font-awesome-icon', FontAwesomeIcon).use(router).mount('#app')
+createApp(App).use(Vuex).use(store).use(moshaToast).component('font-awesome-icon', FontAwesomeIcon).use(router).mount('#app')

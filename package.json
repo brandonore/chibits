@@ -21,7 +21,6 @@
     "core-js": "^3.8.3",
     "keccak256": "^1.0.6",
     "merkletreejs": "^0.2.31",
-    "moralis": "^1.5.10",
     "mosha-vue-toastify": "^1.0.23",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "path-browserify": "^1.0.1",
