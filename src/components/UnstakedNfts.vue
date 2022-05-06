@@ -2,7 +2,6 @@
   <div class="md:mt-8 pt-4 mb-8">
     <div class="flex items-center justify-between pt-4 pb-8">
       <h1 class="titles text-2xl text-left text-slate-500">Unstaked NFTs ({{ getBalance }})</h1>
-      <span class="pr-5">{{ selectedNfts }}</span>
       <button
         v-if="!txSubmitted"
         @click.prevent="onStake"
@@ -382,7 +381,7 @@ export default {
               return 60
           case i > 15 && i <= 20:
             return 40
-          case i > 20 && i <= 25:
+          case i > 20 && i <= 100:
             return 20
         }
     },

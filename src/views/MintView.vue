@@ -1,13 +1,15 @@
 <template>
   <div
-    class="mint mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-center"
+    class="mint mx-auto px-4 sm:px-6 md:px-8 relative flex items-center justify-center"
   >
     <!-- Replace with your content -->
     <div
       class="mint-container relative flex flex-col justify-center h-3/4 md:h-3/5 w-full max-w-7xl"
     >
-    <!-- socials -->
-      <div class="absolute top-6 left-6 flex-col justify-center space-x-6 md:order-2">
+      <!-- socials -->
+      <div
+        class="absolute top-6 left-6 flex-col justify-center space-x-6 md:order-2"
+      >
         <a
           v-for="item in socials"
           :key="item.name"
@@ -15,8 +17,15 @@
           class="text-gray-400 hover:text-gray-500"
         >
           <span class="sr-only">{{ item.name }}</span>
-          <img class="w-7 h-7" :src="item.icon" alt="">
+          <img class="w-7 h-7" :src="item.icon" alt="" />
         </a>
+      </div>
+      <!-- hana -->
+      <!-- <div class="absolute top-0 right-60">
+          <img class="h-44" src="../assets/images/hana/taiyaki.png" alt="">
+      </div> -->
+      <div class="absolute -bottom-1 -left-3 z-0">
+          <img class="h-44 w-44" src="../assets/images/hana/peek.png" alt="">
       </div>
       <!-- disconnect btn -->
       <div v-if="getUserAccount" class="absolute top-6 right-6">
@@ -24,8 +33,6 @@
       </div>
       <!-- title -->
       <div class="title text-7xl mb-16 text-white">Mint Chibits</div>
-      <!-- steps -->
-
       <!-- buttons -->
       <div class="mb-16 px-12 flex justify-center">
         <ConnectWallet v-if="!getUserAccount" />
@@ -40,24 +47,35 @@
               class="text-emerald-400 mx-auto pr-3 h-6"
               aria-hidden="true"
             />
-            <div class="flex-col">
+            <div v-if="!publicSaleStarted" class="flex-col">
               <h1 class="text-white font-bold text-xl">
                 Your wallet is whitelisted
               </h1>
-              <p v-if="!presaleStarted" class="text-white text-sm font-normal">
-                Presale hasn't started yet
+              <p
+                v-if="!presaleStarted && !publicSaleStarted"
+                class="text-white text-sm font-normal"
+              >
+                Presale hasn't started yet. Come back later
               </p>
               <p
-                v-else-if="presaleStarted"
+                v-else-if="presaleStarted && !publicSaleStarted"
                 class="text-white text-sm font-normal"
               >
                 Presale has started! Mint below
               </p>
             </div>
+            <div v-else-if="publicSaleStarted" class="flex-col">
+              <h1 class="text-white font-bold text-xl">
+                Public sale has started!
+              </h1>
+              <p class="text-white text-sm font-normal">
+                Mint your chibits below
+              </p>
+            </div>
           </div>
         </div>
         <div
-          v-if="getUserAccount && !isWhitelisted"
+          v-if="getUserAccount && !isWhitelisted && !publicSaleStarted"
           class="flex-col px-8 md:px-12 justify-center min-h-[44px]"
         >
           <div class="flex items-center">
@@ -76,28 +94,28 @@
             </div>
           </div>
         </div>
-                <div
-          v-if="getUserAccount && !isWhitelisted && presaleStarted"
+        <div
+          v-if="getUserAccount && !isWhitelisted && publicSaleStarted"
           class="flex-col px-8 md:px-12 justify-center min-h-[44px]"
         >
           <div class="flex items-center">
             <font-awesome-icon
               :icon="['fas', 'circle-check']"
-              class="text-emerald-500 mx-auto pr-3 h-6"
+              class="text-emerald-400 mx-auto pr-3 h-6"
               aria-hidden="true"
             />
             <div class="flex-col">
               <h1 class="text-white font-bold text-xl">
-                Public sale has started
+                Public sale has started!
               </h1>
               <p class="text-white text-sm font-normal">
-                Mint below!
+                Mint your chibits below
               </p>
             </div>
           </div>
         </div>
       </div>
-<!-- wallet check -->
+      <!-- wallet check -->
       <div
         v-if="!getUserAccount"
         class="flex items-center mb-16 px-8 md:px-12 min-h-[48px] justify-center"
@@ -148,30 +166,35 @@
         </button>
       </div>
       <!-- supply -->
-      <div class="text-white flex justify-center items-center">
-        <div
-          v-if="
-            (presaleStarted && !publicSaleStarted) ||
-            (!presaleStarted && !publicSaleStarted)
-          "
-          class="pr-3 text-lg"
-        >
+      <div
+        :style="{
+          visibility:
+            presaleStarted || publicSaleStarted ? 'visible' : 'hidden',
+        }"
+        class="text-white flex justify-center items-center"
+      >
+        <div v-if="presaleStarted && !publicSaleStarted" class="pr-3 text-lg">
           Presale Price: {{ presalePrice }}Ξ
         </div>
         <div
           v-else-if="!presaleStarted && publicSaleStarted"
           class="pr-3 text-lg"
         >
-          Presale Price: {{ presalePrice }}Ξ
+          Public Sale Price: {{ publicSalePrice }}Ξ
         </div>
-        <span class="pr-3">|</span>
-        <h1 class="pr-3 text-lg">Supply:</h1>
-        <div class="bg-emerald-400 rounded-2xl text-xl px-3 py-0.2">
-          {{ currentSupply }} / {{ totalSupply }}
+        <div :style="{
+          visibility:
+            presaleStarted || publicSaleStarted ? 'visible' : 'hidden',
+        }" class="flex">
+          <span class="pr-3">|</span>
+          <h1 class="pr-3 text-lg">Supply:</h1>
+          <div class="bg-emerald-400 rounded-2xl text-xl px-3 py-0.2">
+            {{ currentSupply }} / {{ totalSupply }}
+          </div>
         </div>
       </div>
       <!-- steps -->
-      <div class="mt-16">
+      <div class="mt-16 z-10">
         <div class="max-w-5xl mx-auto my-4 pb-4">
           <div class="flex pb-3 mx-8 md:mx-16">
             <!-- step upcoming  -->
@@ -559,7 +582,7 @@
 import contract from "@/contracts/ABIs.json";
 import whitelist from "@/contracts/WhitelistAccounts.json";
 import ConnectWallet from "@/components/ConnectWallet.vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 import {
   Popover,
@@ -607,15 +630,31 @@ export default {
         { name: "Step 4", text: "Reveal", status: "upcoming" },
       ],
       socials: [
-        { name: "discord", href: "#", icon: require("../assets/icons/discord.svg") },
-        { name: "opensea", href: "#", icon: require("../assets/icons/opensea.svg") },
-        { name: "etherscan", href: "#", icon: require("../assets/icons/etherscan.svg") },
-        { name: "twitter", href: "#", icon: require("../assets/icons/twitter.svg") },
+        {
+          name: "discord",
+          href: "#",
+          icon: require("../assets/icons/discord.svg"),
+        },
+        {
+          name: "opensea",
+          href: "#",
+          icon: require("../assets/icons/opensea.svg"),
+        },
+        {
+          name: "etherscan",
+          href: "#",
+          icon: require("../assets/icons/etherscan.svg"),
+        },
+        {
+          name: "twitter",
+          href: "#",
+          icon: require("../assets/icons/twitter.svg"),
+        },
       ],
       presaleStarted: false,
       publicSaleStarted: false,
       presalePrice: "0.06",
-      publicSalePrice: "0.08",
+      publicSalePrice: "0.02",
       totalSupply: null,
       isWalletCheckedWhitelisted: false,
       isWhitelisted: false,
@@ -634,6 +673,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["SET_UNSTAKED_RELOAD", "SET_STAKED_RELOAD"]),
     checkPresaleStart() {
       if (this.getTokenInstance) {
         this.getTokenInstance.methods
@@ -711,6 +751,7 @@ export default {
     startIntervalSaleCheck() {
       this.interval = setInterval(() => {
         this.checkPresaleStart();
+        this.setCurrentSupply();
       }, 5000);
     },
     mintPresale() {
@@ -751,9 +792,11 @@ export default {
               hideProgressBar: true,
             });
             this.mintInProgress = false;
+            this.SET_UNSTAKED_RELOAD(true);
+            this.SET_STAKED_RELOAD(true);
           })
-          .on("error", (error, receipt) => {
-            console.log("Error receipt: ", receipt);
+          .on("error", (error) => {
+            console.log("Error receipt: ", error);
             //transaction rejected
             this.$moshaToast("Transaction rejected!", {
               showIcon: true,
@@ -771,17 +814,17 @@ export default {
         this.publicSaleStarted
       ) {
         this.mintPublic();
+        console.log("public mint");
       }
     },
     mintPublic() {
-      let mintPrice =
-        Number(this.publicMintAmount) * Number(this.publicSalePrice);
+      let mintPrice = Number(this.mintSelected) * Number(this.publicSalePrice);
       let value = this.getWeb3.utils.toHex(
         this.getWeb3.utils.toWei(mintPrice.toString(), "ether")
       );
 
       this.getTokenInstance.methods
-        .mint(Number(this.publicMintAmount))
+        .mint(Number(this.mintSelected))
         .send({
           from: this.getUserAccount,
           to: contract.TOKEN_ADDR,
@@ -811,9 +854,11 @@ export default {
             hideProgressBar: true,
           });
           this.mintInProgress = false;
+          this.SET_UNSTAKED_RELOAD(true);
+          this.SET_STAKED_RELOAD(true);
         })
-        .on("error", (error, receipt) => {
-          console.log("Error receipt: ", receipt);
+        .on("error", (error) => {
+          console.log("Error receipt: ", error);
           //transaction rejected
           this.$moshaToast("Transaction rejected!", {
             showIcon: true,
@@ -829,14 +874,14 @@ export default {
       this.modalOpen = true;
     },
     setCurrentSupply() {
-      if (this.getTokenInstance) {
-        this.getTokenInstance.methods
-          .totalSupply()
-          .call()
-          .then((val) => {
+      this.getTokenInstance.methods
+        .totalSupply()
+        .call()
+        .then((val) => {
+          if (val !== this.currentSupply) {
             this.currentSupply = val;
-          });
-      }
+          }
+        });
     },
     setTotalSupply() {
       if (this.getTokenInstance) {
@@ -868,11 +913,13 @@ export default {
     },
   },
   mounted() {
-    this.checkPresaleStart();
-    this.setCurrentSupply();
-    this.setTotalSupply();
     if (this.getUserAccount) {
       this.checkWhitelisted();
+    }
+    if (this.getTokenInstance) {
+      this.checkPresaleStart();
+      this.setTotalSupply();
+      this.setCurrentSupply();
     }
   },
   destroyed() {
@@ -882,9 +929,6 @@ export default {
 </script>
 
 <style scoped>
-.step-desc {
-  border: 2px solid red;
-}
 .mint {
   height: 100vh;
   background-image: linear-gradient(to bottom, #667eeaa8, #764ba2a6),

@@ -276,7 +276,7 @@ export default {
           return 60;
         case i > 15 && i <= 20:
           return 40;
-        case i > 20 && i <= 25:
+        case i > 20 && i <= 100:
           return 20;
       }
     },

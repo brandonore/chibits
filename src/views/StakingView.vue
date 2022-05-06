@@ -122,7 +122,7 @@
         <h1 class="titles text-2xl text-left text-slate-500">Owned NFTs</h1>
         <button
           type="button"
-          class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-md text-white bg-gradient-to-tl from-pink-500 to-rose-500 hover:text-white transition-all linear hover:opacity-75"
+          class="p-3 w-1/3 md:w-1/6 text-md font-extrabold rounded-sm text-white bg-gradient-to-tl from-pink-500 to-rose-500 hover:text-white transition-all linear hover:opacity-75"
         >
           Stake
           <!-- <span v-if="selectedNfts.length">({{ selectedNfts.length }})</span> -->
@@ -235,7 +235,7 @@ export default {
               rewardPerDay: 40,
             });
             break;
-          case i > 20 && i <= 25:
+          case i > 20 && i <= 100:
             this.tokenRewards.push({
               stakedId: i,
               rarity: 4,
