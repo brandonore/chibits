@@ -26,6 +26,7 @@
               <router-link
                 v-if="getWeb3 && getUserAccount === adminWallet"
                 to="/admin"
+                @click.prevent="closeSidebar"
                 class="transition duration-200 linear group flex items-center px-2 py-2 text-sm font-medium rounded-md active:dark:bg-slate-700"
               >
                 <font-awesome-icon
@@ -172,23 +173,23 @@ const web3Modal = new Web3Modal({
 });
 
 const navigation = [
-  { name: "Home", href: "/", icon: ["far", "user"], current: false },
+  { name: "Home", href: "/", icon: ["far", "house"], current: false },
   {
     name: "Mint",
     href: "/mint",
-    icon: ["far", "user"],
+    icon: ["far", "coin-front"],
     current: false,
   },
   {
     name: "Staking",
     href: "/staking",
-    icon: ["far", "user"],
+    icon: ["far", "coins"],
     current: false,
   },
   {
     name: "Marketplace",
     href: "/marketplace",
-    icon: ["far", "user"],
+    icon: ["far", "store"],
     current: false,
   },
 ];

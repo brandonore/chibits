@@ -50,14 +50,18 @@ export default {
       "SET_USER_ACCOUNT",
       "SET_TOKEN_INSTANCE",
       "SET_STAKING_INSTANCE",
+      "SET_AUTH_USER"
     ]),
     logOut() {
       if (!this.getUserAccount) {
         return;
       } else {
         this.SET_USER_ACCOUNT(null);
+        this.SET_AUTH_USER(null)
         localStorage.removeItem('userAccount')
-        this.$router.push('/')
+        if(this.$route.name === 'admin') {
+            this.$router.push('/staking')
+        }
       }
     },
     async login() {
