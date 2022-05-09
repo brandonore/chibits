@@ -9,7 +9,7 @@ import 'mosha-vue-toastify/dist/style.css'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { 
-    faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt, faCircleInfo
+    faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt, faCircleInfo, faUser
 } from '@fortawesome/pro-regular-svg-icons'
 import { faCircleCheck, faWallet, faCircleExclamation, faStars, 
     faStarShooting, faStar, faCheck, faCircle, faCircleX
@@ -20,6 +20,6 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(faHashtag, faCoins, faBolt, faGaugeHigh, faGaugeCircleBolt, faCircleCheck, faWallet,
      faStarShooting, faCircleExclamation, faStars, faSpinnerThird, faStar, faCircleInfo,
-     faEthereum, faCheck, faCircle, faCircleX)
+     faEthereum, faCheck, faCircle, faCircleX, faUser)
 
 createApp(App).use(Vuex).use(store).use(moshaToast).component('font-awesome-icon', FontAwesomeIcon).use(router).mount('#app')

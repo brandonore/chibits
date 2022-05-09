@@ -14,7 +14,8 @@ const store = createStore({
     disableUnstakeButton: false,
     stakedBalance: 0,
     unstakedBalance: 0,
-    provider: null
+    provider: null,
+    authUser: null
   },
   mutations: {
     SET_WEB3: (state, payload) => {
@@ -56,6 +57,9 @@ const store = createStore({
     SET_PROVIDER: (state, payload) => {
         state.provider = payload
     },
+    SET_AUTH_USER: (state, payload) => {
+        state.authUser = payload
+    },
   },
   getters: {
     getWeb3: (state) => {
@@ -96,6 +100,9 @@ const store = createStore({
     },
     getProvider: (state) => {
         return state.provider
+    },
+    getAuthUser: (state) => {
+        return state.authUser
     }
   },
   actions: {
@@ -137,6 +144,9 @@ const store = createStore({
     },
     SET_PROVIDER({ commit }, payload) {
         commit("SET_PROVIDER", payload)
+    },
+    SET_AUTH_USER({ commit }, payload) {
+        commit("SET_AUTH_USER", payload)
     },
   },
 });

@@ -24,6 +24,18 @@
           <div class="mt-5 flex-grow flex flex-col">
             <nav class="flex-1 px-2 pb-4 space-y-1">
               <router-link
+                v-if="getWeb3 && getUserAccount === adminWallet"
+                to="/admin"
+                class="transition duration-200 linear group flex items-center px-2 py-2 text-sm font-medium rounded-md active:dark:bg-slate-700"
+              >
+                <font-awesome-icon
+                  :icon="['far', 'user']"
+                  class="text-slate-500 mr-4 h-5 w-5"
+                  aria-hidden="true"
+                />
+                Admin
+              </router-link>
+              <router-link
                 :to="item.href"
                 v-for="item in navigation"
                 :key="item.name"
@@ -31,9 +43,9 @@
                 @click.prevent="closeSidebar"
                 class="transition duration-200 linear group flex items-center px-2 py-2 text-sm font-medium rounded-md active:dark:bg-slate-700"
               >
-                <component
-                  :is="item.icon"
-                  class="mr-3 flex-shrink-0 h-6 w-6"
+                <font-awesome-icon
+                  :icon="item.icon"
+                  class="text-slate-500 mr-4 h-5 w-5"
                   aria-hidden="true"
                 />
                 {{ item.name }}
@@ -139,7 +151,7 @@
 import { ref } from "vue";
 import { mapActions, mapGetters } from "vuex";
 import Web3 from "web3";
-import Web3Modal from 'web3modal'
+import Web3Modal from "web3modal";
 import contract from "@/contracts/ABIs";
 import ConnectWallet from "@/components/ConnectWallet.vue";
 import {
@@ -152,39 +164,31 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
-import {
-  SunIcon,
-  MoonIcon,
-  HomeIcon,
-  CurrencyDollarIcon,
-  ShoppingBagIcon,
-  MenuAlt2Icon,
-  XIcon,
-} from "@heroicons/vue/outline";
+import { SunIcon, MoonIcon, MenuAlt2Icon, XIcon } from "@heroicons/vue/outline";
 
 const web3Modal = new Web3Modal({
-    cacheProvider: false,
-    disableInjectedProvider: false
-})
+  cacheProvider: false,
+  disableInjectedProvider: false,
+});
 
 const navigation = [
-  { name: "Home", href: "/", icon: HomeIcon, current: false },
+  { name: "Home", href: "/", icon: ["far", "user"], current: false },
   {
     name: "Mint",
     href: "/mint",
-    icon: CurrencyDollarIcon,
+    icon: ["far", "user"],
     current: false,
   },
   {
     name: "Staking",
     href: "/staking",
-    icon: CurrencyDollarIcon,
+    icon: ["far", "user"],
     current: false,
   },
   {
     name: "Marketplace",
     href: "/marketplace",
-    icon: ShoppingBagIcon,
+    icon: ["far", "user"],
     current: false,
   },
 ];
@@ -202,8 +206,6 @@ export default {
     SunIcon,
     MoonIcon,
     MenuAlt2Icon,
-    CurrencyDollarIcon,
-    ShoppingBagIcon,
     XIcon,
     ConnectWallet,
   },
@@ -214,6 +216,7 @@ export default {
       sidebarOpen: ref(false),
       darkMode,
       walletIcon: ["fas", "wallet"],
+      adminWallet: "0x189FeFd08c6cf40fA0a96892De0Cd04E61bbCd86",
     };
   },
   methods: {
@@ -229,11 +232,11 @@ export default {
       localStorage.setItem("darkMode", this.darkMode);
     },
     closeSidebar() {
-        this.sidebarOpen = false
-    }
+      this.sidebarOpen = false;
+    },
   },
   computed: {
-    ...mapGetters(["getWeb3"]),
+    ...mapGetters(["getWeb3", "getUserAccount"]),
     notHome() {
       return this.$route.name !== "home";
     },
@@ -250,12 +253,12 @@ export default {
       }
     },
   },
- async mounted() {
-     let account = localStorage.getItem('userAccount')
-     this.SET_USER_ACCOUNT(account)
-      if(web3Modal.cachedProvider) {
-          await web3Modal.connect()
-      }
+  async mounted() {
+    let account = localStorage.getItem("userAccount");
+    this.SET_USER_ACCOUNT(account);
+    if (web3Modal.cachedProvider) {
+      await web3Modal.connect();
+    }
     if (localStorage.getItem("darkMode") == "true") {
       document.querySelector("html").classList.add("dark");
     } else {
@@ -263,15 +266,15 @@ export default {
     }
   },
   async beforeMount() {
-    const provider = await web3Modal.connect()
-    const web3 = new Web3(provider)
-    
-    this.SET_WEB3(web3)
+    const provider = await web3Modal.connect();
+    const web3 = new Web3(provider);
+
+    this.SET_WEB3(web3);
     // listen for provider changes
-    provider.on('accountsChanged', (accounts) => {
-        console.log('Disconnected')
-        this.SET_USER_ACCOUNT(null)
-    })
+    provider.on("accountsChanged", (accounts) => {
+      console.log("Disconnected");
+      this.SET_USER_ACCOUNT(null);
+    });
 
     let TOKEN_INSTANCE = new web3.eth.Contract(
       contract.TOKEN_ABI,
@@ -285,7 +288,6 @@ export default {
     this.SET_TOKEN_INSTANCE(TOKEN_INSTANCE);
     this.SET_STAKING_INSTANCE(STAKING_INSTANCE);
   },
-  
 };
 </script>
 
@@ -300,9 +302,21 @@ export default {
   text-align: center;
 }
 
+.titles {
+  font-family: "CeraBold", sans-serif;
+  text-transform: uppercase;
+}
+.small-title {
+  font-family: "CeraLight", sans-serif;
+  /* text-transform: uppercase; */
+}
+
 .router-link-exact-active {
   background-color: #f43f5e;
   color: white;
+}
+.router-link-exact-active svg {
+    color: white;
 }
 
 .logo-text {
@@ -326,7 +340,7 @@ export default {
   width: 100%;
 }
 .menu-reg {
-    height: 4.5rem;
+  height: 4.5rem;
 }
 .not-mint-route {
   background-color: white;

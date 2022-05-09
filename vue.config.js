@@ -4,6 +4,9 @@ module.exports = defineConfig({
   transpileDependencies: true,
   configureWebpack: {
     plugins: [new NodePolyfillPlugin()],
+    experiments: {
+        topLevelAwait: true
+    },
     optimization: {
       splitChunks: {
         chunks: "all",

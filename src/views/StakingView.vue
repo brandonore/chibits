@@ -353,14 +353,6 @@ export default {
 </script>
 
 <style>
-.titles {
-  font-family: "CeraBold", sans-serif;
-  text-transform: uppercase;
-}
-.small-title {
-  font-family: "CeraLight", sans-serif;
-  /* text-transform: uppercase; */
-}
 .card-1 {
   background-image: url("../assets/images/other/card-1a.png");
   background-repeat: no-repeat;

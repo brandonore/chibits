@@ -57,6 +57,7 @@ export default {
       } else {
         this.SET_USER_ACCOUNT(null);
         localStorage.removeItem('userAccount')
+        this.$router.push('/')
       }
     },
     async login() {
