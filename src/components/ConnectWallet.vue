@@ -34,6 +34,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { supabase } from "@/supabase";
 
 export default {
   name: "ConnectWallet",
@@ -50,32 +51,35 @@ export default {
       "SET_USER_ACCOUNT",
       "SET_TOKEN_INSTANCE",
       "SET_STAKING_INSTANCE",
-      "SET_AUTH_USER"
+      "SET_AUTH_USER",
     ]),
-    logOut() {
+    async logOut() {
       if (!this.getUserAccount) {
         return;
       } else {
         this.SET_USER_ACCOUNT(null);
-        this.SET_AUTH_USER(null)
-        localStorage.removeItem('userAccount')
-        if(this.$route.name === 'admin') {
-            this.$router.push('/staking')
+        localStorage.removeItem("userAccount");
+        if (this.$route.name === "admin") {
+          this.$router.push("/staking");
+        }
+        if (this.getAuthUser) {
+          await supabase.auth.signOut();
+          this.SET_AUTH_USER(null);
         }
       }
     },
     async login() {
       try {
-          let accounts = await this.getWeb3.eth.getAccounts()
-          this.SET_USER_ACCOUNT(accounts[0])
-          localStorage.setItem('userAccount', accounts[0])
+        let accounts = await this.getWeb3.eth.getAccounts();
+        this.SET_USER_ACCOUNT(accounts[0]);
+        localStorage.setItem("userAccount", accounts[0]);
       } catch (error) {
         console.log(error);
       }
     },
   },
   computed: {
-    ...mapGetters(["getUserAccount", "getWeb3"]),
+    ...mapGetters(["getUserAccount", "getWeb3", "getAuthUser"]),
   },
 };
 </script>

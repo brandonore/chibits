@@ -15,7 +15,8 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import { supabase } from "@/supabase";
 import AuthLogin from "../components/AuthLogin.vue";
 import AddMarketplaceItem from "@/components/AddMarketplaceItem.vue";
 import DataTable from "@/components/DataTable.vue";
@@ -30,8 +31,17 @@ export default {
   data() {
     return {};
   },
+  methods: {
+      ...mapActions(["SET_AUTH_USER"])
+  },
   computed: {
       ...mapGetters(["getAuthUser"])
+  },
+  mounted() {
+      const session = supabase.auth.session()
+      if(session) {
+          this.SET_AUTH_USER(session.user)
+      }
   }
 };
 </script>

@@ -111,9 +111,12 @@
                   <td
                     class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6"
                   >
-                    <a href="#" class="text-indigo-600 hover:text-indigo-700"
-                      >Edit<span class="sr-only">, {{ item.title }}</span></a
+                    <button
+                      @click.prevent="deleteItem(item)"
+                      class="text-pink-500 hover:text-pink-700"
                     >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -123,25 +126,51 @@
       </div>
     </div>
     <!-- modal -->
-      <TransitionRoot as="template" :show="showModal">
-    <Dialog as="div" class="relative z-10" @close="showModal = false">
-      <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-      </TransitionChild>
+    <TransitionRoot as="template" :show="showModal">
+      <Dialog as="div" class="relative z-10" @close="showModal = false">
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div
+            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          />
+        </TransitionChild>
 
-      <div class="fixed z-10 inset-0 overflow-y-auto">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-          <!-- This element is to trick the browser into centering the modal contents. -->
-          <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-          <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-            <DialogPanel class="w-full sm:w-2/3  xl:w-1/2 2xl:w-1/3 relative inline-block align-middle bg-white rounded-sm p-8 transform transition-all">
-              <AddMarketplaceItem />
-            </DialogPanel>
-          </TransitionChild>
+        <div class="fixed z-10 inset-0 overflow-y-auto">
+          <div
+            class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+          >
+            <!-- This element is to trick the browser into centering the modal contents. -->
+            <span
+              class="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+              >&#8203;</span
+            >
+            <TransitionChild
+              as="template"
+              enter="ease-out duration-300"
+              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enter-to="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leave-from="opacity-100 translate-y-0 sm:scale-100"
+              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <DialogPanel
+                class="w-full sm:w-2/3 xl:w-1/2 2xl:w-1/3 relative inline-block align-middle bg-white rounded-sm p-8 transform transition-all"
+              >
+                <AddMarketplaceItem @dbreload="triggerDbReload" />
+              </DialogPanel>
+            </TransitionChild>
+          </div>
         </div>
-      </div>
-    </Dialog>
-  </TransitionRoot>
+      </Dialog>
+    </TransitionRoot>
   </div>
 </template>
 
@@ -154,7 +183,7 @@ import {
   DialogTitle,
   TransitionChild,
   TransitionRoot,
-  DialogPanel
+  DialogPanel,
 } from "@headlessui/vue";
 import AddMarketplaceItem from "./AddMarketplaceItem.vue";
 
@@ -167,7 +196,7 @@ export default {
     TransitionChild,
     TransitionRoot,
     DialogPanel,
-    AddMarketplaceItem
+    AddMarketplaceItem,
   },
   data() {
     return {
@@ -180,7 +209,7 @@ export default {
     async getData() {
       try {
         this.loading = true;
-        let { data, error, status } = await supabase
+        const { data, error, status } = await supabase
           .from("marketplace")
           .select();
 
@@ -198,6 +227,44 @@ export default {
     openModal() {
       this.showModal = true;
     },
+    triggerDbReload() {
+      this.showModal = false;
+      this.getData();
+    },
+    async deleteItem(item) {
+      const id = item.id;
+      let prefix = 'https://vpyikcjriwwrxoblslds.supabase.co/storage/v1/object/public/images/public/'
+      let url = item.imgUrl;
+      let imgUrl = url.slice(prefix.length)
+
+      try {
+        const { data, error } = await supabase
+          .from("marketplace")
+          .delete()
+          .match({ id: id });
+
+        if (error) throw error;
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        console.log("item deleted successfully");
+        this.getData();
+        this.deleteImg(imgUrl)
+      }
+    },
+    async deleteImg(url) {
+        try {
+        const { data, error } = await supabase.storage
+          .from("images")
+          .remove([`public/${url}`]);
+
+          if(error) throw error
+        } catch (error) {
+            alert(error.message)
+        } finally {
+            console.log('img deleted')
+        }
+    }
   },
   computed: {
     ...mapGetters(["getAuthUser"]),

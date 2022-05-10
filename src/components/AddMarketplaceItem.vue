@@ -334,6 +334,7 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 import { v4 as uuidv4 } from "uuid";
 import {
   Listbox,
@@ -478,7 +479,6 @@ export default {
           .from("images")
           .getPublicUrl(`public/${this.filePath}`);
         this.clearImage();
-        console.log(publicURL);
         this.addItemToDatabase(publicURL);
       }
     },
@@ -495,6 +495,7 @@ export default {
         twitterLink: this.twitterLink,
         discordLink: this.discordLink,
         imgUrl: publicURL,
+        user_id: this.getAuthUser.id
       };
       try {
         if (!this.title) {
@@ -508,10 +509,14 @@ export default {
         alert(error.message);
       } finally {
         this.loading = false;
+        this.$emit('dbreload')
         console.log("item added successfully");
       }
     },
   },
+  computed: {
+      ...mapGetters(["getAuthUser"])
+  }
 };
 </script>
 
