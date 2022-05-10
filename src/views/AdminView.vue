@@ -4,8 +4,8 @@
   </div>
   <div class="flex justify-center max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
     <!-- Replace with your content -->
-    <div class="w-1/2" v-if="getAuthUser">
-        <AddMarketplaceItem />
+    <div class="w-full" v-if="getAuthUser">
+        <DataTable />
     </div>
     <div class="w-full" v-else>
         <AuthLogin />
@@ -18,12 +18,14 @@
 import { mapGetters } from "vuex";
 import AuthLogin from "../components/AuthLogin.vue";
 import AddMarketplaceItem from "@/components/AddMarketplaceItem.vue";
+import DataTable from "@/components/DataTable.vue";
 
 export default {
   name: "AdminView",
   components: {
     AuthLogin,
-    AddMarketplaceItem
+    AddMarketplaceItem,
+    DataTable
 },
   data() {
     return {};
