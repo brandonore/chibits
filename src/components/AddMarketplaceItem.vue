@@ -35,7 +35,7 @@
                   <ListboxOption
                     as="template"
                     v-for="item in categories"
-                    :key="item.id"
+                    :key="item.category"
                     :value="item"
                     v-slot="{ active, selected }"
                   >
@@ -78,15 +78,34 @@
           <label class="block text-sm font-regular text-slate-500">
             Title
           </label>
-          <div class="mt-1">
+          <div class="mt-1" v-if="!v$.title.$error">
             <input
               name="title"
               type="text"
               v-model="title"
               :placeholder="selected.title"
               required=""
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-400 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              @blur="v$.title.$touch"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
+          </div>
+          <div class="mt-1" v-if="v$.title.$error">
+            <input
+              name="title"
+              type="text"
+              v-model="title"
+              :placeholder="selected.title"
+              required=""
+              @blur="v$.title.$touch"
+              class="appearance-none block w-full px-3 py-2 border rounded-sm placeholder-slate-300 border-pink-500 sm:text-sm"
+            />
+            <span class="inline-flex items-center text-sm text-pink-500 pt-1"
+              ><font-awesome-icon
+                :icon="['far', 'circle-exclamation']"
+                class="mr-2 h-4 w-4"
+                aria-hidden="true"
+              />Required Field</span
+            >
           </div>
         </div>
         <!-- desc -->
@@ -94,15 +113,34 @@
           <label class="block text-sm font-regular text-slate-500">
             Description
           </label>
-          <div class="mt-1">
+          <div class="mt-1" v-if="!v$.desc.$error">
             <input
-              name="title"
+              name="desc"
               type="text"
               v-model="desc"
               :placeholder="selected.desc"
               required=""
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-400 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              @blur="v$.desc.$touch"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
+          </div>
+          <div class="mt-1" v-if="v$.desc.$error">
+            <input
+              name="desc"
+              type="text"
+              v-model="desc"
+              :placeholder="selected.desc"
+              required=""
+              @blur="v$.desc.$touch"
+              class="appearance-none block w-full px-3 py-2 border rounded-sm placeholder-slate-300 border-pink-500 sm:text-sm"
+            />
+            <span class="inline-flex items-center text-sm text-pink-500 pt-1"
+              ><font-awesome-icon
+                :icon="['far', 'circle-exclamation']"
+                class="mr-2 h-4 w-4"
+                aria-hidden="true"
+              />Required Field</span
+            >
           </div>
         </div>
       </div>
@@ -122,7 +160,7 @@
           </label>
           <div class="mt-1">
             <input
-              name="title"
+              name="twitterLink"
               type="text"
               v-model="twitterLink"
               placeholder="Twitter link"
@@ -138,7 +176,7 @@
           </label>
           <div class="mt-1">
             <input
-              name="title"
+              name="discordLink"
               type="text"
               v-model="discordLink"
               placeholder="Discord link"
@@ -155,15 +193,34 @@
           <label class="block text-sm font-regular text-slate-500">
             Number of Winners
           </label>
-          <div class="mt-1">
+          <div class="mt-1" v-if="!v$.numberOfWinners.$error">
             <input
-              name="winners"
+              name="numberOfWinners"
               type="text"
               v-model="numberOfWinners"
               placeholder="0"
               required=""
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-400 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              @blur="v$.numberOfWinners.$touch"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
+          </div>
+          <div class="mt-1" v-if="v$.numberOfWinners.$error">
+            <input
+              name="numberOfWinners"
+              type="text"
+              v-model="numberOfWinners"
+              placeholder="0"
+              required=""
+              @blur="v$.numberOfWinners.$touch"
+              class="appearance-none block w-full px-3 py-2 border rounded-sm placeholder-slate-300 border-pink-500 sm:text-sm"
+            />
+            <span class="inline-flex items-center text-sm text-pink-500 pt-1"
+              ><font-awesome-icon
+                :icon="['far', 'circle-exclamation']"
+                class="mr-2 h-4 w-4"
+                aria-hidden="true"
+              />Required Field & Integers only</span
+            >
           </div>
         </div>
         <!-- date & time -->
@@ -183,15 +240,34 @@
           <label class="block text-sm font-regular text-slate-500">
             $CHI Cost
           </label>
-          <div class="mt-1">
+          <div class="mt-1" v-if="!v$.amountToEnter.$error">
             <input
-              name="cost"
+              name="amountToEnter"
               type="text"
               v-model="amountToEnter"
               placeholder="0"
               required=""
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-400 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              @blur="v$.amountToEnter.$touch"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
+          </div>
+          <div class="mt-1" v-if="v$.amountToEnter.$error">
+            <input
+              name="amountToEnter"
+              type="text"
+              v-model="amountToEnter"
+              placeholder="0"
+              required=""
+              @blur="v$.amountToEnter.$touch"
+              class="appearance-none block w-full px-3 py-2 border rounded-sm placeholder-slate-300 border-pink-500 sm:text-sm"
+            />
+            <span class="inline-flex items-center text-sm text-pink-500 pt-1"
+              ><font-awesome-icon
+                :icon="['far', 'circle-exclamation']"
+                class="mr-2 h-4 w-4"
+                aria-hidden="true"
+              />Required Field & Integers only</span
+            >
           </div>
         </div>
         <!-- amount to win -->
@@ -204,12 +280,12 @@
           </label>
           <div class="mt-1">
             <input
-              name="reward"
+              name="amountToWin"
               type="text"
               v-model="amountToWin"
               placeholder="# of $CHI Tokens the winner will get"
               required=""
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-400 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
           </div>
         </div>
@@ -223,12 +299,12 @@
           </label>
           <div class="mt-1">
             <input
-              name="title"
+              name="tokenId"
               type="text"
               v-model="tokenId"
               placeholder="Enter token id of the NFT"
               required=""
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-400 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
           </div>
         </div>
@@ -237,7 +313,9 @@
       <div class="flex-col text-sm justify-center">
         <!-- img upload blank -->
         <div v-if="!preview">
-          <label class="block font-normal text-left text-slate-500"> Cover photo </label>
+          <label class="block font-normal text-left text-slate-500">
+            Cover photo
+          </label>
           <div class="mt-2">
             <div
               class="flex justify-center px-6 pt-8 pb-9 border-2 border-slate-300 border-dashed rounded-md"
@@ -289,7 +367,7 @@
               Clear Image
             </button>
             <div class="flex justify-center">
-                <img :src="preview" class="h-96" />
+              <img :src="preview" class="h-96" />
             </div>
           </div>
         </div>
@@ -334,8 +412,10 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import { mapGetters } from "vuex";
 import { v4 as uuidv4 } from "uuid";
+import useVuelidate from "@vuelidate/core";
+import { required, integer, url } from "@vuelidate/validators";
 import {
   Listbox,
   ListboxButton,
@@ -357,77 +437,52 @@ export default {
     CheckIcon,
     SelectorIcon,
   },
+  setup() {
+    return {
+      v$: useVuelidate(),
+    };
+  },
   data() {
     return {
       title: "",
       desc: "",
       amountToEnter: null,
       amountToWin: null,
-      tokenId: "",
+      tokenId: null,
       numberOfWinners: null,
       twitterLink: "",
       discordLink: "",
       categories: [
         {
-          id: 1,
           category: "$CHI Tokens",
           title: "$CHI Raffle",
           desc: "Enter for a chance to win $CHI Tokens",
-          amountToEnter: 0,
-          amountToWin: 0,
-          tokenId: null,
-          img: null,
         },
         {
-          id: 2,
           category: "Chibits NFT",
           title: "Chibits NFT Raffle",
           desc: "Enter for a chance to win a Chibits - Hana NFT!",
-          amountToEnter: 0,
-          amountToWin: 0,
-          tokenId: null,
-          img: null,
         },
         {
-          id: 3,
           category: "WL Raffle",
           title: "WL Raffle",
           desc: "Enter for a chance to win a whitelist spot!",
-          amountToEnter: 0,
-          amountToWin: 0,
-          tokenId: null,
-          img: null,
         },
         {
-          id: 4,
           category: "Instant WL",
           title: "Instant WL",
           desc: "Buy an instant whitelist spot!",
-          amountToEnter: 0,
-          amountToWin: 0,
-          tokenId: null,
-          img: null,
         },
         {
-          id: 5,
           category: "IRL Raffle",
           title: "IRL Raffle",
           desc: "Enter for a chance to win irl merch!",
-          amountToEnter: 0,
-          amountToWin: 0,
-          tokenId: null,
-          img: null,
         },
       ],
       selected: {
-        id: 1,
         category: "$CHI Tokens",
         title: "$CHI Raffle",
         desc: "Enter for a chance to win $CHI Tokens",
-        amountToEnter: 0,
-        amountToWin: 0,
-        tokenId: null,
-        img: null,
       },
       preview: null,
       filePath: null,
@@ -435,6 +490,15 @@ export default {
       expirationDate: new Date(),
       startDate: new Date(),
       loading: false,
+    };
+  },
+  validations() {
+    return {
+      title: { required, $lazy: true },
+      desc: { required, $lazy: true },
+      amountToEnter: { required, integer, $lazy: true },
+      numberOfWinners: { required, integer, $lazy: true },
+      file: { required, $lazy: true }
     };
   },
   methods: {
@@ -459,31 +523,33 @@ export default {
       this.filePath = null;
     },
     async submitNewItem() {
-      try {
-        this.loading = true;
-        if (!this.file) {
-          throw new Error("You must select and image to upload.");
+      const result = await this.v$.$validate();
+      if(!this.file) {
+          alert('Image is required')
+      }
+      if (result && this.file) {
+        try {
+          this.loading = true;
+          const { error: uploadError } = await supabase.storage
+            .from("images")
+            .upload(`public/${this.filePath}`, this.file, {
+              cacheControl: "3600",
+              upsert: false,
+            });
+          if (uploadError) throw uploadError;
+        } catch (error) {
+          alert(error.message);
+        } finally {
+          const { publicURL } = supabase.storage
+            .from("images")
+            .getPublicUrl(`public/${this.filePath}`);
+          this.clearImage();
+          this.addItemToDatabase(publicURL);
         }
-
-        let { error: uploadError } = await supabase.storage
-          .from("images")
-          .upload(`public/${this.filePath}`, this.file, {
-            cacheControl: "3600",
-            upsert: false,
-          });
-        if (uploadError) throw uploadError;
-      } catch (error) {
-        alert(error.message);
-      } finally {
-        const { publicURL } = supabase.storage
-          .from("images")
-          .getPublicUrl(`public/${this.filePath}`);
-        this.clearImage();
-        this.addItemToDatabase(publicURL);
       }
     },
     async addItemToDatabase(publicURL) {
-      let item = {
+      const item = {
         title: this.title,
         desc: this.desc,
         amountToEnter: this.amountToEnter,
@@ -495,13 +561,10 @@ export default {
         twitterLink: this.twitterLink,
         discordLink: this.discordLink,
         imgUrl: publicURL,
-        user_id: this.getAuthUser.id
+        user_id: this.getAuthUser.id,
       };
       try {
-        if (!this.title) {
-          throw new Error("You must have a title");
-        }
-        let { error: uploadError } = await supabase
+        const { error: uploadError } = await supabase
           .from("marketplace")
           .insert(item);
         if (uploadError) throw uploadError;
@@ -509,14 +572,14 @@ export default {
         alert(error.message);
       } finally {
         this.loading = false;
-        this.$emit('dbreload')
+        this.$emit("dbreload");
         console.log("item added successfully");
       }
     },
   },
   computed: {
-      ...mapGetters(["getAuthUser"])
-  }
+    ...mapGetters(["getAuthUser"]),
+  },
 };
 </script>
 

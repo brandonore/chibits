@@ -19,6 +19,8 @@
     "@headlessui/vue": "^1.6.1",
     "@heroicons/vue": "^1.0.6",
     "@supabase/supabase-js": "^1.35.3",
+    "@vuelidate/core": "^2.0.0-alpha.41",
+    "@vuelidate/validators": "^2.0.0-alpha.29",
     "@vuepic/vue-datepicker": "^3.2.0",
     "core-js": "^3.8.3",
     "firebase": "^9.8.0",

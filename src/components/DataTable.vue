@@ -233,9 +233,14 @@ export default {
     },
     async deleteItem(item) {
       const id = item.id;
-      let prefix = 'https://vpyikcjriwwrxoblslds.supabase.co/storage/v1/object/public/images/public/'
-      let url = item.imgUrl;
-      let imgUrl = url.slice(prefix.length)
+      let prefix =
+        "https://vpyikcjriwwrxoblslds.supabase.co/storage/v1/object/public/images/public/";
+        let url = ''
+        let imgUrl = ''
+      if(item.url) {
+          url = item.imgUrl;
+        imgUrl = url.slice(prefix.length);
+      }
 
       try {
         const { data, error } = await supabase
@@ -249,22 +254,23 @@ export default {
       } finally {
         console.log("item deleted successfully");
         this.getData();
-        this.deleteImg(imgUrl)
+        if(url !== '') {
+            this.deleteImg(imgUrl);
+        }
       }
     },
     async deleteImg(url) {
-        try {
-        const { data, error } = await supabase.storage
-          .from("images")
-          .remove([`public/${url}`]);
-
-          if(error) throw error
-        } catch (error) {
-            alert(error.message)
-        } finally {
-            console.log('img deleted')
-        }
-    }
+      try {
+          const { data, error } = await supabase.storage
+            .from("images")
+            .remove([`public/${url}`]);
+        if (error) throw error;
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        console.log("img deleted");
+      }
+    },
   },
   computed: {
     ...mapGetters(["getAuthUser"]),

@@ -7,8 +7,8 @@
       class="inline-flex items-center px-12 py-3 rounded-sm text-sm font-medium text-white bg-gradient-to-tl from-pink-500 to-rose-500 hover:opacity-75 hover:text-white transition-all linear"
     >
       <font-awesome-icon
-        :icon="['fas', 'circle-exclamation']"
-        class="-ml-1 mr-2 h-5 w-5"
+        :icon="['fas', 'wifi-slash']"
+        class="-mx-2 mr-2 h-5 w-5"
         aria-hidden="true"
       />
       Disconnect
@@ -23,7 +23,7 @@
     >
       <font-awesome-icon
         :icon="['fas', 'wallet']"
-        class="-ml-1 mr-2 h-5 w-5"
+        class="-mx-2 mr-2 h-5 w-5"
         aria-hidden="true"
       />
       Connect Wallet
