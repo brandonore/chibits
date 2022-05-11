@@ -2,10 +2,10 @@
   <div class="max-w-7xl px-4 pt-6 pb-8 sm:px-6 md:px-8">
     <h1 class="titles text-2xl text-left text-slate-500">Marketplace</h1>
   </div>
-  <div class="marketplace flex justify-between max-w-7xl mx-auto px-2 sm:px-0">
+  <div class="marketplace flex flex-col md:flex-row justify-evenly max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
     <!-- Replace with your content -->
     <!-- sid nav -->
-    <div class="side-nav mr-12 flex-col w-48">
+    <div class="side-nav w-full mb-12 md:mr-12 flex-col md:w-48">
       <div class="bg-white rounded-md border-2">
         <div class="h-12 my-2 flex items-center justify-center">
           <h1 class="text-xl text-slate-500 uppercase">Categories</h1>
@@ -31,7 +31,7 @@
       <ul
       v-if="isActive === 'Chibits'"
         role="list"
-        class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4"
+        class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
         <li
           v-for="item in chibits"
