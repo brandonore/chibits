@@ -24,9 +24,9 @@
       <!-- <div class="absolute top-0 right-60">
           <img class="h-44" src="../assets/images/hana/taiyaki.png" alt="">
       </div> -->
-      <div class="absolute -bottom-1 -left-3 z-0">
+      <!-- <div class="absolute -bottom-1 -left-3 z-0">
           <img class="h-44 w-44" src="../assets/images/hana/peek.png" alt="">
-      </div>
+      </div> -->
       <!-- disconnect btn -->
       <div v-if="getUserAccount" class="absolute top-6 right-6">
         <ConnectWallet />

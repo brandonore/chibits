@@ -311,7 +311,9 @@ export default {
   font-family: "CeraLight", sans-serif;
   /* text-transform: uppercase; */
 }
-
+.cera-title {
+    font-family: "CeraBlack", sans-serif;
+}
 .router-link-exact-active {
   background-color: #f43f5e;
   color: white;
@@ -354,6 +356,9 @@ export default {
   background-color: transparent;
   color: white;
   border: none;
+}
+.sidebar-mint svg {
+    color: white;
 }
 .sidebar-reg {
   background-color: white;
