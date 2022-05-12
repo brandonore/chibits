@@ -48,7 +48,7 @@
               aria-hidden="true"
             />
             <div v-if="!publicSaleStarted" class="flex-col">
-              <h1 class="text-white font-bold text-xl">
+              <h1 class="text-white cera-bold text-xl">
                 Your wallet is whitelisted
               </h1>
               <p
@@ -65,7 +65,7 @@
               </p>
             </div>
             <div v-else-if="publicSaleStarted" class="flex-col">
-              <h1 class="text-white font-bold text-xl">
+              <h1 class="text-white cera-bold text-xl">
                 Public sale has started!
               </h1>
               <p class="text-white text-sm font-normal">
@@ -85,7 +85,7 @@
               aria-hidden="true"
             />
             <div class="flex-col">
-              <h1 class="text-white font-bold text-xl">
+              <h1 class="text-white cera-bold text-xl">
                 Your wallet is not whitelisted
               </h1>
               <p class="text-white text-sm font-normal">
@@ -105,7 +105,7 @@
               aria-hidden="true"
             />
             <div class="flex-col">
-              <h1 class="text-white font-bold text-xl">
+              <h1 class="text-white cera-bold text-xl">
                 Public sale has started!
               </h1>
               <p class="text-white text-sm font-normal">
@@ -482,7 +482,7 @@
                 <div class="mt-3 text-center sm:mt-5">
                   <DialogTitle
                     as="h3"
-                    class="mint-ask text-3xl font-bold leading-6 text-white"
+                    class="mint-ask text-3xl cera-bold leading-6 text-white"
                   >
                     Mint
                   </DialogTitle>
@@ -509,7 +509,7 @@
                               checked
                                 ? 'bg-gradient-to-tl from-pink-500 to-rose-500 border-transparent text-white'
                                 : 'bg-transparent border-white border-2 text-white hover:bg-white hover:text-slate-500',
-                              'border rounded-sm py-2 px-3 flex items-center justify-center text-md font-bold uppercase sm:flex-1',
+                              'border rounded-sm py-2 px-3 flex items-center justify-center text-md cera-bold uppercase sm:flex-1',
                             ]"
                           >
                             <RadioGroupLabel as="p">

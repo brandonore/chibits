@@ -18,32 +18,32 @@
           <dl>
             <dt
               v-if="card.id === 1"
-              class="text-3xl font-bold text-pink-chi truncate"
+              class="text-3xl cera-bold text-pink-chi truncate"
             >
               <span
                 v-if="!getUserAccount"
                 >0</span
               >
-              <span v-else-if="getBalance && !getStakedBalance">
+              <span class="cera-bold" v-else-if="getBalance && !getStakedBalance">
                   {{ getBalance }}
               </span>
-              <span v-else-if="!getBalance && getStakedBalance">
+              <span class="cera-bold" v-else-if="!getBalance && getStakedBalance">
                   {{ getStakedBalance.length }}
               </span>
-              <span v-else>{{
+              <span class="cera-bold" v-else>{{
                 Number(getBalance) + Number(getStakedBalance.length)
               }}</span>
             </dt>
             <dt
               v-if="card.id === 2"
-              class="text-3xl font-bold text-pink-chi truncate"
+              class="text-3xl cera-bold text-pink-chi truncate"
             >
-              <span v-if="getStakedBalance.length >= 5"> 5% </span>
-              <span v-else> 0% </span>
+              <span class="cera-bold" v-if="getStakedBalance.length >= 5"> 5% </span>
+              <span class="cera-bold" v-else> 0% </span>
             </dt>
             <dt
               v-if="card.id === 3"
-              class="text-3xl font-bold text-pink-chi truncate"
+              class="text-3xl cera-bold text-pink-chi truncate"
             >
               {{ Math.trunc(totalRewards) }}
             </dt>
@@ -60,7 +60,7 @@
       >
         <div class="flex items-center justify-evenly card-bg w-full px-5 py-10">
           <dl>
-            <dt class="text-3xl font-bold text-pink-chi truncate">
+            <dt class="text-3xl cera-bold text-pink-chi truncate">
               {{ totalUnclaimedRewards }}
             </dt>
             <dd>

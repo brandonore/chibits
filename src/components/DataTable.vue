@@ -19,15 +19,15 @@
     <div class="mt-8 flex flex-col">
       <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-          <div class="overflow-hidden md:rounded-sm border-2">
-            <table class="min-w-full divide-y divide-slate-300">
-              <thead class="bg-slate-50">
+          <div class="overflow-hidden md:rounded-sm border-2 dark:border-slate-500">
+            <table class="min-w-full divide-y divide-slate-300 dark:divide-slate-500">
+              <thead class="bg-slate-50 dark:bg-slate-800">
                 <tr>
                   <th
                     scope="col"
-                    class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-slate-700 sm:pl-6"
+                    class="py-3.5 pl-4 pr-3 text-left text-sm text-slate-500 sm:pl-6"
                   >
-                    <a href="#" class="group inline-flex">
+                    <a href="#" class="cera-extrabold group inline-flex">
                       Category
                       <span
                         class="invisible ml-2 flex-none rounded text-slate-400 group-hover:visible group-focus:visible"
@@ -38,12 +38,12 @@
                   </th>
                   <th
                     scope="col"
-                    class="px-3 py-3.5 text-left text-sm font-semibold text-slate-700"
+                    class="px-3 py-3.5 text-left text-sm font-semibold text-slate-500"
                   >
-                    <a href="#" class="group inline-flex">
+                    <a href="#" class="cera-extrabold group inline-flex">
                       Title
                       <span
-                        class="ml-2 flex-none rounded bg-slate-200 text-slate-700 group-hover:bg-slate-300"
+                        class="ml-2 flex-none rounded dark:bg-slate-600 text-slate-700 group-hover:bg-slate-300"
                       >
                         <ChevronDownIcon class="h-5 w-5" aria-hidden="true" />
                       </span>
@@ -51,9 +51,9 @@
                   </th>
                   <th
                     scope="col"
-                    class="px-3 py-3.5 text-left text-sm font-semibold text-slate-700"
+                    class="px-3 py-3.5 text-left text-sm font-semibold text-slate-500"
                   >
-                    <a href="#" class="group inline-flex">
+                    <a href="#" class="cera-extrabold group inline-flex">
                       Description
                       <span
                         class="invisible ml-2 flex-none rounded text-slate-400 group-hover:visible group-focus:visible"
@@ -67,9 +67,9 @@
                   </th>
                   <th
                     scope="col"
-                    class="px-3 py-3.5 text-left text-sm font-semibold text-slate-700"
+                    class="px-3 py-3.5 text-left text-sm font-semibold text-slate-500"
                   >
-                    <a href="#" class="group inline-flex">
+                    <a href="#" class="cera-extrabold group inline-flex">
                       $CHI Cost
                       <span
                         class="invisible ml-2 flex-none rounded text-slate-400 group-hover:visible group-focus:visible"
@@ -86,7 +86,7 @@
                   </th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-200 bg-white">
+              <tbody class="divide-y divide-slate-200 bg-white dark:bg-slate-800 dark:divide-slate-500">
                 <tr v-for="item in data" :key="item.id">
                   <td
                     class="whitespace-nowrap text-left pl-4 pr-3 py-4 text-sm font-medium text-slate-500"
@@ -162,7 +162,7 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <DialogPanel
-                class="w-full sm:w-2/3 xl:w-1/2 2xl:w-1/3 relative inline-block align-middle bg-white rounded-sm p-8 transform transition-all"
+                class="w-full sm:w-2/3 xl:w-1/2 2xl:w-1/3 relative inline-block align-middle bg-white dark:bg-slate-800 rounded-sm p-8 transform transition-all"
               >
                 <AddMarketplaceItem @dbreload="triggerDbReload" />
               </DialogPanel>

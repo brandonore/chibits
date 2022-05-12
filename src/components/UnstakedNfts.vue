@@ -1,5 +1,5 @@
 <template>
-  <div class="md:mt-8 pt-4 mb-8">
+  <div class="md:mt-8 pt-4 pb-12">
     <div class="flex items-center justify-between pt-4 pb-8">
       <h1 class="titles text-2xl text-left text-slate-500">Unstaked NFTs ({{ getBalance }})</h1>
       <button
@@ -47,12 +47,12 @@
         <div
           v-for="nft in sortedNfts"
           :key="nft.tokenId"
-          class="rounded-lg nft-card overflow-hidden"
+          :class="{ active: nft.active }"
+            @click="!txSubmitted && getNftId(nft)"
+          class="rounded-lg nft-card overflow-hidden bg-white dark:bg-slate-800 pb-3"
         >
           <div
             class="flex-col relative items-center justify-evenly"
-            :class="{ active: nft.active }"
-            @click="!txSubmitted && getNftId(nft)"
           >
             <span
               v-show="nft.active"
@@ -63,11 +63,16 @@
             <img :src="nft.url" class="rounded-lg nft-img w-full" />
           </div>
           <div class="flex-col p-2 items-center justify-evenly">
-            <h1 class="small-title text-sm text-slate-400">
+            <h1 class="small-title text-md text-slate-400">
               hana //
-              <span class="text-md font-bold">NO. {{ nft.tokenId }}</span>
+              <span class="text-lg cera-bold">NO. {{ nft.tokenId }}</span>
             </h1>
-            <div class="small-title text-md text-slate-400"><span class="font-bold">{{ nft.reward }} CHI</span> per day</div>
+            <div class="small-title text-md text-slate-400">
+              <span
+                class="inline-flex items-center px-3 py-0.5 rounded-lg text-sm cera-bold dark:bg-slate-500 dark:text-slate-800 bg-emerald-100 text-emerald-600"
+                >{{ nft.reward }} $CHI per day</span
+              > 
+            </div>
           </div>
         </div>
       </div>
@@ -424,7 +429,7 @@ export default {
 
 <style>
 .active {
-  border: 4px solid #8b5cf6;
+  outline: 4px solid #8b5cf6;
   border-radius: 0.75rem;
 }
 .nft-card {

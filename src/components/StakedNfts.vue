@@ -64,12 +64,12 @@
         <div
           v-for="nft in sortedNfts"
           :key="nft.tokenId"
-          class="rounded-lg nft-card overflow-hidden"
+          :class="{ active: nft.active }"
+            @click="!txSubmitted && getNftId(nft)"
+          class="rounded-lg nft-card bg-white pb-3 dark:bg-slate-800 overflow-hidden"
         >
           <div
             class="flex-col relative items-center justify-evenly"
-            :class="{ active: nft.active }"
-            @click="!txSubmitted && getNftId(nft)"
           >
             <span
               v-show="nft.active"
@@ -77,19 +77,20 @@
             >
               <font-awesome-icon class="h-6 w-6" :icon="checkedIcon"
             /></span>
-            <img :src="nft.url" class="rounded-lg nft-img w-full" />
-          </div>
+            <img :src="nft.url" class="rounded-tl-lg rounded-tr-lg nft-img w-full" />
+          
           <div class="flex-col p-2 items-center justify-evenly">
-            <h1 class="small-title text-sm text-slate-400">
+            <h1 class="small-title pb-1 text-md text-slate-500">
               hana //
-              <span class="text-md font-bold">NO. {{ nft.tokenId }}</span>
+              <span class="text-lg cera-bold">NO. {{ nft.tokenId }}</span>
             </h1>
-            <div class="small-title text-md text-slate-400">
+            <div class="small-title text-md">
               <span
-                class="inline-flex items-center px-3 py-0.5 rounded-lg text-sm font-medium bg-violet-400 text-white"
-                >{{ nft.reward }} CHI per day</span
+                class="inline-flex items-center px-3 py-0.5 rounded-lg text-sm cera-bold dark:bg-slate-500 dark:text-slate-800 bg-emerald-100 text-emerald-600"
+                >{{ nft.reward }} $CHI per day</span
               > 
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -217,7 +218,7 @@ export default {
             type: "info",
             transition: "bounce",
             toastBackgroundColor: "#0ea5e9",
-            hideProgressBar: "true",
+            hideProgressBar: true,
           });
         })
         .on("receipt", (receipt) => {
@@ -231,7 +232,7 @@ export default {
             timeout: 4000,
             type: "success",
             transition: "bounce",
-            hideProgressBar: "true",
+            hideProgressBar: true,
           });
         })
         .on("error", (error) => {
@@ -243,7 +244,7 @@ export default {
             timeout: 4000,
             type: "danger",
             transition: "bounce",
-            hideProgressBar: "true",
+            hideProgressBar: true,
           });
         });
     },

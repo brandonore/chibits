@@ -11,7 +11,7 @@
           <Listbox as="div" v-model="selected">
             <div class="mt-1 relative">
               <ListboxButton
-                class="bg-white relative w-full border border-gray-300 rounded-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+                class="bg-white dark:bg-slate-800 dark:border-slate-500 relative w-full border border-gray-300 rounded-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
               >
                 <span class="block truncate">{{ selected.category }}</span>
                 <span
@@ -30,7 +30,7 @@
                 leave-to-class="opacity-0"
               >
                 <ListboxOptions
-                  class="absolute z-10 mt-1 w-full bg-white max-h-60 rounded-sm py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+                  class="absolute z-10 mt-1 w-full dark:bg-slate-800 dark:border-slate-500 bg-white max-h-60 rounded-sm py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
                 >
                   <ListboxOption
                     as="template"
@@ -86,7 +86,7 @@
               :placeholder="selected.title"
               required=""
               @blur="v$.title.$touch"
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
           </div>
           <div class="mt-1" v-if="v$.title.$error">
@@ -97,7 +97,7 @@
               :placeholder="selected.title"
               required=""
               @blur="v$.title.$touch"
-              class="appearance-none block w-full px-3 py-2 border rounded-sm placeholder-slate-300 border-pink-500 sm:text-sm"
+              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border rounded-sm placeholder-slate-300 dark:placeholder-slate-500 border-pink-500 sm:text-sm"
             />
             <span class="inline-flex items-center text-sm text-pink-500 pt-1"
               ><font-awesome-icon
@@ -121,7 +121,7 @@
               :placeholder="selected.desc"
               required=""
               @blur="v$.desc.$touch"
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
           </div>
           <div class="mt-1" v-if="v$.desc.$error">
@@ -132,7 +132,7 @@
               :placeholder="selected.desc"
               required=""
               @blur="v$.desc.$touch"
-              class="appearance-none block w-full px-3 py-2 border rounded-sm placeholder-slate-300 border-pink-500 sm:text-sm"
+              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border rounded-sm placeholder-slate-300 dark:placeholder-slate-500 border-pink-500 sm:text-sm"
             />
             <span class="inline-flex items-center text-sm text-pink-500 pt-1"
               ><font-awesome-icon
@@ -165,7 +165,7 @@
               v-model="twitterLink"
               placeholder="Twitter link"
               required=""
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-400 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
           </div>
         </div>
@@ -181,7 +181,7 @@
               v-model="discordLink"
               placeholder="Discord link"
               required=""
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-400 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
           </div>
         </div>
@@ -201,7 +201,7 @@
               placeholder="0"
               required=""
               @blur="v$.numberOfWinners.$touch"
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              class="appearance-none dark:bg-slate-800 dark:border-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
           </div>
           <div class="mt-1" v-if="v$.numberOfWinners.$error">
@@ -212,7 +212,7 @@
               placeholder="0"
               required=""
               @blur="v$.numberOfWinners.$touch"
-              class="appearance-none block w-full px-3 py-2 border rounded-sm placeholder-slate-300 border-pink-500 sm:text-sm"
+              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border rounded-sm placeholder-slate-300 dark:placeholder-slate-500 border-pink-500 sm:text-sm"
             />
             <span class="inline-flex items-center text-sm text-pink-500 pt-1"
               ><font-awesome-icon
@@ -229,7 +229,7 @@
             Set Expiration Date & Time
           </label>
           <div class="mt-1">
-            <Datepicker v-model="expirationDate" :is24="false" />
+            <Datepicker class="dark:bg-slate-800 dark:border-slate-500" v-model="expirationDate" :is24="false" />
           </div>
         </div>
       </div>
@@ -248,7 +248,7 @@
               placeholder="0"
               required=""
               @blur="v$.amountToEnter.$touch"
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
           </div>
           <div class="mt-1" v-if="v$.amountToEnter.$error">
@@ -259,7 +259,7 @@
               placeholder="0"
               required=""
               @blur="v$.amountToEnter.$touch"
-              class="appearance-none block w-full px-3 py-2 border rounded-sm placeholder-slate-300 border-pink-500 sm:text-sm"
+              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border rounded-sm placeholder-slate-300 dark:placeholder-slate-500 border-pink-500 sm:text-sm"
             />
             <span class="inline-flex items-center text-sm text-pink-500 pt-1"
               ><font-awesome-icon
@@ -285,7 +285,7 @@
               v-model="amountToWin"
               placeholder="# of $CHI Tokens the winner will get"
               required=""
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
           </div>
         </div>
@@ -304,7 +304,7 @@
               v-model="tokenId"
               placeholder="Enter token id of the NFT"
               required=""
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
           </div>
         </div>
@@ -318,7 +318,7 @@
           </label>
           <div class="mt-2">
             <div
-              class="flex justify-center px-6 pt-8 pb-9 border-2 border-slate-300 border-dashed rounded-md"
+              class="flex justify-center px-6 pt-8 pb-9 border-2 border-slate-500 border-dashed rounded-md"
             >
               <div class="space-y-1 text-center">
                 <div class="flex justify-center text-sm text-slate-600">
@@ -351,7 +351,7 @@
                     />
                   </label>
                 </div>
-                <p class="text-xs text-gray-500">PNG, JPG or GIF</p>
+                <p class="text-xs text-slate-500">PNG, JPG or GIF</p>
               </div>
             </div>
           </div>

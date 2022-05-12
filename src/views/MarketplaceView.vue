@@ -6,22 +6,22 @@
     <!-- Replace with your content -->
     <!-- sid nav -->
     <div class="side-nav w-full mb-12 md:mr-12 flex-col md:w-48">
-      <div class="bg-white rounded-md border-2">
+      <div class="bg-white dark:bg-slate-800 dark:border-slate-500 rounded-md border-2">
         <div class="h-12 my-2 flex items-center justify-center">
           <h1 class="text-xl text-slate-500 uppercase">Categories</h1>
         </div>
         <nav class="space-y-1 pb-2 px-2" aria-label="Sidebar">
-          <a
+          <div
             v-for="item in navigation"
             :key="item.name"
             @click.prevent="setActive(item.name)"
-            :class="[(isActive == item.name) ? 'active' : 'text-slate-500 hover:bg-gray-100']"
+            :class="[(isActive == item.name) ? 'side-nav-active' : 'text-slate-500 hover:bg-gray-100']"
             class="cursor-pointer flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all linear"
           >
             <span class="truncate">
               {{ item.name }}
             </span>
-          </a>
+          </div>
         </nav>
       </div>
     </div>
@@ -36,7 +36,7 @@
         <li
           v-for="item in chibits"
           :key="item.id"
-          class="col-span-1 flex flex-col text-center bg-white rounded-md shadow divide-y divide-gray-200"
+          class="col-span-1 flex flex-col text-center bg-white dark:bg-slate-800 rounded-md shadow divide-y divide-gray-200"
         >
           <div class="flex-1 flex flex-col rounded-md">
             <img
@@ -45,7 +45,7 @@
               alt=""
             />
             <h1
-              class="mt-4 text-slate-500 uppercase text-2xl cera-title font-light"
+              class="mt-4 text-slate-600 uppercase text-2xl cera-extrabold font-light"
             >
               {{ item.title }}
             </h1>
@@ -54,7 +54,7 @@
               <div class="mt-3 flex justify-center">
                 <div class="pr-2">Price</div>
                 <div
-                  class="px-2 py-1 text-emerald-600 text-xs font-medium bg-emerald-100 rounded-full"
+                  class="px-3 py-0.5 text-emerald-600 text-sm dark:bg-slate-500 dark:text-slate-800 cera-extrabold bg-emerald-100 rounded-lg"
                 >
                   {{ item.amountToEnter }} $CHI
                 </div>
@@ -64,7 +64,7 @@
                 {{ formatExpiration(item.expirationDate) }}
               </div>
               <div class="mt-3">
-                <div>{{ item.numberOfWinners }} winners!</div>
+                  <div>{{ item.numberOfWinners }} winners!</div>
               </div>
             </div>
           </div>
@@ -92,7 +92,7 @@
       <ul
       v-if="isActive === 'Instant WL'"
         role="list"
-        class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4"
+        class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
         <li
           v-for="item in instantWL"
@@ -106,7 +106,7 @@
               alt=""
             />
             <h1
-              class="mt-4 text-slate-500 uppercase text-2xl cera-title font-light"
+              class="mt-4 text-slate-500 uppercase text-2xl cera-extrabold font-light"
             >
               {{ item.title }}
             </h1>
@@ -115,7 +115,7 @@
               <div class="mt-3 flex justify-center">
                 <div class="pr-2">Price</div>
                 <div
-                  class="px-2 py-1 text-emerald-600 text-xs font-medium bg-emerald-100 rounded-full"
+                  class="px-3 py-0.5 text-emerald-600 text-sm dark:bg-slate-500 dark:text-slate-800 cera-extrabold bg-emerald-100 rounded-lg"
                 >
                   {{ item.amountToEnter }} $CHI
                 </div>
@@ -153,7 +153,7 @@
       <ul
       v-if="isActive === 'WL Raffle'"
         role="list"
-        class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4"
+        class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
         <li
           v-for="item in wlRaffle"
@@ -167,7 +167,7 @@
               alt=""
             />
             <h1
-              class="mt-4 text-slate-500 uppercase text-2xl cera-title font-light"
+              class="mt-4 text-slate-500 uppercase text-2xl cera-extrabold font-light"
             >
               {{ item.title }}
             </h1>
@@ -176,7 +176,7 @@
               <div class="mt-3 flex justify-center">
                 <div class="pr-2">Price</div>
                 <div
-                  class="px-2 py-1 text-emerald-600 text-xs font-medium bg-emerald-100 rounded-full"
+                  class="px-3 py-0.5 text-emerald-600 text-sm dark:bg-slate-500 dark:text-slate-800 cera-extrabold bg-emerald-100 rounded-lg"
                 >
                   {{ item.amountToEnter }} $CHI
                 </div>
@@ -214,7 +214,7 @@
       <ul
       v-if="isActive === 'IRL Raffle'"
         role="list"
-        class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4"
+        class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
         <li
           v-for="item in irlRaffle"
@@ -228,7 +228,7 @@
               alt=""
             />
             <h1
-              class="mt-4 text-slate-500 uppercase text-2xl cera-title font-light"
+              class="mt-4 text-slate-500 uppercase text-2xl cera-extrabold font-light"
             >
               {{ item.title }}
             </h1>
@@ -237,7 +237,7 @@
               <div class="mt-3 flex justify-center">
                 <div class="pr-2">Price</div>
                 <div
-                  class="px-2 py-1 text-emerald-600 text-xs font-medium bg-emerald-100 rounded-full"
+                  class="px-3 py-0.5 text-emerald-600 text-sm dark:bg-slate-500 dark:text-slate-800 cera-extrabold bg-emerald-100 rounded-lg"
                 >
                   {{ item.amountToEnter }} $CHI
                 </div>
@@ -412,7 +412,7 @@ export default {
 </script>
 
 <style>
-.active {
+.side-nav-active {
     background-color: #f43f5e;
     color: white;
 }

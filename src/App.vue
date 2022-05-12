@@ -11,15 +11,15 @@
         <!-- Sidebar component, swap this element with another sidebar if you like -->
         <div
           :class="mintRoute ? 'sidebar-mint' : 'sidebar-reg'"
-          class="flex flex-col flex-grow md:border-r border-gray-200 pt-5 overflow-y-auto dark:bg-gray-900 dark:text-slate-500 dark:border-gray-600"
+          class="sidebar flex flex-col flex-grow md:border-r border-gray-200 pt-5 overflow-y-auto dark:bg-gray-900 dark:text-slate-500 dark:border-gray-600"
         >
           <div class="flex items-center flex-shrink-0 px-4">
-            <img
-              class="h-8 w-auto"
-              src="./assets/images/other/chick.png"
-              alt="Chicken"
-            />
-            <h1 class="pl-5 text-2xl logo-text">Chibits</h1>
+             <font-awesome-icon
+                    :icon="['fas', 'star']"
+                    class="h-6 text-rose-500 dark:text-slate-500"
+                    aria-hidden="true"
+                  />
+            <h1 class="pl-2 text-rose-500 dark:text-slate-500 text-2xl logo-text">Chibits</h1>
           </div>
           <div class="mt-5 flex-grow flex flex-col">
             <nav class="flex-1 px-2 pb-4 space-y-1">
@@ -68,12 +68,12 @@
       <div :class="mintRoute ? 'top-mint' : 'top-regular'" class="">
         <div
           :class="mintRoute ? 'mint-route' : 'not-mint-route'"
-          class="sticky top-0 z-10 flex h-16 dark:bg-slate-800 dark:text-slate-500"
+          class="sticky top-0 z-10 flex h-16"
         >
           <button
             v-if="!sidebarOpen"
             type="button"
-            class="px-4 text-white dark:border-gray-700"
+            class="px-4 text-white"
             @click="sidebarOpen = !sidebarOpen"
           >
             <span class="sr-only">Open sidebar</span>
@@ -111,14 +111,17 @@
         <div
           class="sticky menu-reg top-0 z-10 flex bg-white dark:bg-slate-800 dark:text-slate-500"
         >
+         <div v-if="!sidebarOpen" class="flex items-center">
           <button
             type="button"
             class="px-4 text-gray-500 border-r dark:border-gray-700"
             @click="sidebarOpen = !sidebarOpen"
           >
-            <span class="sr-only">Open sidebar</span>
-            <MenuAlt2Icon class="h-6 w-6" aria-hidden="true" />
+           
+                <MenuAlt2Icon class="h-6 w-6" aria-hidden="true" />
+            
           </button>
+          </div>
           <div class="flex-1 flex">
             <div class="flex-1 flex items-center justify-end">
               <ConnectWallet v-if="notHome" />
@@ -311,8 +314,11 @@ export default {
   font-family: "CeraLight", sans-serif;
   /* text-transform: uppercase; */
 }
-.cera-title {
+.cera-extrabold {
     font-family: "CeraBlack", sans-serif;
+}
+.cera-bold {
+    font-family: "CeraBold", sans-serif;
 }
 .router-link-exact-active {
   background-color: #f43f5e;
@@ -357,7 +363,10 @@ export default {
   color: white;
   border: none;
 }
-.sidebar-mint svg {
+.sidebar .dark {
+    background-color: transparent;
+}
+.sidebar-mint svg, .sidebar-mint h1 {
     color: white;
 }
 .sidebar-reg {
