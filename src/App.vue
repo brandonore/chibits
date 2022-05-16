@@ -14,12 +14,16 @@
           class="sidebar flex flex-col flex-grow md:border-r border-gray-200 pt-5 overflow-y-auto dark:bg-gray-900 dark:text-slate-500 dark:border-gray-600"
         >
           <div class="flex items-center flex-shrink-0 px-4">
-             <font-awesome-icon
-                    :icon="['fas', 'star']"
-                    class="h-6 text-rose-500 dark:text-slate-500"
-                    aria-hidden="true"
-                  />
-            <h1 class="pl-2 text-rose-500 dark:text-slate-500 text-2xl logo-text">Chibits</h1>
+            <font-awesome-icon
+              :icon="['fas', 'star']"
+              class="h-6 text-rose-500 dark:text-slate-500"
+              aria-hidden="true"
+            />
+            <h1
+              class="pl-2 text-rose-500 dark:text-slate-500 text-2xl cera-extrabold uppercase"
+            >
+              Chibits
+            </h1>
           </div>
           <div class="mt-5 flex-grow flex flex-col">
             <nav class="flex-1 px-2 pb-4 space-y-1">
@@ -111,16 +115,14 @@
         <div
           class="sticky menu-reg top-0 z-10 flex bg-white dark:bg-slate-800 dark:text-slate-500"
         >
-         <div v-if="!sidebarOpen" class="flex items-center">
-          <button
-            type="button"
-            class="px-4 text-gray-500 border-r dark:border-gray-700"
-            @click="sidebarOpen = !sidebarOpen"
-          >
-           
-                <MenuAlt2Icon class="h-6 w-6" aria-hidden="true" />
-            
-          </button>
+          <div v-if="!sidebarOpen" class="flex items-center">
+            <button
+              type="button"
+              class="px-4 text-gray-500 border-r dark:border-gray-700"
+              @click="sidebarOpen = !sidebarOpen"
+            >
+              <MenuAlt2Icon class="h-6 w-6" aria-hidden="true" />
+            </button>
           </div>
           <div class="flex-1 flex">
             <div class="flex-1 flex items-center justify-end">
@@ -229,6 +231,7 @@ export default {
       "SET_USER_ACCOUNT",
       "SET_TOKEN_INSTANCE",
       "SET_STAKING_INSTANCE",
+      "SET_REWARD_INSTANCE",
       "SET_NFTS",
     ]),
     applyDarkMode() {
@@ -288,7 +291,11 @@ export default {
       contract.STAKING_ABI,
       contract.STAKING_ADDR
     );
-
+    let REWARD_INSTANCE = new web3.eth.Contract(
+      contract.REWARD_ABI,
+      contract.REWARD_ADDR
+    );
+    this.SET_REWARD_INSTANCE(REWARD_INSTANCE);
     this.SET_TOKEN_INSTANCE(TOKEN_INSTANCE);
     this.SET_STAKING_INSTANCE(STAKING_INSTANCE);
   },
@@ -315,17 +322,17 @@ export default {
   /* text-transform: uppercase; */
 }
 .cera-extrabold {
-    font-family: "CeraBlack", sans-serif;
+  font-family: "CeraBlack", sans-serif;
 }
 .cera-bold {
-    font-family: "CeraBold", sans-serif;
+  font-family: "CeraBold", sans-serif;
 }
 .router-link-exact-active {
   background-color: #f43f5e;
   color: white;
 }
 .router-link-exact-active svg {
-    color: white;
+  color: white;
 }
 
 .logo-text {
@@ -364,10 +371,11 @@ export default {
   border: none;
 }
 .sidebar .dark {
-    background-color: transparent;
+  background-color: transparent;
 }
-.sidebar-mint svg, .sidebar-mint h1 {
-    color: white;
+.sidebar-mint svg,
+.sidebar-mint h1 {
+  color: white;
 }
 .sidebar-reg {
   background-color: white;

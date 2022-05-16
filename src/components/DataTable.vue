@@ -19,8 +19,12 @@
     <div class="mt-8 flex flex-col">
       <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-          <div class="overflow-hidden md:rounded-sm border-2 dark:border-slate-500">
-            <table class="min-w-full divide-y divide-slate-300 dark:divide-slate-500">
+          <div
+            class="overflow-hidden md:rounded-sm border border-slate-300 dark:border-slate-500"
+          >
+            <table
+              class="min-w-full divide-y divide-slate-300 dark:divide-slate-500"
+            >
               <thead class="bg-slate-50 dark:bg-slate-800">
                 <tr>
                   <th
@@ -86,7 +90,9 @@
                   </th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-200 bg-white dark:bg-slate-800 dark:divide-slate-500">
+              <tbody
+                class="divide-y divide-slate-200 bg-white dark:bg-slate-800 dark:divide-slate-500"
+              >
                 <tr v-for="item in data" :key="item.id">
                   <td
                     class="whitespace-nowrap text-left pl-4 pr-3 py-4 text-sm font-medium text-slate-500"
@@ -235,10 +241,10 @@ export default {
       const id = item.id;
       let prefix =
         "https://vpyikcjriwwrxoblslds.supabase.co/storage/v1/object/public/images/public/";
-        let url = ''
-        let imgUrl = ''
-      if(item.url) {
-          url = item.imgUrl;
+      let url = "";
+      let imgUrl = "";
+      if (item.url) {
+        url = item.imgUrl;
         imgUrl = url.slice(prefix.length);
       }
 
@@ -254,16 +260,16 @@ export default {
       } finally {
         console.log("item deleted successfully");
         this.getData();
-        if(url !== '') {
-            this.deleteImg(imgUrl);
+        if (url !== "") {
+          this.deleteImg(imgUrl);
         }
       }
     },
     async deleteImg(url) {
       try {
-          const { data, error } = await supabase.storage
-            .from("images")
-            .remove([`public/${url}`]);
+        const { data, error } = await supabase.storage
+          .from("images")
+          .remove([`public/${url}`]);
         if (error) throw error;
       } catch (error) {
         alert(error.message);

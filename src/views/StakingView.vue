@@ -16,19 +16,19 @@
           class="flex items-center justify-evenly card-bg h-full w-full px-5 py-10"
         >
           <dl>
-            <dt
-              v-if="card.id === 1"
-              class="text-3xl cera-bold text-pink-chi truncate"
-            >
+            <dt v-if="card.id === 1" class="text-3xl text-pink-chi truncate">
+              <span class="cera-bold" v-if="!getUserAccount">0</span>
               <span
-                v-if="!getUserAccount"
-                >0</span
+                class="cera-bold"
+                v-else-if="getBalance && !getStakedBalance"
               >
-              <span class="cera-bold" v-else-if="getBalance && !getStakedBalance">
-                  {{ getBalance }}
+                {{ getBalance }}
               </span>
-              <span class="cera-bold" v-else-if="!getBalance && getStakedBalance">
-                  {{ getStakedBalance.length }}
+              <span
+                class="cera-bold"
+                v-else-if="!getBalance && getStakedBalance"
+              >
+                {{ getStakedBalance.length }}
               </span>
               <span class="cera-bold" v-else>{{
                 Number(getBalance) + Number(getStakedBalance.length)
@@ -38,7 +38,9 @@
               v-if="card.id === 2"
               class="text-3xl cera-bold text-pink-chi truncate"
             >
-              <span class="cera-bold" v-if="getStakedBalance.length >= 5"> 5% </span>
+              <span class="cera-bold" v-if="getStakedBalance.length >= 5">
+                5%
+              </span>
               <span class="cera-bold" v-else> 0% </span>
             </dt>
             <dt
@@ -65,20 +67,20 @@
             </dt>
             <dd>
               <div class="text-sm font-medium text-white">
-                Claimable CHI Balance<br>
+                Claimable CHI Balance<br />
                 <span class="italic">(CHI auto-claims when you unstake)</span>
               </div>
             </dd>
           </dl>
-                    <button
-          v-if="!getUserAccount"
+          <button
+            v-if="!getUserAccount"
             type="button"
             class="w-1/3 p-3 text-center text-sm font-extrabold rounded-sm text-[#DE14E9] bg-pink-chi transition-all linear hover:opacity-75"
           >
             Claim CHI
           </button>
           <button
-          v-else-if="getUserAccount && !txSubmitted"
+            v-else-if="getUserAccount && !txSubmitted"
             @click.prevent="claimRewards"
             type="button"
             class="w-1/3 p-3 text-center text-sm font-extrabold rounded-sm text-[#DE14E9] bg-pink-chi transition-all linear hover:opacity-75"
@@ -86,8 +88,8 @@
             Claim CHI
           </button>
           <button
-          v-else
-          disabled
+            v-else
+            disabled
             type="button"
             class="cursor-not-allowed disabled:opacity-75 inline-flex justify-center items-center w-1/3 p-3 text-center text-sm font-extrabold rounded-md text-[#DE14E9] bg-pink-chi transition-all linear"
           >
@@ -304,7 +306,7 @@ export default {
         })
         .on("receipt", (receipt) => {
           this.txSubmitted = false;
-          this.calcCurrentRewards()
+          this.calcCurrentRewards();
           this.$moshaToast("Claim successful!", {
             showIcon: "true",
             position: "top-center",

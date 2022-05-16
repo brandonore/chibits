@@ -6,14 +6,13 @@
         <div class="tooltip">
           <font-awesome-icon class="text-slate-500 h-5 pl-2" :icon="infoIcon" />
           <div class="right p-5">
-            <h3 class="text-2xl pb-2 font-bold text-center">
-              About Staking
-            </h3>
+            <h3 class="text-2xl pb-2 font-bold text-center">About Staking</h3>
             <p class="text-sm normal-case text-center">
-              Chibits are "staked" in the vault and will generate $CHI per day. This means
-              that the vault address will be shown as the "owner" while staked, and
-              unstaking will move them back to your wallet. You will maintain full ownership, but
-              they will not show up in your wallet while staked.
+              Chibits are "staked" in the vault and will generate $CHI per day.
+              This means that the vault address will be shown as the "owner"
+              while staked, and unstaking will move them back to your wallet.
+              You will maintain full ownership, but they will not show up in
+              your wallet while staked.
             </p>
             <i></i>
           </div>
@@ -65,32 +64,33 @@
           v-for="nft in sortedNfts"
           :key="nft.tokenId"
           :class="{ active: nft.active }"
-            @click="!txSubmitted && getNftId(nft)"
+          @click="!txSubmitted && getNftId(nft)"
           class="rounded-lg nft-card bg-white pb-3 dark:bg-slate-800 overflow-hidden"
         >
-          <div
-            class="flex-col relative items-center justify-evenly"
-          >
+          <div class="flex-col relative items-center justify-evenly">
             <span
               v-show="nft.active"
               class="absolute top-2 right-2 text-violet-500"
             >
               <font-awesome-icon class="h-6 w-6" :icon="checkedIcon"
             /></span>
-            <img :src="nft.url" class="rounded-tl-lg rounded-tr-lg nft-img w-full" />
-          
-          <div class="flex-col p-2 items-center justify-evenly">
-            <h1 class="small-title pb-1 text-md text-slate-500">
-              hana //
-              <span class="text-lg cera-bold">NO. {{ nft.tokenId }}</span>
-            </h1>
-            <div class="small-title text-md">
-              <span
-                class="inline-flex items-center px-3 py-0.5 rounded-lg text-sm cera-bold dark:bg-slate-500 dark:text-slate-800 bg-emerald-100 text-emerald-600"
-                >{{ nft.reward }} $CHI per day</span
-              > 
+            <img
+              :src="nft.url"
+              class="rounded-tl-lg rounded-tr-lg nft-img w-full"
+            />
+
+            <div class="flex-col p-2 items-center justify-evenly">
+              <h1 class="small-title pb-1 text-md text-slate-500">
+                hana //
+                <span class="text-lg cera-bold">NO. {{ nft.tokenId }}</span>
+              </h1>
+              <div class="small-title text-md">
+                <span
+                  class="inline-flex items-center px-3 py-0.5 rounded-lg text-sm cera-bold dark:bg-slate-500 dark:text-slate-800 bg-emerald-100 text-emerald-600"
+                  >{{ nft.reward }} $CHI per day</span
+                >
+              </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
@@ -225,7 +225,7 @@ export default {
           console.log("Receipt: ", receipt);
           this.SET_UNSTAKED_RELOAD(true);
           this.getStakedTokens();
-          this.$emit('updateUnclaimedBalance')
+          this.$emit("updateUnclaimedBalance");
           this.$moshaToast("Unstake successful!", {
             showIcon: "true",
             position: "top-center",

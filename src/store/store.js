@@ -6,6 +6,7 @@ const store = createStore({
     userAccount: null,
     tokenInstance: null,
     stakingInstance: null,
+    rewardInstance: null,
     balance: 0,
     isApproved: false,
     stakedReload: false,
@@ -15,7 +16,7 @@ const store = createStore({
     stakedBalance: 0,
     unstakedBalance: 0,
     provider: null,
-    authUser: null
+    authUser: null,
   },
   mutations: {
     SET_WEB3: (state, payload) => {
@@ -30,35 +31,38 @@ const store = createStore({
     SET_STAKING_INSTANCE: (state, payload) => {
       state.stakingInstance = payload;
     },
+    SET_REWARD_INSTANCE: (state, payload) => {
+      state.rewardInstance = payload;
+    },
     SET_BALANCE: (state, payload) => {
-        state.balance = payload;
-      },
+      state.balance = payload;
+    },
     SET_APPROVAL: (state, payload) => {
-        state.isApproved = payload
+      state.isApproved = payload;
     },
     SET_STAKED_RELOAD: (state, payload) => {
-        state.stakedReload = payload
+      state.stakedReload = payload;
     },
     SET_UNSTAKED_RELOAD: (state, payload) => {
-        state.unstakedReload = payload
+      state.unstakedReload = payload;
     },
     SET_DISABLE_STAKE_BUTTON: (state, payload) => {
-        state.disableStakeButton = payload
+      state.disableStakeButton = payload;
     },
     SET_DISABLE_UNSTAKE_BUTTON: (state, payload) => {
-        state.disableUnstakeButton = payload
+      state.disableUnstakeButton = payload;
     },
     SET_STAKED_BALANCE: (state, payload) => {
-        state.stakedBalance = payload
+      state.stakedBalance = payload;
     },
     SET_UNSTAKED_BALANCE: (state, payload) => {
-        state.unstakedBalance = payload
+      state.unstakedBalance = payload;
     },
     SET_PROVIDER: (state, payload) => {
-        state.provider = payload
+      state.provider = payload;
     },
     SET_AUTH_USER: (state, payload) => {
-        state.authUser = payload
+      state.authUser = payload;
     },
   },
   getters: {
@@ -74,36 +78,39 @@ const store = createStore({
     getStakingInstance: (state) => {
       return state.stakingInstance;
     },
+    getRewardInstance: (state) => {
+      return state.rewardInstance;
+    },
     getBalance: (state) => {
-        return state.balance
+      return state.balance;
     },
     getIsApproved: (state) => {
-        return state.isApproved;
+      return state.isApproved;
     },
     getStakedReload: (state) => {
-        return state.stakedReload
+      return state.stakedReload;
     },
     getUnstakedReload: (state) => {
-        return state.unstakedReload
+      return state.unstakedReload;
     },
     getDisableStakeButton: (state) => {
-        return state.disableStakeButton
+      return state.disableStakeButton;
     },
     getDisableUnstakeButton: (state) => {
-        return state.disableUnstakeButton
+      return state.disableUnstakeButton;
     },
     getStakedBalance: (state) => {
-        return state.stakedBalance
+      return state.stakedBalance;
     },
     getUnstakedBalance: (state) => {
-        return state.unstakedBalance
+      return state.unstakedBalance;
     },
     getProvider: (state) => {
-        return state.provider
+      return state.provider;
     },
     getAuthUser: (state) => {
-        return state.authUser
-    }
+      return state.authUser;
+    },
   },
   actions: {
     SET_WEB3({ commit }, payload) {
@@ -118,35 +125,38 @@ const store = createStore({
     SET_STAKING_INSTANCE({ commit }, payload) {
       commit("SET_STAKING_INSTANCE", payload);
     },
+    SET_REWARD_INSTANCE({ commit }, payload) {
+      commit("SET_REWARD_INSTANCE", payload);
+    },
     SET_BALANCE({ commit }, payload) {
-        commit("SET_BALANCE", payload);
-      },
+      commit("SET_BALANCE", payload);
+    },
     SET_APPROVAL({ commit }, payload) {
-        commit("SET_APPROVAL", payload)
+      commit("SET_APPROVAL", payload);
     },
     SET_STAKED_RELOAD({ commit }, payload) {
-        commit("SET_STAKED_RELOAD", payload)
+      commit("SET_STAKED_RELOAD", payload);
     },
     SET_UNSTAKED_RELOAD({ commit }, payload) {
-        commit("SET_UNSTAKED_RELOAD", payload)
+      commit("SET_UNSTAKED_RELOAD", payload);
     },
     SET_DISABLE_STAKE_BUTTON({ commit }, payload) {
-        commit("SET_DISABLE_STAKE_BUTTON", payload)
+      commit("SET_DISABLE_STAKE_BUTTON", payload);
     },
     SET_DISABLE_UNSTAKE_BUTTON({ commit }, payload) {
-        commit("SET_DISABLE_UNSTAKE_BUTTON", payload)
+      commit("SET_DISABLE_UNSTAKE_BUTTON", payload);
     },
     SET_STAKED_BALANCE({ commit }, payload) {
-        commit("SET_STAKED_BALANCE", payload)
+      commit("SET_STAKED_BALANCE", payload);
     },
     SET_UNSTAKED_BALANCE({ commit }, payload) {
-        commit("SET_UNSTAKED_BALANCE", payload)
+      commit("SET_UNSTAKED_BALANCE", payload);
     },
     SET_PROVIDER({ commit }, payload) {
-        commit("SET_PROVIDER", payload)
+      commit("SET_PROVIDER", payload);
     },
     SET_AUTH_USER({ commit }, payload) {
-        commit("SET_AUTH_USER", payload)
+      commit("SET_AUTH_USER", payload);
     },
   },
 });

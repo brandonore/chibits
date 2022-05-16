@@ -8,7 +8,7 @@
           Select Category
         </label>
         <div class="mt-1">
-          <Listbox as="div" v-model="selected">
+          <Listbox as="div" @click.prevent="clearForm" v-model="selected">
             <div class="mt-1 relative">
               <ListboxButton
                 class="bg-white dark:bg-slate-800 dark:border-slate-500 relative w-full border border-gray-300 rounded-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
@@ -30,7 +30,7 @@
                 leave-to-class="opacity-0"
               >
                 <ListboxOptions
-                  class="absolute z-10 mt-1 w-full dark:bg-slate-800 dark:border-slate-500 bg-white max-h-60 rounded-sm py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+                  class="absolute z-10 mt-1 w-full dark:bg-slate-800 border dark:border-slate-500 bg-white max-h-60 rounded-sm py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
                 >
                   <ListboxOption
                     as="template"
@@ -78,7 +78,7 @@
           <label class="block text-sm font-regular text-slate-500">
             Title
           </label>
-          <div class="mt-1" v-if="!v$.title.$error">
+          <div class="mt-1">
             <input
               name="title"
               type="text"
@@ -86,20 +86,12 @@
               :placeholder="selected.title"
               required=""
               @blur="v$.title.$touch"
+              :class="{ error: v$.title.$error }"
               class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
-          </div>
-          <div class="mt-1" v-if="v$.title.$error">
-            <input
-              name="title"
-              type="text"
-              v-model="title"
-              :placeholder="selected.title"
-              required=""
-              @blur="v$.title.$touch"
-              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border rounded-sm placeholder-slate-300 dark:placeholder-slate-500 border-pink-500 sm:text-sm"
-            />
-            <span class="inline-flex items-center text-sm text-pink-500 pt-1"
+            <span
+              v-if="v$.title.$error"
+              class="inline-flex items-center text-sm text-pink-500 pt-1"
               ><font-awesome-icon
                 :icon="['far', 'circle-exclamation']"
                 class="mr-2 h-4 w-4"
@@ -113,7 +105,7 @@
           <label class="block text-sm font-regular text-slate-500">
             Description
           </label>
-          <div class="mt-1" v-if="!v$.desc.$error">
+          <div class="mt-1">
             <input
               name="desc"
               type="text"
@@ -121,20 +113,12 @@
               :placeholder="selected.desc"
               required=""
               @blur="v$.desc.$touch"
+              :class="{ error: v$.desc.$error }"
               class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
-          </div>
-          <div class="mt-1" v-if="v$.desc.$error">
-            <input
-              name="desc"
-              type="text"
-              v-model="desc"
-              :placeholder="selected.desc"
-              required=""
-              @blur="v$.desc.$touch"
-              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border rounded-sm placeholder-slate-300 dark:placeholder-slate-500 border-pink-500 sm:text-sm"
-            />
-            <span class="inline-flex items-center text-sm text-pink-500 pt-1"
+            <span
+              v-if="v$.desc.$error"
+              class="inline-flex items-center text-sm text-pink-500 pt-1"
               ><font-awesome-icon
                 :icon="['far', 'circle-exclamation']"
                 class="mr-2 h-4 w-4"
@@ -165,7 +149,7 @@
               v-model="twitterLink"
               placeholder="Twitter link"
               required=""
-              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
           </div>
         </div>
@@ -181,7 +165,7 @@
               v-model="discordLink"
               placeholder="Discord link"
               required=""
-              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
           </div>
         </div>
@@ -189,11 +173,14 @@
       <!-- row 3 -->
       <div class="flex justify-between">
         <!-- number of winners -->
-        <div class="w-full space-y-1 text-left">
+        <div
+          v-if="selected.category !== 'Instant WL'"
+          class="w-full space-y-1 text-left"
+        >
           <label class="block text-sm font-regular text-slate-500">
             Number of Winners
           </label>
-          <div class="mt-1" v-if="!v$.numberOfWinners.$error">
+          <div class="mt-1">
             <input
               name="numberOfWinners"
               type="text"
@@ -201,20 +188,42 @@
               placeholder="0"
               required=""
               @blur="v$.numberOfWinners.$touch"
+              :class="{ error: v$.numberOfWinners.$error }"
               class="appearance-none dark:bg-slate-800 dark:border-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
+            <span
+              v-if="v$.numberOfWinners.$error"
+              class="inline-flex items-center text-sm text-pink-500 pt-1"
+              ><font-awesome-icon
+                :icon="['far', 'circle-exclamation']"
+                class="mr-2 h-4 w-4"
+                aria-hidden="true"
+              />Required Field & Integers only</span
+            >
           </div>
-          <div class="mt-1" v-if="v$.numberOfWinners.$error">
+        </div>
+        <!-- supply -->
+        <div
+          v-if="selected.category === 'Instant WL'"
+          class="w-full space-y-1 text-left"
+        >
+          <label class="block text-sm font-regular text-slate-500">
+            Total Supply
+          </label>
+          <div class="mt-1">
             <input
-              name="numberOfWinners"
+              name="supply"
               type="text"
-              v-model="numberOfWinners"
-              placeholder="0"
+              v-model="supply"
+              placeholder="Enter total supply for the project"
               required=""
-              @blur="v$.numberOfWinners.$touch"
-              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border rounded-sm placeholder-slate-300 dark:placeholder-slate-500 border-pink-500 sm:text-sm"
+              @blur="v$.supply.$touch"
+              :class="{ error: v$.supply.$error }"
+              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
-            <span class="inline-flex items-center text-sm text-pink-500 pt-1"
+            <span
+              v-if="v$.supply.$error"
+              class="inline-flex items-center text-sm text-pink-500 pt-1"
               ><font-awesome-icon
                 :icon="['far', 'circle-exclamation']"
                 class="mr-2 h-4 w-4"
@@ -229,7 +238,11 @@
             Set Expiration Date & Time
           </label>
           <div class="mt-1">
-            <Datepicker class="dark:bg-slate-800 dark:border-slate-500" v-model="expirationDate" :is24="false" />
+            <Datepicker
+              class="dark:bg-slate-800 dark:border-slate-500"
+              v-model="expirationDate"
+              :is24="false"
+            />
           </div>
         </div>
       </div>
@@ -240,7 +253,7 @@
           <label class="block text-sm font-regular text-slate-500">
             $CHI Cost
           </label>
-          <div class="mt-1" v-if="!v$.amountToEnter.$error">
+          <div class="mt-1">
             <input
               name="amountToEnter"
               type="text"
@@ -248,20 +261,12 @@
               placeholder="0"
               required=""
               @blur="v$.amountToEnter.$touch"
+              :class="{ error: v$.amountToEnter.$error }"
               class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border border-gray-300 rounded-sm placeholder-slate-300 dark:placeholder-slate-500 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
             />
-          </div>
-          <div class="mt-1" v-if="v$.amountToEnter.$error">
-            <input
-              name="amountToEnter"
-              type="text"
-              v-model="amountToEnter"
-              placeholder="0"
-              required=""
-              @blur="v$.amountToEnter.$touch"
-              class="appearance-none dark:bg-slate-800 dark:border-slate-500 dark:text-slate-500 block w-full px-3 py-2 border rounded-sm placeholder-slate-300 dark:placeholder-slate-500 border-pink-500 sm:text-sm"
-            />
-            <span class="inline-flex items-center text-sm text-pink-500 pt-1"
+            <span
+              v-if="v$.amountToEnter.$error"
+              class="inline-flex items-center text-sm text-pink-500 pt-1"
               ><font-awesome-icon
                 :icon="['far', 'circle-exclamation']"
                 class="mr-2 h-4 w-4"
@@ -318,7 +323,7 @@
           </label>
           <div class="mt-2">
             <div
-              class="flex justify-center px-6 pt-8 pb-9 border-2 border-slate-500 border-dashed rounded-md"
+              class="flex justify-center px-6 pt-8 pb-9 border-2 border-slate-300 dark:border-slate-500 border-dashed rounded-md"
             >
               <div class="space-y-1 text-center">
                 <div class="flex justify-center text-sm text-slate-600">
@@ -449,9 +454,10 @@ export default {
       amountToEnter: null,
       amountToWin: null,
       tokenId: null,
-      numberOfWinners: null,
+      numberOfWinners: 0,
       twitterLink: "",
       discordLink: "",
+      supply: 0,
       categories: [
         {
           category: "$CHI Tokens",
@@ -498,7 +504,8 @@ export default {
       desc: { required, $lazy: true },
       amountToEnter: { required, integer, $lazy: true },
       numberOfWinners: { required, integer, $lazy: true },
-      file: { required, $lazy: true }
+      file: { required, $lazy: true },
+      supply: { required, integer, $lazy: true },
     };
   },
   methods: {
@@ -522,10 +529,21 @@ export default {
       this.file = null;
       this.filePath = null;
     },
+    clearForm() {
+      (this.title = ""),
+        (this.desc = ""),
+        (this.amountToEnter = null),
+        (this.amountToWin = null),
+        (this.tokenId = null),
+        (this.numberOfWinners = 0),
+        (this.twitterLink = ""),
+        (this.discordLink = ""),
+        (this.supply = 0);
+    },
     async submitNewItem() {
       const result = await this.v$.$validate();
-      if(!this.file) {
-          alert('Image is required')
+      if (!this.file) {
+        alert("Image is required");
       }
       if (result && this.file) {
         try {
@@ -549,6 +567,7 @@ export default {
       }
     },
     async addItemToDatabase(publicURL) {
+      const id = uuidv4();
       const item = {
         title: this.title,
         desc: this.desc,
@@ -562,11 +581,16 @@ export default {
         discordLink: this.discordLink,
         imgUrl: publicURL,
         user_id: this.getAuthUser.id,
+        supply: this.supply,
+        itemId: id,
       };
       try {
         const { error: uploadError } = await supabase
           .from("marketplace")
           .insert(item);
+        const { data, error } = await supabase
+          .from("entries")
+          .insert({ itemId: id, supply: this.supply });
         if (uploadError) throw uploadError;
       } catch (error) {
         alert(error.message);
@@ -583,4 +607,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.error {
+  border-color: #ec4899;
+}
+</style>
