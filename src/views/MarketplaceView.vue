@@ -159,7 +159,8 @@
                 class="rounded-bl-md rounded-br-md w-0 flex-1 flex bg-indigo-500"
               >
                 <button
-                  @click.prevent="buyItem(item.itemId)"
+                  v-if="!loading"
+                  @click.prevent="getWalletAddresses(item.itemId)"
                   class="relative rounded-bl-md rounded-br-md -mr-px w-0 flex-1 inline-flex items-center justify-center py-3 text-sm text-white transition-all linear hover:opacity-75"
                 >
                   <font-awesome-icon
@@ -168,6 +169,18 @@
                     aria-hidden="true"
                   />
                   <span>Purchase</span>
+                </button>
+                <button
+                  v-else
+                  disabled
+                  class="disabled:opacity-50 cursor-not-allowed relative rounded-bl-md rounded-br-md -mr-px w-0 flex-1 inline-flex items-center justify-center py-3 text-sm text-white transition-all linear"
+                >
+                  <font-awesome-icon
+                    :icon="['fas', 'circle-dollar']"
+                    class="mr-2 h-5 w-5"
+                    aria-hidden="true"
+                  />
+                  <span>Purchasing...</span>
                 </button>
               </div>
             </div>
@@ -322,6 +335,8 @@ export default {
       totalUnclaimedRewards: 0,
       entries: [],
       supply: 0,
+      itemId: null,
+      walletAddresses: [],
       navigation: [
         { name: "Chibits", current: true },
         { name: "Instant WL", current: false },
@@ -329,53 +344,6 @@ export default {
         { name: "IRL Raffle", current: false },
       ],
       isActive: "Chibits",
-      people: [
-        {
-          name: "Jane Cooper",
-          title: "Paradigm Representative",
-          role: "Admin",
-          email: "janecooper@example.com",
-          telephone: "+1-202-555-0170",
-          imageUrl:
-            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-        },
-        {
-          name: "Jane Cooper",
-          title: "Paradigm Representative",
-          role: "Admin",
-          email: "janecooper@example.com",
-          telephone: "+1-202-555-0170",
-          imageUrl:
-            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-        },
-        {
-          name: "Jane Cooper",
-          title: "Paradigm Representative",
-          role: "Admin",
-          email: "janecooper@example.com",
-          telephone: "+1-202-555-0170",
-          imageUrl:
-            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-        },
-        {
-          name: "Jane Cooper",
-          title: "Paradigm Representative",
-          role: "Admin",
-          email: "janecooper@example.com",
-          telephone: "+1-202-555-0170",
-          imageUrl:
-            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-        },
-        {
-          name: "Jane Cooper",
-          title: "Paradigm Representative",
-          role: "Admin",
-          email: "janecooper@example.com",
-          telephone: "+1-202-555-0170",
-          imageUrl:
-            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-        },
-      ],
     };
   },
   methods: {
@@ -466,19 +434,55 @@ export default {
           this.calcCurrentRewards();
         });
     },
-    async buyItem(id) {
+    async getWalletAddresses(id) {
+      this.walletAddresses = [];
+      this.itemId = id;
       try {
         this.loading = true;
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from("entries")
-          .update({ walletAddresses: [this.getUserAccount] })
+          .select("walletAddresses[]")
           .match({ itemId: id });
         if (error) throw error;
+        if (data[0].walletAddresses !== null) {
+          this.walletAddresses = data[0].walletAddresses;
+          this.walletAddresses.push(this.getUserAccount);
+          await this.buyItem(this.itemId);
+        } else {
+          this.buyItemNoAddr(this.itemId);
+        }
       } catch (error) {
         alert(error.message);
-      } finally {
-        this.loading = false;
-        console.log("purchase successful");
+      }
+    },
+
+    async buyItem(id) {
+      if (this.getUserAccount) {
+        try {
+          const { error } = await supabase
+            .from("entries")
+            .update({ walletAddresses: this.walletAddresses })
+            .match({ itemId: id });
+          if (error) throw error;
+          this.loading = false;
+          console.log("wallet added");
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+    },
+    async buyItemNoAddr(id) {
+      if (this.getUserAccount) {
+        try {
+          const { error } = await supabase
+            .from("entries")
+            .update({ walletAddresses: [this.getUserAccount] })
+            .match({ itemId: id });
+          if (error) throw error;
+          this.loading = false;
+        } catch (error) {
+          alert(error.message);
+        }
       }
     },
   },
